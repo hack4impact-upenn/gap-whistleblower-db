@@ -1,7 +1,11 @@
-# Immigrant Defense Project
+# Government Accountability Project
 
 ## Team
 * Sarah Raines (Project Lead)
+* Kasra Khadem (Business Development)
+* Aruna Prasad
+* Jediah Katz
+* Amit Lohe
 
 ## Setup
 
