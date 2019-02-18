@@ -12,7 +12,7 @@
 ##### Clone the project
 
 ```
-$ git clone https://github.com/hack4impact/govt-accountability-project.git
+$ git clone https://github.com/hack4impact/gap-whistleblower-db.git
 $ cd immigrant-defense-project
 ```
 
