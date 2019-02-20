@@ -1,11 +1,7 @@
 {
     "_meta": {
         "hash": {
-<<<<<<< HEAD
             "sha256": "46aaa00f02154b910665601f22339843535d2f6324802d9f9c61fbea0e1aca99"
-=======
-            "sha256": "20d1cd524be1513d16eeaeca9c8614266a16425fb69d1af5d03406660def2542"
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
         },
         "pipfile-spec": 6,
         "requires": {
@@ -50,27 +46,20 @@
             "index": "pypi",
             "version": "==6.7"
         },
-<<<<<<< HEAD
-=======
         "colorama": {
             "hashes": [
                 "sha256:05eed71e2e327246ad6b38c540c4a3117230b19679b875190486ddd2d721422d",
                 "sha256:f8ac84de7840f5b9c4e3347b3c1eaa50f7e49c2b07596221daec5edaabbd7c48"
             ],
-            "markers": "sys_platform == 'win32'",
             "version": "==0.4.1"
         },
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
         "faker": {
             "hashes": [
                 "sha256:17175adec823519c23c74ad5352d7290f67434ef72460b3578e08cd216e2cca7",
                 "sha256:249d1bd8fddb80643d4dc91b72c6089c847ab2d0deead946a6d339209ac24146"
             ],
             "index": "pypi",
-<<<<<<< HEAD
-=======
             "markers": "python_version != '3.2.*' and python_version != '3.1.*' and python_version >= '2.7' and python_version != '3.0.*'",
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
             "version": "==0.7.7"
         },
         "flask": {
@@ -79,10 +68,7 @@
                 "sha256:93e803cdbe326a61ebd5c5d353959397c85f829bec610d59cb635c9f97d7ca8b"
             ],
             "index": "pypi",
-<<<<<<< HEAD
-=======
             "markers": "python_version != '3.1.*' and python_version >= '2.7' and python_version != '3.3.*' and python_version != '3.2.*' and python_version != '3.0.*'",
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
             "version": "==0.12"
         },
         "flask-assets": {
@@ -90,10 +76,7 @@
                 "sha256:6031527b89fb3509d1581d932affa5a79dd348cfffb58d0aef99a43461d47847"
             ],
             "index": "pypi",
-<<<<<<< HEAD
-=======
             "markers": "python_version != '3.1.*' and python_version >= '2.7' and python_version != '3.3.*' and python_version != '3.2.*' and python_version != '3.0.*'",
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
             "version": "==0.12"
         },
         "flask-compress": {
@@ -101,10 +84,7 @@
                 "sha256:468693f4ddd11ac6a41bca4eb5f94b071b763256d54136f77957cfee635badb3"
             ],
             "index": "pypi",
-<<<<<<< HEAD
-=======
             "markers": "python_version != '3.1.*' and python_version >= '2.7' and python_version != '3.3.*' and python_version != '3.2.*' and python_version != '3.0.*'",
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
             "version": "==1.4.0"
         },
         "flask-login": {
@@ -113,10 +93,7 @@
                 "sha256:f9149b63ec6b32aec44acb061ad851eb4eb065e742341147d116d69f8e35ae2b"
             ],
             "index": "pypi",
-<<<<<<< HEAD
-=======
             "markers": "python_version != '3.1.*' and python_version >= '2.7' and python_version != '3.3.*' and python_version != '3.2.*' and python_version != '3.0.*'",
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
             "version": "==0.4.0"
         },
         "flask-mail": {
@@ -131,10 +108,7 @@
                 "sha256:331f1facf93712b6a3067eac382e645b1ef09e9a6d34da447acb6a3c293afd80"
             ],
             "index": "pypi",
-<<<<<<< HEAD
-=======
             "markers": "python_version != '3.1.*' and python_version >= '2.6' and python_version != '3.0.*'",
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
             "version": "==2.0.3"
         },
         "flask-rq": {
@@ -142,10 +116,7 @@
                 "sha256:e4630d4195c1fca9eb51bec93c8536883df304cd69db29df609547376fc8d2a1"
             ],
             "index": "pypi",
-<<<<<<< HEAD
-=======
             "markers": "python_version != '3.1.*' and python_version >= '2.7' and python_version != '3.3.*' and python_version != '3.2.*' and python_version != '3.0.*'",
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
             "version": "==0.2"
         },
         "flask-script": {
@@ -153,10 +124,7 @@
                 "sha256:cef76eac751396355429a14c38967bb14d4973c53e07dec94af5cc8fb017107f"
             ],
             "index": "pypi",
-<<<<<<< HEAD
-=======
             "markers": "python_version != '3.1.*' and python_version >= '2.7' and python_version != '3.3.*' and python_version != '3.2.*' and python_version != '3.0.*'",
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
             "version": "==2.0.5"
         },
         "flask-sqlalchemy": {
@@ -164,10 +132,7 @@
                 "sha256:c5244de44cc85d2267115624d83faef3f9e8f088756788694f305a5d5ad137c5"
             ],
             "index": "pypi",
-<<<<<<< HEAD
-=======
             "markers": "python_version != '3.1.*' and python_version >= '2.7' and python_version != '3.3.*' and python_version != '3.2.*' and python_version != '3.0.*'",
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
             "version": "==2.1"
         },
         "flask-sslify": {
@@ -175,10 +140,7 @@
                 "sha256:d33e1d3c09cd95154176aa8a7319418e52129fc482dd56d8a8ad7c24500d543e"
             ],
             "index": "pypi",
-<<<<<<< HEAD
-=======
             "markers": "python_version != '3.1.*' and python_version >= '2.7' and python_version != '3.3.*' and python_version != '3.2.*' and python_version != '3.0.*'",
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
             "version": "==0.1.5"
         },
         "flask-wtf": {
@@ -187,10 +149,7 @@
                 "sha256:c1de81c9c2b6d1ceb3342850b7113ed7c04bab78b3c3ee0fb144d5de5fbc5a61"
             ],
             "index": "pypi",
-<<<<<<< HEAD
-=======
             "markers": "python_version != '3.1.*' and python_version >= '2.7' and python_version != '3.3.*' and python_version != '3.2.*' and python_version != '3.0.*'",
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
             "version": "==0.11"
         },
         "gunicorn": {
@@ -218,20 +177,12 @@
         },
         "jinja2": {
             "hashes": [
-<<<<<<< HEAD
-                "sha256:702a24d992f856fa8d5a7a36db6128198d0c21e1da34448ca236c42e92384825",
-                "sha256:a7b7438120dbe76a8e735ef7eba6048eaf4e0b7dbc530e100812f8ec462a4d50"
-            ],
-            "index": "pypi",
-            "version": "==2.9.5"
-=======
                 "sha256:74c935a1b8bb9a3947c50a54766a969d4846290e1e788ea44c1392163723c3bd",
                 "sha256:f84be1bb0040caca4cea721fcbbbbd61f9be9464ca236387158b0feea01914a4"
             ],
             "index": "pypi",
             "markers": "python_version != '3.2.*' and python_version != '3.1.*' and python_version >= '2.7' and python_version != '3.0.*' and python_version != '3.3.*'",
             "version": "==2.10"
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
         },
         "jsmin": {
             "hashes": [
@@ -252,10 +203,7 @@
                 "sha256:48559ebd872a8e77f92005884b3d88ffae552812cdf17db6768e5c3be5ebbe0d"
             ],
             "index": "pypi",
-<<<<<<< HEAD
-=======
             "markers": "python_version != '3.1.*' and python_version >= '2.7' and python_version != '3.3.*' and python_version != '3.2.*' and python_version != '3.0.*'",
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
             "version": "==1.0.6"
         },
         "markupsafe": {
@@ -381,19 +329,11 @@
         },
         "werkzeug": {
             "hashes": [
-<<<<<<< HEAD
                 "sha256:455d7798ac263266dbd38d4841f7534dd35ca9c3da4a8df303f8488f38f3bcc0",
                 "sha256:c6f6f89124df0514d886782c658c3e12f2caaa94da34cee3fd82eebf4ebf052b"
             ],
             "index": "pypi",
             "version": "==0.11.15"
-=======
-                "sha256:c3fd7a7d41976d9f44db327260e263132466836cef6f91512889ed60ad26557c",
-                "sha256:d5da73735293558eb1651ee2fddc4d0dedcfa06538b8813a2e20011583c9e49b"
-            ],
-            "index": "pypi",
-            "version": "==0.14.1"
->>>>>>> 09e7fd751ac9d92aa7215897eb7ce769617f87a3
         },
         "wtforms": {
             "hashes": [
