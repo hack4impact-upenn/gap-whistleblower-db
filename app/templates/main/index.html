@@ -1,17 +1,203 @@
-{% extends 'layouts/base.html' %}
+{% import 'macros/nav_macros.html' as nav %}
+{% import 'macros/location_macros.html' as loc %}
 
-{% block content %}
-    <div class="ui text container">
-      <h1>Hello {% if not (current_user.is_authenticated) %} world {% else %} {{ current_user.full_name() }} {% endif %},</h1>
+<!DOCTYPE html>
+<html>
+    <head>
+        {% include 'partials/_head.html' %}
+        {# Any templates that extend this template can set custom_head_tags to add scripts to their page #}
+        {% block custom_head_tags %}{% endblock %}
+    </head>
+    <body onresize="resizeFilter()">
+        <div class="ui inverted vertical masthead center aligned segment">
+            <div class="ui container">
+                {% block nav %}
+                  {# add dropdown variable here to the render_nav method to render dropdowns #}
+                  {{ nav.render_nav(current_user) }}
+                {% endblock %}
 
-        <p>This is <a href="http://hack4impact.org">Hack4Impact</a>'s web application template. We'll use this as a
-        foundation for each of our <a href="http://flask.pocoo.org">Flask</a> projects. The goal is to reduce the work
-        necessary to get a new project off the ground, by providing boilerplate code (such as account management
-        facilities), as well as uncontroversial and extensible defaults. We have integrated an
-        <a href="http://sass-lang.com">SCSS</a>-based asset pipeline based around a (fantastic!) framework
-        called <a href="http://semantic-ui.com">Semantic UI</a>. Much of this code is appropriated from the examples
-        in Miguel Grinberg's book, <a href="http://flaskbook.com"><em>Flask Web Development</em></a>.</p>
+                {% include 'partials/_flashes.html' %}
+                {# When extended, the content block contains all the html of the webpage #}
+                {% block content %}
+                {% endblock %}
 
-        <p>{{ lipsum(6) }}</p>
-    </div>
-{% endblock %}
+                {# Implement CSRF protection for site #}
+                {% if csrf_token()|safe %}
+                    <div style="visibility: hidden; display: none">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token()|safe }}">
+                    </div>
+                {% endif %}
+            </div>
+            <div class="ui text container" style="padding: 100px 0 100px 0;">
+                <h1 class="ui huge inverted header">
+                    Whistleblower Database
+                    <div class="sub header">Curated by Government Accountability Project</div>
+                </h1>
+                <p>
+                    Government Accountability Project is the international leader in whistleblower protection. <br/>
+                    This database is a curated, searchable list of scholarly materials related to whistleblowing. <br/>
+                </p>
+                <div class="ui action input fluid large">
+                  <input type="text" placeholder="Search...">
+                  <select class="ui selection dropdown">
+                    <option selected="" value="subject">Subject</option>
+                    <option value="author">Author</option>
+                    <option value="title">Title</option>
+                  </select>
+                  <div class="ui button large">Search</div>
+                </div>
+            </div>
+        </div>
+        <div class="ui container" style="padding: 100px 0 100px 0;">
+          <div class="ui grid">
+            <div class="four wide column" id="myDiv">
+              <div class="ui vertical menu fluid">
+                <div class="item">
+                  <div class="ui basic segment fluid center aligned" style="padding: 0 0 0 0;">
+                    <p style="font-size: 1.5em;">Filter Resources</p>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="ui header small">Resource Type</div>
+                  <div class="ui form">
+                    <div class="grouped fields">
+                      <div class="field">
+                        <div class="ui checked checkbox">
+                        <input type="checkbox" checked="">
+                        <label>Book</label>
+                        </div>
+                      </div>
+                      <div class="field">
+                        <div class="ui checked checkbox">
+                          <input type="checkbox" checked="">
+                          <label>Article</label>
+                        </div>
+                      </div>
+                      <div class="field">
+                        <div class="ui checked checkbox">
+                          <input type="checkbox" checked="">
+                          <label>Research</label>
+                        </div>
+                      </div>
+                      <div class="field">
+                        <div class="ui checked checkbox">
+                          <input type="checkbox" checked="">
+                          <label>Law</label>
+                        </div>
+                      </div>
+                      <div class="field">
+                        <div class="ui checked checkbox">
+                          <input type="checkbox" checked="">
+                          <label>Court Case</label>
+                        </div>
+                      </div>
+                      <div class="field">
+                        <div class="ui checked checkbox">
+                          <input type="checkbox" checked="">
+                          <label>Other</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="ui header small">Location</div>
+                  {% block loc %}
+                    <select name="country" class="ui dropdown fluid">
+                    {{ loc.country_dropdown() }}
+                    </select>
+                  {% endblock %}
+                </div>
+                <div class="item">
+                  <div class="ui header small">Date Posted</div>
+                    <div class="ui form">
+                        <div class="field">
+                          <label>Start date</label>
+                          <div class="ui calendar" id="rangestart">
+                            <div class="ui input left icon">
+                              <i class="calendar icon"></i>
+                              <input type="text" placeholder="Start">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="field">
+                          <label>End date</label>
+                          <div class="ui calendar" id="rangeend">
+                            <div class="ui input left icon">
+                              <i class="calendar icon"></i>
+                              <input type="text" placeholder="End">
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <br/>
+                </div>
+                <div class="item">
+                  <div class="ui header small">Tags</div>
+                  <select class="ui fluid search dropdown" multiple="">
+                    <option value="">Topics</option>
+                    <option value="AL">Scientific Integrity</option>
+                    <option value="AK">Public Health</option>
+                    <option value="AZ">Immigration</option>
+                    <option value="AR">National Security</option>
+                    <option value="CA">Government Accountability</option>
+                    <option value="CO">Corporate Accountability</option>
+                    <option value="CT">International Rights</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="twelve wide column" id="myDiv2">
+              <div class="ui fluid container">
+                <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Keywords</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for c in search_results %}
+                        <tr>
+                            <td>{{ c.title }}</td>
+                            <td>{{ c.author }}</td>
+                            <td>{{ c.keywords }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+          $( document ).ready(function() {
+              $('#rangestart').calendar({
+              type: 'date',
+              endCalendar: $('#rangeend')
+              });
+              $('#rangeend').calendar({
+              type: 'date',
+              startCalendar: $('#rangestart')
+              });
+          });
+          function resizeFilter() {
+            if($(window).width() < 800){
+              $("#myDiv").hide();
+              if ($("myDiv2").hasClass('twelve wide')) {
+                $("#myDiv2").removeClass('twelve wide');
+              }
+              $("#myDiv2").addClass('sixteen wide');
+            }
+            else {
+              $("#myDiv").show();
+              if ($("myDiv2").hasClass('sixteen wide')) {
+                $("#myDiv2").removeClass('sixteen wide');
+              }
+              $("#myDiv2").addClass('twelve wide');
+            }
+          };
+        </script>
+    </body>
+</html>
