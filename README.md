@@ -13,7 +13,7 @@
 
 ```
 $ git clone https://github.com/hack4impact/gap-whistleblower-db.git
-$ cd immigrant-defense-project
+$ cd gap-whistleblower-db
 ```
 
 ##### Initialize a virtualenv
@@ -58,7 +58,9 @@ Other key-value pairs:
 ##### Install the dependencies
 
 ```
-$ pip install -r requirements.txt
+brew install pipenv
+pipenv --python 3.7
+pipenv install
 ```
 
 ##### Other dependencies for running locally
