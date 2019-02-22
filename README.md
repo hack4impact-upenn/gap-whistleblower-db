@@ -15,15 +15,6 @@
 $ git clone https://github.com/hack4impact/gap-whistleblower-db.git
 $ cd gap-whistleblower-db
 ```
-
-##### Initialize a virtualenv
-
-```
-$ pip install virtualenv
-$ virtualenv -p python3 env
-$ source env/bin/activate
-```
-
 ##### [Mac-only] Make sure XCode tools are installed
 
 ```
