@@ -8,7 +8,7 @@ from redis import Redis
 from rq import Connection, Queue, Worker
 
 from app import create_app, db
-from app.models import Role, User
+from app.models import Role, User, Document
 from config import Config
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
@@ -51,11 +51,13 @@ def recreate_db():
     type=int,
     help='Number of each model type to create',
     dest='number_users')
+
 def add_fake_data(number_users):
     """
     Adds fake data to the database.
     """
     User.generate_fake(count=number_users)
+    Document.generate_fake(count = number_users)
 
 
 @manager.command
