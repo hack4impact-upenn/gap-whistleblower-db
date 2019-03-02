@@ -6,7 +6,7 @@ import flask_whooshalchemyplus
 
 class Document(db.Model):
     __tablename__ = 'document'
-    __searchable__ = ['title', 'author', 'description', 'publication']
+    __searchable__ = ['title', 'author', 'description', 'publication', 'doc_type']
 
     id = db.Column(db.Integer, primary_key=True)
     doc_type = db.Column(db.String(200))

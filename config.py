@@ -28,6 +28,7 @@ class Config:
         SECRET_KEY = 'SECRET_KEY_ENV_VAR_NOT_SET'
         print('SECRET KEY ENV VAR NOT SET! SHOULD NOT SEE IN PRODUCTION')
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     # Email
     MAIL_SERVER = os.environ.get('MAIL_SERVER') or 'smtp.sendgrid.net'
