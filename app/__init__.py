@@ -8,6 +8,7 @@ from flask_mail import Mail
 from flask_rq import RQ
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CsrfProtect
+import flask_whooshalchemyplus
 
 from app.assets import app_css, app_js, vendor_css, vendor_js
 from config import config
@@ -24,7 +25,6 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'account.login'
 
-
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
@@ -40,6 +40,7 @@ def create_app(config_name):
     csrf.init_app(app)
     compress.init_app(app)
     RQ(app)
+    flask_whooshalchemyplus.init_app(app)
 
     # Register Jinja template functions
     from .utils import register_template_utils

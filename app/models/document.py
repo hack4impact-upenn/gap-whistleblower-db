@@ -61,3 +61,6 @@ class Document(db.Model):
                 f'Country {self.country}\n'
                 f'State: {self.state}\n'
                 f'Link: {self.link}\n>')
+
+    def __str__(self):
+        return self.__repr__()
