@@ -2,11 +2,13 @@ from .. import db, login_manager
 from . import User
 import random
 from faker import Faker
-
+import flask_whooshalchemyplus
 
 class Document(db.Model):
     __tablename__ = 'document'
-    id = db.Column(db.Integer, primary_key = True)
+    __searchable__ = ['title', 'author', 'description', 'publication']
+
+    id = db.Column(db.Integer, primary_key=True)
     doc_type = db.Column(db.String(200))
     title = db.Column(db.String(10000))
     author = db.Column(db.String(1000))
@@ -44,22 +46,18 @@ class Document(db.Model):
             db.session.add(document)
             db.session.commit()
 
-
-        def __repr__(self):
-            s = '<Document \n'
-            s += 'Type: {}\n'.format(self.doc_type)
-            s += 'Title: {}\n'.format(self.title)
-            s += 'Author: {}, {}\n'.format(self.author)
-            s += 'Description: {}\n'.format(self.description)
-            s += 'Publication'.format(self.publication)
-            s += 'Publication Date: {}\n'.format(self.publication_date)
-            s += 'Posted Date: {}\n'.format(self.posted_date)
-            s += 'Last Edited Date: {}\n'.format(self.last_edited_date)
-            s += 'Posted By: {}\n'.format(self.posted_by)
-            s += 'Last Edited By: {}\n'.format(self.last_edited_by)
-            s += 'Country {}\n'.format(self.country)
-            s += 'State: {}\n'.format(self.state)
-            s += 'Link: {}\n'.format(self.link) + '>'
-            return s
-
-
+    def __repr__(self):
+        return ('<Document \n'
+                f'Type: {self.doc_type}\n'
+                f'Title: {self.title}\n'
+                f'Author: {self.author}\n'
+                f'Description: {self.description}\n'
+                f'Publication: {self.publication}\n'
+                f'Publication Date: {self.publication_date}\n'
+                f'Posted Date: {self.posted_date}\n'
+                f'Last Edited Date: {self.last_edited_date}\n'
+                f'Posted By: {self.posted_by}\n'
+                f'Last Edited By: {self.last_edited_by}\n'
+                f'Country {self.country}\n'
+                f'State: {self.state}\n'
+                f'Link: {self.link}\n>')
