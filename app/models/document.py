@@ -2,11 +2,14 @@ from .. import db, login_manager
 from . import User
 import random
 from faker import Faker
-import flask_whooshalchemyplus
+# import flask_whooshalchemyplus as whooshalchemy
+from flask import current_app
+from flask_whooshee import Whooshee, AbstractWhoosheer
 
+@Whooshee.register_model('title', 'content', 'description', 'publication')
 class Document(db.Model):
     __tablename__ = 'document'
-    __searchable__ = ['title', 'author', 'description', 'publication', 'doc_type']
+    # __searchable__ = ['title', 'author', 'description', 'publication']
 
     id = db.Column(db.Integer, primary_key=True)
     doc_type = db.Column(db.String(200))
@@ -27,7 +30,7 @@ class Document(db.Model):
     def generate_fake(count=10, **kwargs):
         fake = Faker()
         for i in range(count):
-            doc_type = random.choice(["book", "article", "research paper", "law", 
+            doc_type = random.choice(["book", "article", "research paper", "law",
             "court case", "other"])
             document = Document(
                 doc_type = doc_type,

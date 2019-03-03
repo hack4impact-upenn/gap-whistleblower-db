@@ -42,7 +42,9 @@ SQLAlchemy = "==1.1.5"
 Werkzeug = ">=0.11.15"
 WTForms = "==2.1"
 pip = "==18.0"
-flask-whooshalchemyplus = "*"
+flask-whooshalchemyplus = "==0.7.4"
+whoosh = "==2.7.4"
+flask-whooshee = "==0.6.0"
 
 [requires]
 python_version = "3.7"

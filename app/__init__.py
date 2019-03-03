@@ -8,7 +8,8 @@ from flask_mail import Mail
 from flask_rq import RQ
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CsrfProtect
-import flask_whooshalchemyplus
+from flask_whooshee import Whooshee
+# import flask_whooshalchemyplus as whooshalchemy
 
 from app.assets import app_css, app_js, vendor_css, vendor_js
 from config import config
@@ -19,6 +20,7 @@ mail = Mail()
 db = SQLAlchemy()
 csrf = CsrfProtect()
 compress = Compress()
+whooshee = Whooshee()
 
 # Set up Flask-Login
 login_manager = LoginManager()
@@ -27,20 +29,22 @@ login_manager.login_view = 'account.login'
 
 def create_app(config_name):
     app = Flask(__name__)
+
     app.config.from_object(config[config_name])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    # not using sqlalchemy event system, hence disabling it
 
     config[config_name].init_app(app)
 
     # Set up extensions
     mail.init_app(app)
+    whooshee.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
     compress.init_app(app)
     RQ(app)
-    flask_whooshalchemyplus.init_app(app)
+    # from app.models import Document
+    # whooshalchemy.whoosh_index(app, Document)
 
     # Register Jinja template functions
     from .utils import register_template_utils
