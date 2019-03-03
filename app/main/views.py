@@ -2,8 +2,8 @@ from flask import Blueprint, request, render_template
 from random import randint
 from time import sleep
 from app.models import EditableHTML, Document
-import flask_whooshalchemyplus as whooshalchemy
-from flask_whooshee import Whooshee
+# import flask_whooshalchemyplus as whooshalchemy
+# from flask_whooshee import Whooshee
 
 main = Blueprint('main', __name__)
 
@@ -17,9 +17,8 @@ def index():
     # This just returns an empty list...
     # results = Document.query.whoosh_search('cool', fields=('title',))
     # print(results)
-    # print('hello')
-    results = Document.query.whooshee_search('ipsum').all()
-    print(results)
+    # results = Document.query.whooshee_search('ipsum').all()
+    # print(results)
 
     return render_template('main/index.html', search_results=[])
 

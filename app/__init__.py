@@ -37,7 +37,7 @@ def create_app(config_name):
 
     # Set up extensions
     mail.init_app(app)
-    whooshee.init_app(app)
+    # whooshee.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
@@ -76,5 +76,12 @@ def create_app(config_name):
 
     from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
+
+    from .suggestion import suggestion as suggestion_blueprint
+    app.register_blueprint(suggestion_blueprint, url_prefix='/suggestion')
+
+    from .tag import tag as tag_blueprint
+    app.register_blueprint(tag_blueprint, url_prefix='/tag')
+
 
     return app

@@ -8,7 +8,7 @@ from redis import Redis
 from rq import Connection, Queue, Worker
 
 from app import create_app, db
-from app.models import Role, User, Document
+from app.models import Role, User, Document, Tag, Suggestion
 from config import Config
 # import flask_whooshalchemyplus as whooshalchemy
 
@@ -58,7 +58,8 @@ def add_fake_data(number_users):
     """
     User.generate_fake(count=number_users)
     Document.generate_fake(count = number_users)
-
+    Suggestion.generate_fake(count = number_users)
+    Tag.generate_fake(count = number_users)
 
 @manager.command
 def setup_dev():

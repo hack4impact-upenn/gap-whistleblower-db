@@ -6,7 +6,7 @@ from faker import Faker
 from flask import current_app
 from flask_whooshee import Whooshee, AbstractWhoosheer
 
-@Whooshee.register_model('title', 'content', 'description', 'publication')
+# @Whooshee.register_model('title', 'content', 'description', 'publication')
 class Document(db.Model):
     __tablename__ = 'document'
     # __searchable__ = ['title', 'author', 'description', 'publication']
