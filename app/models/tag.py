@@ -3,8 +3,7 @@ from .. import db
 class Tag(db.Model):
     __tablename__ = 'tag'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String())
-    num_docs = db.Column(db.Integer())
+    tag = db.Column(db.String())
 
     @staticmethod
     def generate_fake(count=10, **kwargs):
@@ -15,8 +14,7 @@ class Tag(db.Model):
         tags = []
         for i in range(count):
             item = Tag(
-                name=fake.word(),
-                num_docs=fake.random_int(min=0, max=1000)
+                tag=fake.word(),
             )
             tags.append(item)
             db.session.add(item)
@@ -27,4 +25,4 @@ class Tag(db.Model):
         return tags
 
     def __repr__(self):
-        return '<Tag: Name = {}>'.format(self.name)
+        return '<Tag: Name = {}>'.format(self.tag)

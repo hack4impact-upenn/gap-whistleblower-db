@@ -6,5 +6,5 @@ from app import db
 from app.models import Tag
 
 class TagForm(Form):
-    name = StringField(validators=[InputRequired()])
+    tag = StringField(validators=[InputRequired()])
     submit = SubmitField()
