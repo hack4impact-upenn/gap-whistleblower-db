@@ -1,0 +1,94 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+            <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+                <i class="caret left icon"></i>
+                Back to dashboard
+            </a>
+            <h2 class="ui header">
+                Review Suggestions
+                <div class="sub header">Review suggested entries from users and contributors</div>
+            </h2>
+            <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
+               <thead>
+                   <tr>
+                       <th class="three wide">Title</th>
+                       <th class="one wide">Link</th>
+                       <th>Description</th>
+                       <th class="one wide">Delete</th>
+                   </tr>
+               </thead>
+               <tbody>
+               {% for s in suggestions %}
+                   <tr>
+                       <td>{{ s.title }}</td>
+                       <td>
+                         <div class="ui buttons">
+                           <!--we give the button and icon the same id to avoid weird things with hitboxes-->
+                           <button class="ui small compact icon button"  onclick="linkMe('{{ s.link }}')"
+                           id="{{ s.id }}">
+                             <i class="file icon" id="{{ s.id }}"></i>
+                           </button>
+                         </div>
+                       </td>
+                       <td>{{ s.description }}</td>
+                       <td>
+                         <div class="ui buttons">
+                           <!--we give the button and icon the same id to avoid weird things with hitboxes-->
+                           <button class="ui small compact icon button delete-suggestion" id="{{ s.id }}">
+                             <i class="trash alternate icon" id="{{ s.id }}"></i>
+                           </button>
+                         </div>
+                       </td>
+                       <!--confirmation modal for deleting a checklist item-->
+                       <div id="modal-{{ s.id }}" class="ui tiny modal delete-suggestion-modal">
+                          <div class="header">Delete Suggestion</div>
+                          <div class="content">Are you sure you want to delete {{ s.title }}?</div>
+                          <div class="actions">
+                            <div class="ui cancel button">Cancel</div>
+                            <a href="{{ url_for('admin.delete_suggestion', id=s.id) }}"
+                              class="negative ui button">Yes, delete this suggestion</a>
+                          </div>
+                       </div>
+                   </tr>
+               {% endfor %}
+               </tbody>
+           </table>
+
+        </div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        $('.delete-suggestion').on('click', function(e) {
+          console.log(e.target)
+            id = e.target.id; // gets the id and shows the appropriate modal
+            $('#modal-' + id).modal('show');
+        });
+      });
+      function linkMe(link) {
+        console.log(link)
+          if (isValidDomain(link)) {
+              var re  = "^(https?://)"
+              var regexHTTP = new RegExp(re,"i");
+              if (regexHTTP.test(link)) {
+                window.open(link)
+              }
+              else {
+                window.open('https://'.concat(link))
+              }
+          }
+          else {
+            alert("This suggestion has a malformed URL.")
+          }
+      }
+      function isValidDomain(v) {
+        if (!v) return false;
+        var re  = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
+        var regexUrl = new RegExp(re,"i");
+        return regexUrl.test(v);
+      }
+    </script>
+{% endblock %}

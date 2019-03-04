@@ -9,6 +9,7 @@ from flask import (
 )
 from flask_login import current_user, login_required
 from flask_rq import get_queue
+from sqlalchemy.exc import IntegrityError
 
 from app import db
 from app.admin.forms import (
@@ -16,10 +17,11 @@ from app.admin.forms import (
     ChangeUserEmailForm,
     InviteUserForm,
     NewUserForm,
+    TagForm
 )
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User
+from app.models import EditableHTML, Role, User, Tag, Suggestion
 
 admin = Blueprint('admin', __name__)
 
@@ -196,3 +198,72 @@ def update_editor_contents():
     db.session.commit()
 
     return 'OK', 200
+
+@admin.route('/tag', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def manage_tags():
+    """Tag Management page."""
+    form = TagForm()
+    tags = Tag.query.all()
+
+    if form.validate_on_submit():
+        tag = Tag(tag=form.tag.data)
+        db.session.add(tag)
+        db.session.commit()
+        flash(
+            'Tag \"{}\" successfully created'.format(
+                form.tag.data), 'form-success')
+        tags = Tag.query.all()
+        return render_template(
+            'admin/manage_tags.html', form=form, tags=tags)
+
+    return render_template('admin/manage_tags.html', form=form, tags=tags)
+
+@admin.route('tag/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def delete_tag(id):
+    """Tag Deletion endpoint."""
+    tag = Tag.query.get(id)
+    if tag is None:
+        abort(404)
+    db.session.delete(tag)
+    try:
+        db.session.commit()
+        flash(
+            'Tag \"{}\" successfully deleted'.format(
+                tag.tag), 'form-success')
+    except IntegrityError:
+        db.session.rollback()
+        flash('Error occurred. Please try again.', 'form-error')
+        return redirect(url_for('admin.manage_tags'))
+    return redirect(url_for('admin.manage_tags'))
+
+@admin.route('/suggestion', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def review_suggestions():
+    """Suggestion Review page."""
+    suggestions = Suggestion.query.all()
+    return render_template('admin/review_suggestions.html', suggestions=suggestions)
+
+@admin.route('/suggestion/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def delete_suggestion(id):
+    """Suggestion Deletion endpoint."""
+    suggestion = Suggestion.query.get(id)
+    if suggestion is None:
+        abort(404)
+    db.session.delete(suggestion)
+    try:
+        db.session.commit()
+        flash(
+            'Suggestion {} successfully deleted'.format(
+                suggestion.title), 'form-success')
+    except IntegrityError:
+        db.session.rollback()
+        flash('Error occurred. Please try again.', 'form-error')
+        return redirect(url_for('admin.review_suggestions'))
+    return redirect(url_for('admin.review_suggestions'))

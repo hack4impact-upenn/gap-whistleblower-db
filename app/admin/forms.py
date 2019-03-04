@@ -15,7 +15,7 @@ from wtforms.validators import (
 )
 
 from app import db
-from app.models import Role, User
+from app.models import Role, User, Tag
 
 
 class ChangeUserEmailForm(Form):
@@ -72,3 +72,7 @@ class NewUserForm(InviteUserForm):
     password2 = PasswordField('Confirm password', validators=[InputRequired()])
 
     submit = SubmitField('Create')
+
+class TagForm(Form):
+    tag = StringField(validators=[InputRequired()])
+    submit = SubmitField()

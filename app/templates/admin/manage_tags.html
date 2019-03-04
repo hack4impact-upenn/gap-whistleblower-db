@@ -2,9 +2,16 @@
 {% import 'macros/form_macros.html' as f %}
 
 {% block content %}
-    <div class="ui grid container">
-        <div class="eight wide computer sixteen wide mobile centered column">
-            <h2 class="ui dividing header">Manage Tags</h2>
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+            <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+                <i class="caret left icon"></i>
+                Back to dashboard
+            </a>
+            <h2 class="ui header">
+                Manage Tags
+                <div class="sub header">Manage tags that can be applied to resources</div>
+            </h2>
             <h3 class="ui dividing header">Existing Tags</h3>
             {% for t in tags %}
             <a class="ui label" style="margin-bottom:3px">
@@ -23,7 +30,7 @@
               <div class="actions">
                 <div class="ui cancel red button">Cancel</div>
                 <div class="ui approve green button">
-                  <a href="{{ url_for('tag.delete_tag', id=t.id) }}"
+                  <a href="{{ url_for('admin.delete_tag', id=t.id) }}"
                   style="color: white; text-decoration: none;">OK</a>
                 </div>
               </div>
