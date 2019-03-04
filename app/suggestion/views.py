@@ -20,7 +20,7 @@ def index():
     if form.validate_on_submit():
         suggestion = Suggestion(
             title=form.title.data, link=form.link.data,
-            description=form.description.data)
+            doc_type = form.type.data, description=form.description.data)
         db.session.add(suggestion)
         db.session.commit()
         flash(

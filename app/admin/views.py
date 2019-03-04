@@ -245,7 +245,7 @@ def delete_tag(id):
 @admin_required
 def review_suggestions():
     """Suggestion Review page."""
-    suggestions = Suggestion.query.all()
+    suggestions = Suggestion.query.order_by(Suggestion.id.desc()).all()
     return render_template('admin/review_suggestions.html', suggestions=suggestions)
 
 @admin.route('/suggestion/<int:id>', methods=['GET'])

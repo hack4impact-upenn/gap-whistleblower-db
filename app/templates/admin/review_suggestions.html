@@ -45,8 +45,8 @@
                </thead>
                <tbody>
                {% for s in suggestions %}
-                   <tr onclick="window.location.href = '{{ url_for('admin.suggestion', id=s.id) }}';">
-                       <td>{{ s.title }}</td>
+                   <tr>
+                       <td onclick="window.location.href = '{{ url_for('admin.suggestion', id=s.id) }}';">{{ s.title }}</td>
                        <td>
                          <div class="ui buttons">
                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
@@ -66,15 +66,6 @@
                          </div>
                        </td>
                        <!--confirmation modal for deleting a checklist item-->
-                       <div id="modal-{{ s.id }}" class="ui tiny modal delete-suggestion-modal">
-                          <div class="header">Delete Suggestion</div>
-                          <div class="content">Are you sure you want to delete {{ s.title }}?</div>
-                          <div class="actions">
-                            <div class="ui cancel button">Cancel</div>
-                            <a href="{{ url_for('admin.delete_suggestion', id=s.id) }}"
-                              class="negative ui button">Yes, delete this suggestion</a>
-                          </div>
-                       </div>
                        <td>
                          <div class="ui buttons">
                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
@@ -84,6 +75,15 @@
                            </button>
                          </div>
                        </td>
+                       <div id="modal-{{ s.id }}" class="ui tiny modal delete-suggestion-modal">
+                          <div class="header">Delete Suggestion</div>
+                          <div class="content">Are you sure you want to delete {{ s.title }}?</div>
+                          <div class="actions">
+                            <div class="ui cancel button">Cancel</div>
+                            <a href="{{ url_for('admin.delete_suggestion', id=s.id) }}"
+                              class="negative ui button">Yes, delete this suggestion</a>
+                          </div>
+                       </div>
                    </tr>
                {% endfor %}
                </tbody>
@@ -95,7 +95,6 @@
     <script>
       $(document).ready(function () {
         $('.delete-suggestion').on('click', function(e) {
-          console.log(e.target)
             id = e.target.id; // gets the id and shows the appropriate modal
             $('#modal-' + id).modal('show');
         });
