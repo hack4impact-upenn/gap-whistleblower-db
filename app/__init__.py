@@ -24,12 +24,11 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'account.login'
 
-
 def create_app(config_name):
     app = Flask(__name__)
+
     app.config.from_object(config[config_name])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    # not using sqlalchemy event system, hence disabling it
 
     config[config_name].init_app(app)
 
@@ -71,5 +70,12 @@ def create_app(config_name):
 
     from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
+
+    from .suggestion import suggestion as suggestion_blueprint
+    app.register_blueprint(suggestion_blueprint, url_prefix='/suggestion')
+
+    from .tag import tag as tag_blueprint
+    app.register_blueprint(tag_blueprint, url_prefix='/tag')
+
 
     return app

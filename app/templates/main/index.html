@@ -39,11 +39,6 @@
                 </p>
                 <div class="ui action input fluid large">
                   <input type="text" placeholder="Search...">
-                  <select class="ui selection dropdown">
-                    <option selected="" value="subject">Subject</option>
-                    <option value="author">Author</option>
-                    <option value="title">Title</option>
-                  </select>
                   <div class="ui button large">Search</div>
                 </div>
             </div>
@@ -162,7 +157,7 @@
                         <tr>
                             <td>{{ c.title }}</td>
                             <td>{{ c.author }}</td>
-                            <td>{{ c.keywords }}</td>
+                            <td>{{ c.description }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

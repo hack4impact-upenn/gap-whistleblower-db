@@ -8,13 +8,12 @@ from redis import Redis
 from rq import Connection, Queue, Worker
 
 from app import create_app, db
-from app.models import Role, User, Document
+from app.models import Role, User, Document, Tag, Suggestion
 from config import Config
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 migrate = Migrate(app, db)
-
 
 def make_shell_context():
     return dict(app=app, db=db, User=User, Role=Role)
@@ -58,7 +57,8 @@ def add_fake_data(number_users):
     """
     User.generate_fake(count=number_users)
     Document.generate_fake(count = number_users)
-
+    Suggestion.generate_fake(count = number_users)
+    Tag.generate_fake(count = number_users)
 
 @manager.command
 def setup_dev():
