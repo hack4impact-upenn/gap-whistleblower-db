@@ -10,7 +10,6 @@ from rq import Connection, Queue, Worker
 from app import create_app, db
 from app.models import Role, User, Document, Tag, Suggestion
 from config import Config
-# import flask_whooshalchemyplus as whooshalchemy
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)

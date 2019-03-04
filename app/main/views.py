@@ -9,17 +9,6 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    query = request.args.get('q', '')
-    query = ""
-    #results = Document.query.whoosh_search(query).all()
-    #print(results, "ok")
-    Document.generate_fake(10)
-    # This just returns an empty list...
-    # results = Document.query.whoosh_search('cool', fields=('title',))
-    # print(results)
-    # results = Document.query.whooshee_search('ipsum').all()
-    # print(results)
-
     return render_template('main/index.html', search_results=[])
 
 @main.route('/about')

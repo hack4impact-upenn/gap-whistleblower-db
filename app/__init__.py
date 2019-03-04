@@ -8,8 +8,6 @@ from flask_mail import Mail
 from flask_rq import RQ
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CsrfProtect
-from flask_whooshee import Whooshee
-# import flask_whooshalchemyplus as whooshalchemy
 
 from app.assets import app_css, app_js, vendor_css, vendor_js
 from config import config
@@ -20,7 +18,6 @@ mail = Mail()
 db = SQLAlchemy()
 csrf = CsrfProtect()
 compress = Compress()
-whooshee = Whooshee()
 
 # Set up Flask-Login
 login_manager = LoginManager()
@@ -37,14 +34,11 @@ def create_app(config_name):
 
     # Set up extensions
     mail.init_app(app)
-    # whooshee.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
     compress.init_app(app)
     RQ(app)
-    # from app.models import Document
-    # whooshalchemy.whoosh_index(app, Document)
 
     # Register Jinja template functions
     from .utils import register_template_utils
