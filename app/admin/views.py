@@ -248,6 +248,14 @@ def review_suggestions():
     suggestions = Suggestion.query.all()
     return render_template('admin/review_suggestions.html', suggestions=suggestions)
 
+@admin.route('/suggestion/<int:id>', methods=['GET'])
+@login_required
+@admin_required
+def suggestion(id):
+    """Suggestion Review page."""
+    suggestion = Suggestion.query.get(id)
+    return render_template('admin/suggestion.html', suggestion=suggestion)
+
 @admin.route('/suggestion/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
