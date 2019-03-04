@@ -74,8 +74,4 @@ def create_app(config_name):
     from .suggestion import suggestion as suggestion_blueprint
     app.register_blueprint(suggestion_blueprint, url_prefix='/suggestion')
 
-    from .tag import tag as tag_blueprint
-    app.register_blueprint(tag_blueprint, url_prefix='/tag')
-
-
     return app

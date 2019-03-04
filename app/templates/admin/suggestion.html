@@ -1,0 +1,70 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+            <a class="ui basic compact button" href="{{ url_for('admin.review_suggestions') }}">
+                <i class="caret left icon"></i>
+                Back to suggestions
+            </a>
+            <h2 class="ui header">
+                Review Suggestion
+                <div class="sub header">Review this suggested entry</div>
+            </h2>
+            <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
+               <tbody>
+                   <tr>
+                     <td>Title</td>
+                     <td>{{ suggestion.title }}</td>
+                   </tr>
+                   {% if suggestion.doc_type %}
+                   <tr>
+                     <td>Type</td>
+                     <td>{{ suggestion.doc_type }}</td>
+                   </tr>
+                   {% endif %}
+                   {% if suggestion.link %}
+                   <tr>
+                     <td>Link</td>
+                     <td><a onclick="linkMe('{{ suggestion.link }}')">{{ suggestion.link }}</a></td>
+                   </tr>
+                   {% endif %}
+                   {% if suggestion.description %}
+                   <tr>
+                     <td>Description</td>
+                     <td>{{ suggestion.description }}</td>
+                   </tr>
+                   {% endif %}
+               </tbody>
+           </table>
+           <a class="ui black button" onclick="startDraft('{{ suggestion.id }}')">Draft an entry<i class="edit right icon"></i></a>
+        </div>
+    </div>
+<script>
+  function linkMe(link) {
+    console.log(link)
+      if (isValidDomain(link)) {
+          var re  = "^(https?://)"
+          var regexHTTP = new RegExp(re,"i");
+          if (regexHTTP.test(link)) {
+            window.open(link)
+          }
+          else {
+            window.open('https://'.concat(link))
+          }
+      }
+      else {
+        alert("This suggestion has a malformed URL.")
+      }
+  }
+  function isValidDomain(v) {
+    if (!v) return false;
+    var re  = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
+    var regexUrl = new RegExp(re,"i");
+    return regexUrl.test(v);
+  }
+  function startDraft(id) {
+    window.open('../draft/'.concat(id))
+  }
+</script>
+{% endblock %}

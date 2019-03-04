@@ -2,15 +2,9 @@ from .. import db, login_manager
 from . import User
 import random
 from faker import Faker
-# import flask_whooshalchemyplus as whooshalchemy
-from flask import current_app
-from flask_whooshee import Whooshee, AbstractWhoosheer
 
-# @Whooshee.register_model('title', 'content', 'description', 'publication')
 class Document(db.Model):
     __tablename__ = 'document'
-    # __searchable__ = ['title', 'author', 'description', 'publication']
-
     id = db.Column(db.Integer, primary_key=True)
     doc_type = db.Column(db.String(200))
     title = db.Column(db.String(10000))
@@ -24,14 +18,15 @@ class Document(db.Model):
     last_edited_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     country = db.Column(db.String(1000))
     state = db.Column(db.String(1000))
+    citation = db.Column(db.String(1000))
     link = db.Column(db.String())
 
     @staticmethod
     def generate_fake(count=10, **kwargs):
         fake = Faker()
         for i in range(count):
-            doc_type = random.choice(["book", "article", "research paper", "law",
-            "court case", "other"])
+            doc_type = random.choice(["book", "article", "research paper", "law", "other"])
+            citation = fake.numerify(text="###") + " U.S. " + fake.numerify(text="###")
             document = Document(
                 doc_type = doc_type,
                 title = fake.text(max_nb_chars=200),
@@ -45,6 +40,7 @@ class Document(db.Model):
                 last_edited_by = fake.name(),
                 country = fake.country(),
                 state = fake.state(),
+                citation = citation,
                 link = fake.domain_name())
             db.session.add(document)
             db.session.commit()
@@ -63,6 +59,7 @@ class Document(db.Model):
                 f'Last Edited By: {self.last_edited_by}\n'
                 f'Country {self.country}\n'
                 f'State: {self.state}\n'
+                f'Citation: {self.citation}\n'
                 f'Link: {self.link}\n>')
 
     def __str__(self):
