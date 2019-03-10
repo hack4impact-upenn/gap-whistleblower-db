@@ -146,7 +146,7 @@
             <span class="badge badge-light"><a href="{{ d }}">{{ d }}</a> <span class="delete badge badge-danger" data-url="{{ d }}">Delete Document</span></span><br/>
             {% endfor %}
           {% endif %}
-        </div>   
+        </div>
     {% elif field.type == 'SubmitField' %}
         {{ field(class='ui button') }}
     {% elif field.type == 'FormField' %}

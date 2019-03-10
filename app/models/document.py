@@ -33,6 +33,7 @@ class Document(db.Model):
     ISBN = db.Column(db.String(30))
 
     #Specific to Book/Article
+    publication = db.Column(db.String(1000))
     author_first_name = db.Column(db.String(100))
     author_last_name = db.Column(db.String(100))
 
@@ -48,7 +49,7 @@ class Document(db.Model):
 
     #Specific to other
     other_type = db.Column(db.String(1000)) #Doc type (if other selected)
-    
+
     @staticmethod
     def generate_fake(count=10, **kwargs):
         fake = Faker()
@@ -84,6 +85,7 @@ class Document(db.Model):
                 day =  random.randint(1, 28),
                 month = fake.month_name(),
                 year = fake.year(),
+                publication = fake.sentence(),
                 posted_by = user_id,
                 last_edited_by = user_id,
                 title = fake.text(max_nb_chars=50),
@@ -113,25 +115,6 @@ class Document(db.Model):
             db.session.add(other)
         for i in range(count):
             user_id = random.randint(2,11)
-            city = fake.city()
-            court_case = Document(
-                doc_type = "court case",
-                day =  random.randint(1, 28),
-                month = fake.month_name(),
-                year = fake.year(),
-                posted_by = user_id,
-                last_edited_by = user_id,
-                title = fake.text(max_nb_chars=50),
-                description = fake.text(max_nb_chars=500),
-                link = fake.domain_name(),
-                name = city + " Court",
-                city = city,
-                state = fake.state(),
-                country = "United States",
-                isPublished=False)
-            db.session.add(court_case)
-        for i in range(count):
-            user_id = random.randint(2,11)
             body = random.choice(["105th Congress", "106th Congress", "107th Congress"])
             law = Document(
                 doc_type = "law",
@@ -142,6 +125,9 @@ class Document(db.Model):
                 last_edited_by = user_id,
                 title = fake.text(max_nb_chars=50),
                 description = fake.text(max_nb_chars=500),
+                city = fake.city(),
+                state = fake.state(),
+                country = "United States",
                 link = fake.domain_name(),
                 govt_body = body,
                 section = random.randint(1, 100),
