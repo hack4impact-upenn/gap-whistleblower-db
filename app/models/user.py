@@ -6,10 +6,11 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from .. import db, login_manager
 
-
 class Permission:
     GENERAL = 0x01
-    ADMINISTER = 0xff
+    SCHOLAR = 0x02
+    CONTRIBUTOR = 0x03
+    ADMIN = 0x04
 
 
 class Role(db.Model):
@@ -25,8 +26,10 @@ class Role(db.Model):
     def insert_roles():
         roles = {
             'User': (Permission.GENERAL, 'main', True),
+            'Scholar':(Permission.SCHOLAR, 'scholar', False),
+            'Contributor':(Permission.CONTRIBUTOR, 'contributor', False),
             'Administrator': (
-                Permission.ADMINISTER,
+                Permission.ADMIN,
                 'admin',
                 False  # grants all permissions
             )
@@ -54,15 +57,21 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    organization = db.Column(db.String(128))
+    bio = db.Column(db.Text)
+
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.role is None:
             if self.email == current_app.config['ADMIN_EMAIL']:
-                self.role = Role.query.filter_by(
-                    permissions=Permission.ADMINISTER).first()
-            if self.role is None:
-                self.role = Role.query.filter_by(default=True).first()
+                self.role = Role.query.filter_by(index='admin').first()
+            elif self.email == current_app.config['SCHOLAR_EMAIL']:
+                self.role = Role.query.filter_by(index='scholar').first()
+            elif self.email == current_app.config['CONTRIBUTOR_EMAIL']:
+                self.role = Role.query.filter_by(index='contributor').first()
+            else:
+                self.role = Role.query.filter_by(index='main').first()
 
     def full_name(self):
         return '%s %s' % (self.first_name, self.last_name)
@@ -71,8 +80,17 @@ class User(UserMixin, db.Model):
         return self.role is not None and \
             (self.role.permissions & permissions) == permissions
 
+    def is_user(self):
+       return self.role_id == 1
+    
+    def is_scholar(self):
+        return self.role_id == 2
+    
+    def is_contributor(self):
+        return self.role_id == 3
+
     def is_admin(self):
-        return self.can(Permission.ADMINISTER)
+        return self.role_id == 4
 
     @property
     def password(self):
@@ -153,31 +171,38 @@ class User(UserMixin, db.Model):
     @staticmethod
     def generate_fake(count=100, **kwargs):
         """Generate a number of fake users for testing."""
-        from sqlalchemy.exc import IntegrityError
         from random import seed, choice
         from faker import Faker
 
         fake = Faker()
+        Role.insert_roles()
         roles = Role.query.all()
 
+
         seed()
-        for i in range(count):
-            u = User(
-                first_name=fake.first_name(),
-                last_name=fake.last_name(),
-                email=fake.email(),
-                password='password',
-                confirmed=True,
-                role=choice(roles),
-                **kwargs)
-            db.session.add(u)
-            try:
+        for role in roles:
+            for i in range(count):
+                u = User(
+                    first_name=fake.first_name(),
+                    last_name=fake.last_name(),
+                    email=fake.email(),
+                    password='password',
+                    confirmed=True,
+                    role=role,
+                    organization=fake.text(max_nb_chars=100),
+                    bio=fake.text(max_nb_chars=1000))
+                db.session.add(u)
                 db.session.commit()
-            except IntegrityError:
-                db.session.rollback()
 
     def __repr__(self):
-        return '<User \'%s\'>' % self.full_name()
+        s = '<User \n'
+            s += 'First Name: {}\n'.format(self.first_name)
+            s += 'Last Name: {}\n'.format(self.last_name)
+            s += 'Email: {}, {}\n'.format(self.email)
+            s += 'Role: {}\n'.format(self.role)
+            s += 'Organization'.format(self.organization)
+            s += 'Bio: {}\n'.format(self.bio)+ '>'
+        return s
 
 
 class AnonymousUser(AnonymousUserMixin):
