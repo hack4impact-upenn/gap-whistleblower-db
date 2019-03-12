@@ -82,21 +82,4 @@ class OtherForm(Form):
     other_file_urls = MultipleFileUploadField()
     submit_other = SubmitField()
 
-"""
-class CourtForm(Form):
-    case_name = StringField(validators=[InputRequired()]) #title
-    court_name = StringField() #name
-    case_day = IntegerField(validators=[validators.optional()]) #day
-    case_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
-    ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
-    , ('August', 'August'), ('September', 'September'), ('October', 'October'),
-    ('November', 'November'), ('December', 'December')]) #month
-    case_year = IntegerField(validators=[validators.optional()]) #year
-    court_city = StringField() #city
-    court_state = StringField() #state
-    court_country = StringField() #country
-    description = TextAreaField() #description
-    link = StringField() #link
-    file_urls = MultipleFileUploadField()
-    submit = SubmitField()
-"""
+

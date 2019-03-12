@@ -186,36 +186,3 @@ def sign_s3():
                                                      file_name)
         })
 
-"""
-@suggestion.route('/case', methods=['GET', 'POST'])
-@login_required
-def case():
-    form = CourtForm()
-    if form.validate_on_submit():
-        case = Document(
-            doc_type = "case",
-            title = form.case_name.data,
-            name = form.court_name.data,
-            posted_by = current_user.id,
-            last_edited_by = current_user.id,
-            day = form.case_day.data,
-            month = form.case_month.data,
-            year = form.case_year.data,
-            city = form.court_city.data,
-            state = form.court_state.data,
-            country = form.court_country.data,
-            description = form.description.data,
-            link = form.link.data)
-
-        file_urls = form.file_urls.data
-
-        db.session.add(case)
-        db.session.commit()
-        flash(
-            'Case \"{}\" successfully created'.format(
-                form.case_name.data), 'form-success')
-        return render_template(
-            'suggestion/court.html', form=form)
-
-    return render_template('suggestion/court.html', form=form)
-"""
