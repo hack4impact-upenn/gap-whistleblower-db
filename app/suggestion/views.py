@@ -1,24 +1,11 @@
 from flask import (Blueprint, abort, flash, redirect, render_template, request, jsonify,
                    url_for)
 
-from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
 
 from app import db, csrf
-from app.suggestion.forms import SuggestionForm, BookForm, ArticleForm, OtherForm, CourtForm, LawForm
-from app.decorators import admin_required
-from app.models import Suggestion, Document
-
-import json
-import boto3
-import boto.s3
-import sys
-import urllib
-import tempfile
-from boto.s3.key import Key
-import boto.s3.connection
-import ssl
-from werkzeug import secure_filename
+from app.suggestion.forms import SuggestionForm
+from app.models import Suggestion
 
 suggestion = Blueprint('suggestion', __name__)
 
@@ -211,7 +198,5 @@ def law_form():
             'suggestion/law.html', form=form)
 
     return render_template('suggestion/law.html', form=form)
-
-
 
 

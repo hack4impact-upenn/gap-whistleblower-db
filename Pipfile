@@ -45,6 +45,8 @@ pip = "==18.0"
 flask-whooshalchemyplus = "==0.7.4"
 whoosh = "==2.7.4"
 flask-whooshee = "==0.6.0"
+boto3 = "*"
+boto = "*"
 
 [requires]
 python_version = "3.7"
