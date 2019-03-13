@@ -1,0 +1,157 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+            <a class="ui basic compact button" href="{{ url_for('admin.review_suggestions') }}">
+                <i class="caret left icon"></i>
+                Back to resources
+            </a>
+            <h2 class="ui header">
+                Review Resource
+                <div class="sub header">Review this resource</div>
+            </h2>
+            <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
+               <tbody>
+                   <tr>
+                     <td width = "20%">Title</td>
+                     <td>{{ resource.title }}</td>
+                   </tr>
+                   <tr>
+                     <td>Type</td>
+                     <td>{{ resource.doc_type }}</td>
+                   </tr>
+                   {% if resource.description %}
+                   <tr>
+                  {% if resource.other_type %}
+                   <tr>
+                     <td>Type (if other)</td>
+                     <td>{{ resource.other_type }}</td>
+                   </tr>
+                   {% endif %}  
+                     <td>Description</td>
+                     <td>{{ resource.description }}</td>
+                   </tr>
+                   {% endif %}
+                   {% if resource.day %}
+                   <tr>
+                     <td>Publication Day</td>
+                     <td>{{ resource.day }}</td>
+                   </tr>
+                   {% endif %}
+                    {% if resource.month %}
+                   <tr>
+                     <td>Publication Month</td>
+                     <td>{{ resource.month }}</td>
+                   </tr>
+                   {% endif %}   
+                    {% if resource.year %}
+                   <tr>
+                     <td>Publication Year</td>
+                     <td>{{ resource.year }}</td>
+                   </tr>
+                   {% endif %}   
+                   <tr>
+                     <td>Posted Date</td>
+                     <td>{{ resource.posted_date }}</td>
+                   </tr> 
+                   <tr>
+                     <td>Last Edited Date</td>
+                     <td>{{ resource.last_edited_date }}</td>
+                   </tr> 
+                   {% if resource.link %}
+                   <tr>
+                     <td>Link</td>
+                     <td>{{ resource.link }}</td>
+                   </tr>
+                   {% endif %}  
+                   {% if resource.file %}
+                   <tr>
+                     <td>File</td>
+                     <td>{{ resource.file }}</td>
+                   </tr>
+                   {% endif %}  
+                   {% if resource.citation %}
+                   <tr>
+                     <td>File</td>
+                     <td>{{ resource.citation }}</td>
+                   </tr>
+                   {% endif %} 
+                   {% if resource.volume %}
+                   <tr>
+                     <td>Volume</td>
+                     <td>{{ resource.volume }}</td>
+                   </tr>
+                   {% endif %} 
+                   {% if resource.edition %}
+                   <tr>
+                     <td>Edition</td>
+                     <td>{{ resource.edition }}</td>
+                   </tr>
+                   {% endif %}  
+                   {% if resource.series %}
+                   <tr>
+                     <td>Series</td>
+                     <td>{{ resource.series }}</td>
+                   </tr>
+                   {% endif %} 
+                   {% if resource.ISBN %}
+                   <tr>
+                     <td>ISBN</td>
+                     <td>{{ resource.ISBN }}</td>
+                   </tr>
+                   {% endif %}  
+                   {% if resource.author_first_name %}
+                   <tr>
+                     <td>Author First Name</td>
+                     <td>{{ resource.author_first_name }}</td>
+                   </tr>
+                   {% endif %} 
+                   {% if resource.author_last_name %}
+                   <tr>
+                     <td>Author Last Name</td>
+                     <td>{{ resource.author_last_name }}</td>
+                   </tr>
+                   {% endif %}  
+                   {% if resource.name %}
+                   <tr>
+                     <td>Name</td>
+                     <td>{{ resource.name }}</td>
+                   </tr>
+                   {% endif %}   
+                   {% if resource.city %}
+                   <tr>
+                     <td>City</td>
+                     <td>{{ resource.city }}</td>
+                   </tr>
+                   {% endif %}  
+                   {% if resource.state %}
+                   <tr>
+                     <td>State</td>
+                     <td>{{ resource.state }}</td>
+                   </tr>
+                   {% endif %}
+                   {% if resource.country %}
+                   <tr>
+                     <td>Country</td>
+                     <td>{{ resource.country }}</td>
+                   </tr>
+                   {% endif %}
+                   {% if resource.govt_body %}
+                   <tr>
+                     <td>Government Body</td>
+                     <td>{{ resource.govt_body }}</td>
+                   </tr>
+                   {% endif %}  
+                   {% if resource.section %}
+                   <tr>
+                     <td>Section</td>
+                     <td>{{ resource.section }}</td>
+                   </tr>
+                   {% endif %}     
+               </tbody>
+           </table>
+        </div>
+    </div>
+{% endblock %}
+  
