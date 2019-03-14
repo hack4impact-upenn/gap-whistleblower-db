@@ -1,16 +1,27 @@
 {% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
 
 {% block content %}
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
+            {% if saved %}
             <a class="ui basic compact button" href="{{ url_for('admin.review_suggestions') }}">
                 <i class="caret left icon"></i>
-                Back to resources
+                Back to saved resource
             </a>
+            {% else %}
+            <a class="ui basic compact button" href="{{ url_for('admin.review_suggestions') }}">
+                <i class="caret left icon"></i>
+                Back to database
+            </a>
+            {% endif %}
             <h2 class="ui header">
                 Review Resource
                 <div class="sub header">Review this resource</div>
             </h2>
+            {% if user_id %}
+                {{ f.render_form(form) }}
+            {% endif %}
             <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
                <tbody>
                    <tr>
@@ -153,5 +164,14 @@
            </table>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            var save_btn = $('#save-btn');
+                console.log('hi');
+                save_btn.text('Unsave resource');
+                save_btn.addClass('active');
+        });
+    </script>
 {% endblock %}
   
