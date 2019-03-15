@@ -1,8 +1,8 @@
 from flask import Blueprint, request, render_template, redirect, url_for
 from random import randint
 from time import sleep
-from app.models import EditableHTML, Document, Saved
-from flask_login import current_user
+from app.models import EditableHTML, Document, Saved, User
+from flask_login import current_user, login_required
 # import flask_whooshalchemyplus as whooshalchemy
 # from flask_whooshee import Whooshee
 from app.main.forms import SaveForm, UnsaveForm
@@ -22,8 +22,8 @@ def about():
     return render_template(
         'main/about.html', editable_html_obj=editable_html_obj)
 
-
 @main.route('/resource/saved/<int:id>', methods=['GET', 'POST'])
+@login_required
 def resource_saved(id):
     return resource(id, from_saved=True)
 
@@ -45,3 +45,11 @@ def resource(id, from_saved=False):
     return render_template(
         'main/resource.html', resource=resource, user_id=user_id, saved=saved, form=form, from_saved=from_saved
     )
+
+@main.route('/saved')
+@login_required
+def review_saved():
+    user_id = current_user.id
+    user = User.query.get(user_id)
+    saved = user.saved
+    return render_template('main/review_saved.html', saved=saved)

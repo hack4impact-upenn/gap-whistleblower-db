@@ -5,11 +5,12 @@
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
             {% if from_saved %}
-            <a class="ui basic compact button" href="{{ url_for('admin.review_suggestions') }}">
+            <a class="ui basic compact button" href="{{ url_for('main.review_saved') }}">
                 <i class="caret left icon"></i>
                 Back to saved resources
             </a>
             {% else %}
+                <!-- TODO: update link -->
             <a class="ui basic compact button" href="{{ url_for('admin.review_suggestions') }}">
                 <i class="caret left icon"></i>
                 Back to database
