@@ -1,0 +1,274 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+{% import 'macros/file_upload.html' as upload %}
+
+{% block content %}
+<div class="ui grid container">
+    <div class="twelve wide computer sixteen wide mobile centered column">
+        <h2 class="ui dividing header">Create Database Entry</h2>
+        <div class="ui top attached tabular menu">
+          <a class="{% if active == 'book' %}active {% endif %}item" data-tab="first">Book</a>
+          <a class="{% if active == 'article' %}active {% endif %}item" data-tab="second">Article</a>
+          <a class="{% if active == 'law' %}active {% endif %}item" data-tab="third">Law</a>
+          <a class="{% if active == 'other' %}active {% endif %}item" data-tab="fourth">Other</a>
+        </div>
+        <div class="ui bottom attached {% if active == 'book' %}active {% endif %}tab segment" data-tab="first">
+          <div class="ui grid container">
+              <div class="sixteen wide computer sixteen wide mobile centered column">
+                  <h3 class="ui dividing header">Submit a Book</h3>
+                   {% set book_flashes = {
+                      'success': get_flashed_messages(category_filter=['form-success'])
+                  } %}
+                  {{ f.begin_form(book_form, book_flashes) }}
+                  <input type="hidden" name="form-name" value="book_form">
+                  <div class = "sixteen wide field">
+                  {{ f.form_message(book_flashes['success'], header='Success!', class='success') }}
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(book_form.book_title) }}
+                  </div>
+                  <div class = "fields">
+                      <div class = "eight wide field">
+                      {{ f.render_form_field(book_form.book_author_first_name) }}
+                      </div>
+                      <div class = "eight wide field">
+                      {{ f.render_form_field(book_form.book_author_last_name) }}
+                      </div>
+                  </div>
+                  <div class = "three fields">
+                      <div class = "field">
+                      {{ f.render_form_field(book_form.book_volume) }}
+                      </div>
+                      <div class = "field">
+                      {{ f.render_form_field(book_form.book_edition) }}
+                      </div>
+                      <div class = "field">
+                      {{ f.render_form_field(book_form.book_series) }}
+                      </div>
+                  </div>
+                <div class = "fields">
+                  <div class = "eight wide field">
+                  {{ f.render_form_field(book_form.book_ISBN) }}
+                  </div>
+                    <div class = "eight wide field">
+                    {{ f.render_form_field(book_form.book_publisher_name) }}
+                    </div>
+                </div>
+                  <div class = "three fields">
+      	            <div class = "field">
+      	            {{ f.render_form_field(book_form.book_publication_day) }}
+      	            </div>
+      	            <div class = "field">
+      	            {{ f.render_form_field(book_form.book_publication_month) }}
+      	            </div>
+      	            <div class = "field">
+      	            {{ f.render_form_field(book_form.book_publication_year) }}
+      	            </div>
+      	        </div>
+                  <div class = "three fields">
+                      <div class = "field">
+                      {{ f.render_form_field(book_form.book_publisher_city) }}
+                      </div>
+                      <div class = "field">
+                      {{ f.render_form_field(book_form.book_publisher_state) }}
+                      </div>
+                      <div class = "field">
+                      {{ f.render_form_field(book_form.book_publisher_country) }}
+                      </div>
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(book_form.book_description) }}
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(book_form.book_link) }}
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_input(book_form.book_file_urls) }}
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ upload.file_upload('file_urls') }}
+                  </div>
+                  {{ f.render_form_field(book_form.submit_book) }}
+                  {{ f.end_form(book_form) }}
+              </div>
+          </div>
+        </div>
+        <div class="ui bottom attached {% if active == 'article' %}active {% endif %}tab segment" data-tab="second">
+          <div class="ui grid container">
+              <div class="sixteen wide computer sixteen wide mobile centered column">
+              <h3 class="ui dividing header">Submit an Article</h3>
+              {% set article_flashes = {
+                 'success': get_flashed_messages(category_filter=['form-success'])
+             } %}
+             {{ f.begin_form(article_form, article_flashes) }}
+             <input type="hidden" name="form-name" value="article_form">
+             <div class = "sixteen wide field">
+             {{ f.form_message(article_flashes['success'], header='Success!', class='success') }}
+             </div>
+             <div class = "sixteen wide field">
+             {{ f.render_form_field(article_form.article_title) }}
+             </div>
+             <div class="fields">
+               <div class = "eight wide field">
+               {{ f.render_form_field(article_form.article_author_first_name) }}
+               </div>
+               <div class = "eight wide field">
+               {{ f.render_form_field(article_form.article_author_last_name) }}
+               </div>
+             </div>
+             <div class = "sixteen wide field">
+             {{ f.render_form_field(article_form.article_publication) }}
+             </div>
+             <div class = "three fields">
+               <div class = "field">
+               {{ f.render_form_field(article_form.article_publication_day) }}
+               </div>
+               <div class = "field">
+               {{ f.render_form_field(article_form.article_publication_month) }}
+               </div>
+               <div class = "field">
+               {{ f.render_form_field(article_form.article_publication_year) }}
+               </div>
+             </div>
+               <div class = "sixteen wide field">
+               {{ f.render_form_field(article_form.article_description) }}
+               </div>
+               <div class = "sixteen wide field">
+               {{ f.render_form_field(article_form.article_link) }}
+               </div>
+               <div class = "sixteen wide field">
+               {{ f.render_form_input(article_form.article_file_urls) }}
+               </div>
+               <div class = "sixteen wide field">
+               {{ upload.file_upload('file_urls') }}
+               </div>
+               {{ f.render_form_field(article_form.submit_article) }}
+               {{ f.end_form(article_form) }}
+              </div>
+            </div>
+        </div>
+        <div class="ui bottom attached {% if active == 'article' %}active {% endif %}tab segment" data-tab="third">
+          <div class="ui grid container">
+              <div class="sixteen wide computer sixteen wide mobile centered column">
+                  <h3 class="ui dividing header">Submit a Law</h3>
+                   {% set law_flashes = {
+                      'success': get_flashed_messages(category_filter=['form-success'])
+                  } %}
+                  {{ f.begin_form(law_form, law_flashes) }}
+                  <input type="hidden" name="form-name" value="law_form">
+                  <div class = "sixteen wide field">
+                  {{ f.form_message(law_flashes['success'], header='Success!', class='success') }}
+                  </div>
+                  <div class = "fields">
+                      <div class = "sixteen wide field">
+                      {{ f.render_form_field(law_form.law_title) }}
+                      </div>
+                  </div>
+                  <div class = "fields">
+                      <div class = "eight wide field">
+                      {{ f.render_form_field(law_form.law_government_body) }}
+                      </div>
+                      <div class = "eight wide field">
+                      {{ f.render_form_field(law_form.law_section) }}
+                      </div>
+                  </div>
+                  <div class = "three fields">
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_city) }}
+                      </div>
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_state) }}
+                      </div>
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_country) }}
+                      </div>
+                  </div>
+                  <div class = "three fields">
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_enactment_day) }}
+                      </div>
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_enactment_month) }}
+                      </div>
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_enactment_year) }}
+                      </div>
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(law_form.law_description) }}
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(law_form.law_link) }}
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_input(law_form.law_file_urls) }}
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ upload.file_upload('file_urls') }}
+                  </div>
+                  {{ f.render_form_field(law_form.submit_law) }}
+                  {{ f.end_form(law_form) }}
+              </div>
+          </div>
+        </div>
+        <div class="ui bottom attached {% if active == 'other' %}active {% endif %}tab segment" data-tab="fourth">
+          <div class="ui grid container">
+              <div class="sixteen wide computer sixteen wide mobile centered column">
+                  <h3 class="ui dividing header">Submit Other</h3>
+                   {% set other_flashes = {
+                      'success': get_flashed_messages(category_filter=['form-success'])
+                  } %}
+                  {{ f.begin_form(other_form, other_flashes) }}
+                  <input type="hidden" name="form-name" value="other_form">
+                  <div class = "sixteen wide field">
+                  {{ f.form_message(other_flashes['success'], header='Success!', class='success') }}
+                  </div>
+                  <div class = "sixteen wide field">
+                    {{ f.render_form_field(other_form.other_title) }}
+                  </div>
+                  <div class="fields">
+      	            <div class = "eight wide field">
+      	            {{ f.render_form_field(other_form.other_author_first_name) }}
+      	            </div>
+      	            <div class = "eight wide field">
+      	            {{ f.render_form_field(other_form.other_author_last_name) }}
+      	            </div>
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(other_form.other_document_type) }}
+                  </div>
+                  <div class = "three fields">
+      	            <div class = "field">
+      	            {{ f.render_form_field(other_form.other_publication_day) }}
+      	            </div>
+      	            <div class = "field">
+      	            {{ f.render_form_field(other_form.other_publication_month) }}
+      	            </div>
+      	            <div class = "field">
+      	            {{ f.render_form_field(other_form.other_publication_year) }}
+      	            </div>
+      	        </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(other_form.other_description) }}
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(other_form.other_link) }}
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_input(other_form.other_file_urls) }}
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ upload.file_upload('file_urls') }}
+                  </div>
+                  {{ f.render_form_field(other_form.submit_other) }}
+                  {{ f.end_form(other_form) }}
+              </div>
+          </div>
+        </div>
+    </div>
+</div>
+<script>
+  $('.menu .item').tab();
+</script>
+
+{% endblock %}

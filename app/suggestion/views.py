@@ -1,12 +1,10 @@
-from flask import (Blueprint, abort, flash, redirect, render_template, request,
+from flask import (Blueprint, abort, flash, redirect, render_template, request, jsonify,
                    url_for)
 
-from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
 
-from app import db
+from app import db, csrf
 from app.suggestion.forms import SuggestionForm
-from app.decorators import admin_required
 from app.models import Suggestion
 
 suggestion = Blueprint('suggestion', __name__)
@@ -30,3 +28,5 @@ def index():
             'suggestion/index.html', form=form)
 
     return render_template('suggestion/index.html', form=form)
+
+
