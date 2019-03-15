@@ -196,12 +196,12 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         s = '<User \n'
-            s += 'First Name: {}\n'.format(self.first_name)
-            s += 'Last Name: {}\n'.format(self.last_name)
-            s += 'Email: {}, {}\n'.format(self.email)
-            s += 'Role: {}\n'.format(self.role)
-            s += 'Organization'.format(self.organization)
-            s += 'Bio: {}\n'.format(self.bio)+ '>'
+        s += 'First Name: {}\n'.format(self.first_name)
+        s += 'Last Name: {}\n'.format(self.last_name)
+        s += 'Email: {}, {}\n'.format(self.email)
+        s += 'Role: {}\n'.format(self.role)
+        s += 'Organization'.format(self.organization)
+        s += 'Bio: {}\n'.format(self.bio)+ '>'
         return s
 
 

@@ -24,7 +24,7 @@ class Document(db.Model):
     link = db.Column(db.String())
     file = db.Column(db.String())
     citation = db.Column(db.String())
-    isPublished = db.Column(db.Boolean(), default=False)
+    document_status = db.Column(db.String(), default='draft')
 
     #Specific to Book
     volume = db.Column(db.String(10))
@@ -76,7 +76,8 @@ class Document(db.Model):
                 city = fake.city(),
                 state = fake.state(),
                 country = "United States",
-                isPublished=False)
+                document_status = random.choice(["draft", "needs review", "under review","published"])
+            )
             db.session.add(document)
         for i in range(count):
             user_id = random.randint(2,11)
@@ -93,7 +94,8 @@ class Document(db.Model):
                 link = fake.domain_name(),
                 author_first_name = fake.first_name(),
                 author_last_name = fake.last_name(),
-                isPublished=False)
+                document_status = random.choice(["draft", "needs review", "under review","published"])
+            )
             db.session.add(article)
         for i in range(count):
             user_id = random.randint(2,11)
@@ -111,7 +113,8 @@ class Document(db.Model):
                 author_first_name = fake.first_name(),
                 author_last_name = fake.last_name(),
                 other_type= doc_type,
-                isPublished=False)
+                document_status = random.choice(["draft", "needs review", "under review","published"])
+            )
             db.session.add(other)
         for i in range(count):
             user_id = random.randint(2,11)
@@ -131,7 +134,8 @@ class Document(db.Model):
                 link = fake.domain_name(),
                 govt_body = body,
                 section = random.randint(1, 100),
-                isPublished=False)
+                document_status = random.choice(["draft", "needs review", "under review","published"])
+            )
             db.session.add(law)
 
         db.session.commit()
@@ -164,7 +168,8 @@ class Document(db.Model):
                 f'Country: {self.country}\n>'
                 f'Affiliated Government Body: {self.govt_body}\n>'
                 f'Section: {self.section}\n>'
-                f'Type (if other): {self.other_type}\n>')
+                f'Type (if other): {self.other_type}\n>'
+                f'Document Status: {self.document_status}\n>')
 
     def __str__(self):
         return self.__repr__()

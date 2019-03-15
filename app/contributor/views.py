@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from app import db, csrf
 from app.contributor.forms import BookForm, ArticleForm, OtherForm, LawForm
 from app.decorators import admin_required
-from app.models import Document
+from app.models import Document, User
 
 import json
 import boto3
@@ -21,6 +21,33 @@ import ssl
 from werkzeug import secure_filename
 
 contributor = Blueprint('contributor', __name__)
+
+@contributor.route('/index',methods=['GET', 'POST'])
+@login_required
+def index():
+        return render_template('contributor/submit.html')
+
+@contributor.route('/my_contributions',methods=['GET', 'POST'])
+@login_required
+def my_contributions():
+    """Contribution Review page."""
+    user_id = current_user.id
+    contributions = Document.query.filter(Document.posted_by == user_id)
+    return render_template('contributor/my_contributions.html', contributions=contributions)
+
+
+
+#@admin.route('/contribution/<int:id>', methods=['GET'])
+#@login_required
+#def contribution(id):
+#    """Contribution Review page."""
+#    contribution = Document.query.get(id)
+#    return render_template('admin/contribution.html', contribution=contribution)
+
+
+
+
+
 
 @contributor.route('/submit', methods=['GET', 'POST'])
 @login_required
