@@ -23,8 +23,12 @@ def about():
         'main/about.html', editable_html_obj=editable_html_obj)
 
 
+@main.route('/resource/saved/<int:id>', methods=['GET', 'POST'])
+def resource_saved(id):
+    return resource(id, from_saved=True)
+
 @main.route('/resource/<int:id>', methods=['GET', 'POST'])
-def resource(id):
+def resource(id, from_saved=False):
     resource = Document.query.get(id)
     user_id = getattr(current_user, 'id', None)
     saved_objs = Saved.query.filter_by(user_id=user_id, doc_id=id)
@@ -37,7 +41,7 @@ def resource(id):
             saved = Saved(user_id=user_id, doc_id=id)
             db.session.add(saved)
         db.session.commit()
-        return redirect(url_for('main.resource', id=id))
+        return redirect(url_for('main.resource' if not from_saved else 'main.resource_saved', id=id))
     return render_template(
-        'main/resource.html', resource=resource, user_id=user_id, saved=saved, form=form
+        'main/resource.html', resource=resource, user_id=user_id, saved=saved, form=form, from_saved=from_saved
     )
