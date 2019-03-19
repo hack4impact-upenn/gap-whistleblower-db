@@ -3,12 +3,12 @@
 {% block content %}
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
-            <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+            <a class="ui basic compact button" href="{{ url_for('main.index') }}">
                 <i class="caret left icon"></i>
-                Back to dashboard
+                Back to database
             </a>
             <h2 class="ui header">
-                Review saved
+                Saved Resources
                 <div class="sub header">Review my saved resources</div>
             </h2>
             <div class="ui menu">
@@ -28,7 +28,7 @@
                 </div>
                 <div class="ui right search item">
                     <div class="ui transparent icon input">
-                        <input id="search-suggestions" type="text" placeholder="Search suggestions…">
+                        <input id="search-suggestions" type="text" placeholder="Search resources…">
                         <i class="search icon"></i>
                     </div>
                 </div>
@@ -39,8 +39,7 @@
                        <th>Title</th>
                        <th class="one wide">Link</th>
                        <th>Type</th>
-                       <th class="one wide">Delete</th>
-                       <th class="one wide">Draft</th>
+                       <th class="one wide">Saved</th>
                    </tr>
                </thead>
                <tbody>
@@ -58,32 +57,9 @@
                        </td>
                        <td class="suggestion type">{{ s.doc_type }}</td>
                        <td>
-                         <div class="ui buttons">
-                           <!--we give the button and icon the same id to avoid weird things with hitboxes-->
-                           <button class="ui small compact icon button delete-suggestion" id="{{ s.id }}">
-                             <i class="trash alternate icon" id="{{ s.id }}"></i>
-                           </button>
-                         </div>
-                       </td>
-                       <!--confirmation modal for deleting a checklist item-->
-                       <td>
-                         <div class="ui buttons">
-                           <!--we give the button and icon the same id to avoid weird things with hitboxes-->
-                           <button class="ui small compact icon button" id="{{ s.id }}"
-                            onclick="startDraft('{{ s.id }}')">
-                             <i class="edit icon" id="{{ s.id }}"></i>
-                           </button>
-                         </div>
-                       </td>
-                       <div id="modal-{{ s.id }}" class="ui tiny modal delete-suggestion-modal">
-                          <div class="header">Delete Resource</div>
-                          <div class="content">Are you sure you want to delete {{ s.title }}?</div>
-                          <div class="actions">
-                            <div class="ui cancel button">Cancel</div>
-                            <a href="{{ url_for('admin.delete_suggestion', id=s.id) }}"
-                              class="negative ui button">Yes, delete this resource</a>
-                          </div>
-                       </div>
+                         <a class="ui massive star rating" data-rating="1" data-max-rating="1" id="star-{{ s.id }}">
+                         </a>
+                      </td>
                    </tr>
                {% endfor %}
                </tbody>
@@ -94,6 +70,10 @@
 
     <script>
       $(document).ready(function () {
+        $('.ui.rating')
+          .rating('setting', 'onRate', function(value) {
+            console.log(value)
+          });
         $('.delete-suggestion').on('click', function(e) {
             id = e.target.id; // gets the id and shows the appropriate modal
             $('#modal-' + id).modal('show');

@@ -37,8 +37,9 @@
 {% macro account_items(current_user) %}
     {% if current_user.is_authenticated %}
       {% set endpoints = [
+        ('main.review_saved', 'Saved Resources', 'save'),
         ('account.manage', 'Your Account', 'settings'),
-        ('account.logout', 'Log out', 'sign out')
+        ('account.logout', 'Log Out', 'sign out'),
       ] %}
       {{ render_menu_items(endpoints) }}
     {% else %}

@@ -8,9 +8,8 @@ from .. import db, login_manager
 
 class Permission:
     GENERAL = 0x01
-    SCHOLAR = 0x02
-    CONTRIBUTOR = 0x03
-    ADMIN = 0x04
+    CONTRIBUTOR = 0x02
+    ADMINISTER = 0x03
 
 
 class Role(db.Model):
@@ -26,10 +25,9 @@ class Role(db.Model):
     def insert_roles():
         roles = {
             'User': (Permission.GENERAL, 'main', True),
-            'Scholar':(Permission.SCHOLAR, 'scholar', False),
             'Contributor':(Permission.CONTRIBUTOR, 'contributor', False),
             'Administrator': (
-                Permission.ADMIN,
+                Permission.ADMINISTER,
                 'admin',
                 False  # grants all permissions
             )
@@ -66,8 +64,6 @@ class User(UserMixin, db.Model):
         if self.role is None:
             if self.email == current_app.config['ADMIN_EMAIL']:
                 self.role = Role.query.filter_by(index='admin').first()
-            elif self.email == current_app.config['SCHOLAR_EMAIL']:
-                self.role = Role.query.filter_by(index='scholar').first()
             elif self.email == current_app.config['CONTRIBUTOR_EMAIL']:
                 self.role = Role.query.filter_by(index='contributor').first()
             else:
@@ -82,15 +78,12 @@ class User(UserMixin, db.Model):
 
     def is_user(self):
        return self.role_id == 1
-    
-    def is_scholar(self):
-        return self.role_id == 2
-    
+
     def is_contributor(self):
-        return self.role_id == 3
+        return self.role_id == 2
 
     def is_admin(self):
-        return self.role_id == 4
+        return self.role_id == 3
 
     @property
     def password(self):
@@ -196,12 +189,12 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         s = '<User \n'
-            s += 'First Name: {}\n'.format(self.first_name)
-            s += 'Last Name: {}\n'.format(self.last_name)
-            s += 'Email: {}, {}\n'.format(self.email)
-            s += 'Role: {}\n'.format(self.role)
-            s += 'Organization'.format(self.organization)
-            s += 'Bio: {}\n'.format(self.bio)+ '>'
+        s += 'First Name: {}\n'.format(self.first_name)
+        s += 'Last Name: {}\n'.format(self.last_name)
+        s += 'Email: {}, {}\n'.format(self.email)
+        s += 'Role: {}\n'.format(self.role)
+        s += 'Organization'.format(self.organization)
+        s += 'Bio: {}\n'.format(self.bio)+ '>'
         return s
 
 
