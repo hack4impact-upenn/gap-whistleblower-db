@@ -59,7 +59,7 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     organization = db.Column(db.String(128))
     bio = db.Column(db.Text)
-
+    saved = db.relationship('Document', secondary='saved', backref='user', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
