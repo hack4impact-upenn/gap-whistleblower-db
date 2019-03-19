@@ -1,0 +1,1 @@
+from app.saved.views import saved # noqa

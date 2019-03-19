@@ -3,6 +3,7 @@ import random
 from faker import Faker
 from . import User, Document
 from sqlalchemy import Column, Integer, DateTime
+from sqlalchemy.exc import IntegrityError
 import datetime
 
 
@@ -16,7 +17,6 @@ class Saved(db.Model):
 
     @staticmethod
     def generate_fake(**kwargs):
-        from sqlalchemy.exc import IntegrityError
         documents = Document.query.all()
         users = User.query.all()
 

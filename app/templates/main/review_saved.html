@@ -1,0 +1,146 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+            <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+                <i class="caret left icon"></i>
+                Back to dashboard
+            </a>
+            <h2 class="ui header">
+                Review saved
+                <div class="sub header">Review my saved resources</div>
+            </h2>
+            <div class="ui menu">
+                <div id="select-type" class="ui dropdown item">
+                    <div class="text">
+                        All resource types
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item" data-value="">All resource types</div>
+                        <div class="item" data-value="book">Books</div>
+                        <div class="item" data-value="article">Articles</div>
+                        <div class="item" data-value="research">Research</div>
+                        <div class="item" data-value="law">Laws</div>
+                        <div class="item" data-value="other">Other</div>
+                    </div>
+                </div>
+                <div class="ui right search item">
+                    <div class="ui transparent icon input">
+                        <input id="search-suggestions" type="text" placeholder="Search suggestions…">
+                        <i class="search icon"></i>
+                    </div>
+                </div>
+            </div>
+            <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
+               <thead>
+                   <tr>
+                       <th>Title</th>
+                       <th class="one wide">Link</th>
+                       <th>Type</th>
+                       <th class="one wide">Delete</th>
+                       <th class="one wide">Draft</th>
+                   </tr>
+               </thead>
+               <tbody>
+               {% for s in saved %}
+                   <tr>
+                       <td onclick="window.location.href = '{{ url_for('main.resource_saved', id=s.id) }}';">{{ s.title }}</td>
+                       <td>
+                         <div class="ui buttons">
+                           <!--we give the button and icon the same id to avoid weird things with hitboxes-->
+                           <button class="ui small compact icon button"  onclick="linkMe('{{ s.link }}')"
+                           id="{{ s.id }}">
+                             <i class="linkify icon" id="{{ s.id }}"></i>
+                           </button>
+                         </div>
+                       </td>
+                       <td class="suggestion type">{{ s.doc_type }}</td>
+                       <td>
+                         <div class="ui buttons">
+                           <!--we give the button and icon the same id to avoid weird things with hitboxes-->
+                           <button class="ui small compact icon button delete-suggestion" id="{{ s.id }}">
+                             <i class="trash alternate icon" id="{{ s.id }}"></i>
+                           </button>
+                         </div>
+                       </td>
+                       <!--confirmation modal for deleting a checklist item-->
+                       <td>
+                         <div class="ui buttons">
+                           <!--we give the button and icon the same id to avoid weird things with hitboxes-->
+                           <button class="ui small compact icon button" id="{{ s.id }}"
+                            onclick="startDraft('{{ s.id }}')">
+                             <i class="edit icon" id="{{ s.id }}"></i>
+                           </button>
+                         </div>
+                       </td>
+                       <div id="modal-{{ s.id }}" class="ui tiny modal delete-suggestion-modal">
+                          <div class="header">Delete Resource</div>
+                          <div class="content">Are you sure you want to delete {{ s.title }}?</div>
+                          <div class="actions">
+                            <div class="ui cancel button">Cancel</div>
+                            <a href="{{ url_for('admin.delete_suggestion', id=s.id) }}"
+                              class="negative ui button">Yes, delete this resource</a>
+                          </div>
+                       </div>
+                   </tr>
+               {% endfor %}
+               </tbody>
+           </table>
+
+        </div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        $('.delete-suggestion').on('click', function(e) {
+            id = e.target.id; // gets the id and shows the appropriate modal
+            $('#modal-' + id).modal('show');
+        });
+        $('#search-suggestions').keyup(function () {
+                var searchText = $(this).val();
+                if (searchText.length > 0) {
+                    $('tbody td:icontains(' + searchText + ')').addClass('positive');
+                    $('td.positive').not(':icontains(' + searchText + ')').removeClass('positive');
+                    $('tbody td').not(':icontains(' + searchText + ')').closest('tr').addClass('hidden').hide();
+                    $('tr.hidden:icontains(' + searchText + ')').removeClass('hidden').show();
+                } else {
+                    $('td.positive').removeClass('positive');
+                    $('tr.hidden').removeClass('hidden').show();
+                }
+        });
+        $('#select-type').dropdown({
+            onChange: function (value, text, $selectedItem) {
+                $('td.suggestion.type:contains(' + value + ')').closest('tr').removeClass('hidden').show();
+                $('td.suggestion.type').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
+            }
+        });
+      });
+      function linkMe(link) {
+        console.log(link)
+          if (isValidDomain(link)) {
+              var re  = "^(https?://)"
+              var regexHTTP = new RegExp(re,"i");
+              if (regexHTTP.test(link)) {
+                window.open(link)
+              }
+              else {
+                window.open('https://'.concat(link))
+              }
+          }
+          else {
+            alert("This suggestion has a malformed URL.")
+          }
+      }
+      function isValidDomain(v) {
+        if (!v) return false;
+        var re  = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
+        var regexUrl = new RegExp(re,"i");
+        return regexUrl.test(v);
+      }
+      function startDraft(id) {
+        window.open('draft/'.concat(id))
+      }
+    </script>
+{% endblock %}
