@@ -37,16 +37,12 @@ def my_contributions():
 
 
 
-#@admin.route('/contribution/<int:id>', methods=['GET'])
-#@login_required
-#def contribution(id):
-#    """Contribution Review page."""
-#    contribution = Document.query.get(id)
-#    return render_template('admin/contribution.html', contribution=contribution)
-
-
-
-
+@contributor.route('/contribution/<int:id>', methods=['GET'])
+@login_required
+def contribution(id):
+    """Contribution Review page."""
+    contribution = Document.query.get(id)
+    return render_template('contributor/contribution.html', contribution=contribution)
 
 
 @contributor.route('/submit', methods=['GET', 'POST'])
