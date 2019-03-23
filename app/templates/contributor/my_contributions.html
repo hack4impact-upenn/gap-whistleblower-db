@@ -3,7 +3,7 @@
 {% block content %}
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
-            <a class="ui basic compact button" href="{{ url_for('contributor.my_contributions') }}">
+            <a class="ui basic compact button" href="{{ url_for('contributor.index') }}">
                 <i class="caret left icon"></i>
                 Back to dashboard
             </a>
@@ -19,7 +19,6 @@
                     <i class="dropdown icon"></i>
                     <div class="menu">
                         <div class="item" data-value="">All resources</div>
-                        <div class="item" data-value="draft">Draft</div>
                         <div class="item" data-value="needs review">Needs Review</div>
                         <div class="item" data-value="under review">Under Review</div>
                         <div class="item" data-value="published">Published</div>
@@ -42,12 +41,14 @@
                </thead>
                <tbody>
                {% for c in contributions %}
-                   <tr>
-                       <td onclick="window.location.href = '{{ url_for('contributor.contribution', id=c.id) }}';">{{ c.title }}</td>
-                       <td class="document doc_type">{{ c.doc_type }}</td>
-                       <td class="document document_status">{{ c.document_status }}</td>
-                       </div>
-                   </tr>
+                  {% if c.doc_type == 'needs review' or c.doc_type == 'under review' or c.doc_type == 'published' %}
+                    <tr>
+                         <td onclick="window.location.href = '{{ url_for('contributor.contribution', id=c.id) }}';">{{ c.title }}</td>
+                         <td class="document doc_type">{{ c.doc_type }}</td>
+                         <td class="document document_status">{{ c.document_status }}</td>
+                         </div>
+                    </tr>
+                  {% endif %}
                {% endfor %}
                </tbody>
            </table>

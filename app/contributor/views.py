@@ -25,7 +25,7 @@ contributor = Blueprint('contributor', __name__)
 @contributor.route('/index',methods=['GET', 'POST'])
 @login_required
 def index():
-        return render_template('contributor/submit.html')
+        return render_template('contributor/index.html')
 
 @contributor.route('/my_contributions',methods=['GET', 'POST'])
 @login_required
@@ -35,6 +35,12 @@ def my_contributions():
     contributions = Document.query.filter(Document.posted_by == user_id)
     return render_template('contributor/my_contributions.html', contributions=contributions)
 
+@contributor.route('/view_all_drafts',methods=['GET', 'POST'])
+@login_required
+def view_all_drafts():
+    user_id = current_user.id
+    contributions = Document.query.filter(Document.posted_by == user_id)
+    return render_template('contributor/draft_contributions.html',  contributions=contributions)
 
 
 @contributor.route('/contribution/<int:id>', methods=['GET'])
@@ -43,6 +49,81 @@ def contribution(id):
     """Contribution Review page."""
     contribution = Document.query.get(id)
     return render_template('contributor/contribution.html', contribution=contribution)
+
+# 5 different types of draft editing forms
+@contributor.route('/contribution/draft/book/<int:id>', methods=['GET', 'POST'])
+@login_required
+def view_book_draft(id):
+    """Contribution Review page."""
+    contribution = Document.query.get(id)
+    book_form = BookForm()
+
+    if request.method == 'POST':
+        if book_form.validate_on_submit():
+            book = Document(
+                doc_type = "book",
+                title = book_form.book_title.data,
+                ISBN = book_form.book_ISBN.data,
+                volume = book_form.book_volume.data,
+                edition = book_form.book_edition.data,
+                series = book_form.book_series.data,
+                author_first_name = book_form.book_author_first_name.data,
+                author_last_name = book_form.book_author_last_name.data,
+                posted_by = current_user.id,
+                last_edited_by = current_user.id,
+                name = book_form.book_publisher_name.data,
+                state = book_form.book_publisher_state.data,
+                city = book_form.book_publisher_city.data,
+                country = book_form.book_publisher_country.data,
+                day = book_form.book_publication_day.data,
+                month = book_form.book_publication_month.data,
+                year = book_form.book_publication_year.data,
+                description = book_form.book_description.data,
+                link = book_form.book_link.data)
+
+            file_urls = book_form.book_file_urls.data
+
+            db.session.add(book)
+            db.session.commit()
+            flash(
+                'Book \"{}\" successfully created'.format(
+                    book_form.book_title.data), 'form-success')
+            return render_template('contributor/edit_book_draft.html', book_form=book_form)
+
+    return render_template('contributor/edit_book_draft.html', book_form=book_form, c=contribution)
+
+
+
+
+@contributor.route('/contribution/draft/article/<int:id>', methods=['GET'])
+@login_required
+def view_article_draft(id):
+    """Contribution Review page."""
+    contribution = Document.query.get(id)
+    return render_template('contributor/edit_article_draft.html', contribution=contribution)
+
+@contributor.route('/contribution/draft/research/<int:id>', methods=['GET'])
+@login_required
+def view_research_draft(id):
+    """Contribution Review page."""
+    contribution = Document.query.get(id)
+    return render_template('contributor/edit_research_draft.html', contribution=contribution)
+
+@contributor.route('/contribution/draft/law/<int:id>', methods=['GET'])
+@login_required
+def view_law_draft(id):
+    """Contribution Review page."""
+    contribution = Document.query.get(id)
+    return render_template('contributor/edit_law_draft.html', contribution=contribution)
+
+@contributor.route('/contribution/draft/other/<int:id>', methods=['GET'])
+@login_required
+def view_other_draft(id):
+    """Contribution Review page."""
+    contribution = Document.query.get(id)
+    return render_template('contributor/edit_other_draft.html', contribution=contribution)
+###############
+
 
 
 @contributor.route('/submit', methods=['GET', 'POST'])

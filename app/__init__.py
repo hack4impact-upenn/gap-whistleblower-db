@@ -71,6 +71,9 @@ def create_app(config_name):
     from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
+    from .contributor import contributor as contributor_blueprint
+    app.register_blueprint(contributor_blueprint, url_prefix='/contributor')
+
     from .suggestion import suggestion as suggestion_blueprint
     app.register_blueprint(suggestion_blueprint, url_prefix='/suggestion')
 

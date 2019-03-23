@@ -81,5 +81,3 @@ class OtherForm(Form):
     other_link = StringField()
     other_file_urls = MultipleFileUploadField()
     submit_other = SubmitField()
-
-
