@@ -21,7 +21,7 @@ from app.admin.forms import (
 )
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User, Tag, Suggestion
+from app.models import EditableHTML, Role, User, Tag, Suggestion, Document
 
 admin = Blueprint('admin', __name__)
 
@@ -275,3 +275,19 @@ def delete_suggestion(id):
         flash('Error occurred. Please try again.', 'form-error')
         return redirect(url_for('admin.review_suggestions'))
     return redirect(url_for('admin.review_suggestions'))
+
+@admin.route('/contribution', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def review_contributions():
+    """Contribution Review page."""
+    contributions = Document.query.order_by(Document.id.desc()).all()
+    return render_template('admin/review_contributions.html', contributions=contributions)
+
+@admin.route('/contribution/<int:id>', methods=['GET'])
+@login_required
+@admin_required
+def contribution(id):
+    """Contribution Review page."""
+    contribution = Document.query.get(id)
+    return render_template('admin/contribution.html', contribution=contribution)
