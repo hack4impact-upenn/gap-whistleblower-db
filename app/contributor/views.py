@@ -3,9 +3,10 @@ from flask import (Blueprint, abort, flash, redirect, render_template, request, 
 
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import update
 
 from app import db, csrf
-from app.contributor.forms import BookForm, ArticleForm, OtherForm, LawForm
+from app.contributor.forms import BookForm, ArticleForm, OtherForm, LawForm, DraftEntryForm
 from app.decorators import admin_required
 from app.models import Document, User
 
@@ -40,8 +41,7 @@ def my_contributions():
 def view_all_drafts():
     user_id = current_user.id
     contributions = Document.query.filter(Document.posted_by == user_id)
-    return render_template('contributor/draft_contributions.html',  contributions=contributions)
-
+    return render_template('contributor/draft_contributions.html', contributions=contributions)
 
 @contributor.route('/contribution/<int:id>', methods=['GET'])
 @login_required
@@ -56,39 +56,85 @@ def contribution(id):
 def view_book_draft(id):
     """Contribution Review page."""
     contribution = Document.query.get(id)
-    book_form = BookForm()
-
+    book_entry = Document.query.filter_by(id=id).first()
+    book_form = BookForm(
+        doc_type = "book",
+        book_title = book_entry.title,
+        book_ISBN = book_entry.ISBN,
+        book_volume = book_entry.volume,
+        book_edition = book_entry.edition,
+        book_series = book_entry.series,
+        book_author_first_name = book_entry.author_first_name,
+        book_author_last_name = book_entry.author_last_name,
+        book_publisher_name = book_entry.name,
+        book_publisher_state = book_entry.state,
+        book_publisher_city = book_entry.city,
+        book_publisher_country = book_entry.country,
+        book_publication_day = book_entry.day,
+        book_publication_month = book_entry.month,
+        book_publication_year = book_entry.year,
+        book_description = book_entry.description,
+        book_link = book_entry.link)
     if request.method == 'POST':
         if book_form.validate_on_submit():
-            book = Document(
-                doc_type = "book",
-                title = book_form.book_title.data,
-                ISBN = book_form.book_ISBN.data,
-                volume = book_form.book_volume.data,
-                edition = book_form.book_edition.data,
-                series = book_form.book_series.data,
-                author_first_name = book_form.book_author_first_name.data,
-                author_last_name = book_form.book_author_last_name.data,
-                posted_by = current_user.id,
-                last_edited_by = current_user.id,
-                name = book_form.book_publisher_name.data,
-                state = book_form.book_publisher_state.data,
-                city = book_form.book_publisher_city.data,
-                country = book_form.book_publisher_country.data,
-                day = book_form.book_publication_day.data,
-                month = book_form.book_publication_month.data,
-                year = book_form.book_publication_year.data,
-                description = book_form.book_description.data,
-                link = book_form.book_link.data)
+            if "Save Book" in request.form.values():
+                book_entry.doc_type = "book"
+                book_entry.title = book_form.book_title.data
+                book_entry.ISBN = book_form.book_ISBN.data
+                book_entry.volume = book_form.book_volume.data
+                book_entry.edition = book_form.book_edition.data
+                book_entry.series = book_form.book_series.data
+                book_entry.author_first_name = book_form.book_author_first_name.data
+                book_entry.author_last_name = book_form.book_author_last_name.data
+                book_entry.posted_by = current_user.id
+                book_entry.last_edited_by = current_user.id
+                book_entry.name = book_form.book_publisher_name.data
+                book_entry.state = book_form.book_publisher_state.data
+                book_entry.city = book_form.book_publisher_city.data
+                book_entry.country = book_form.book_publisher_country.data
+                book_entry.day = book_form.book_publication_day.data
+                book_entry.month = book_form.book_publication_month.data
+                book_entry.year = book_form.book_publication_year.data
+                book_entry.description = book_form.book_description.data
+                book_entry.link = book_form.book_link.data
+                book_entry.document_status = "draft"
 
-            file_urls = book_form.book_file_urls.data
+                db.session.commit()
+                flash(
+                    'Book \"{}\" successfully saved'.format(
+                        book_form.book_title.data), 'form-success')
+                
+                return view_all_drafts()
 
-            db.session.add(book)
-            db.session.commit()
-            flash(
-                'Book \"{}\" successfully created'.format(
-                    book_form.book_title.data), 'form-success')
-            return render_template('contributor/edit_book_draft.html', book_form=book_form)
+            if "Submit Book" in request.form.values():
+                book_entry.doc_type = "book"
+                book_entry.title = book_form.book_title.data
+                book_entry.ISBN = book_form.book_ISBN.data
+                book_entry.volume = book_form.book_volume.data
+                book_entry.edition = book_form.book_edition.data
+                book_entry.series = book_form.book_series.data
+                book_entry.author_first_name = book_form.book_author_first_name.data
+                book_entry.author_last_name = book_form.book_author_last_name.data
+                book_entry.posted_by = current_user.id
+                book_entry.last_edited_by = current_user.id
+                book_entry.name = book_form.book_publisher_name.data
+                book_entry.state = book_form.book_publisher_state.data
+                book_entry.city = book_form.book_publisher_city.data
+                book_entry.country = book_form.book_publisher_country.data
+                book_entry.day = book_form.book_publication_day.data
+                book_entry.month = book_form.book_publication_month.data
+                book_entry.year = book_form.book_publication_year.data
+                book_entry.description = book_form.book_description.data
+                book_entry.link = book_form.book_link.data
+                book_entry.document_status = "needs review"
+
+                db.session.commit()
+                flash(
+                    'Book \"{}\" successfully created'.format(
+                        book_form.book_title.data), 'form-success')
+
+                return my_contributions()
+                
 
     return render_template('contributor/edit_book_draft.html', book_form=book_form, c=contribution)
 
@@ -122,7 +168,6 @@ def view_other_draft(id):
     """Contribution Review page."""
     contribution = Document.query.get(id)
     return render_template('contributor/edit_other_draft.html', contribution=contribution)
-###############
 
 
 
@@ -136,38 +181,74 @@ def submit():
     other_form = OtherForm()
 
     if request.method == 'POST':
+
         form_name = request.form['form-name']
+
         if form_name == 'book_form' and book_form.validate_on_submit():
-            book = Document(
-                doc_type = "book",
-                title = book_form.book_title.data,
-                ISBN = book_form.book_ISBN.data,
-                volume = book_form.book_volume.data,
-                edition = book_form.book_edition.data,
-                series = book_form.book_series.data,
-                author_first_name = book_form.book_author_first_name.data,
-                author_last_name = book_form.book_author_last_name.data,
-                posted_by = current_user.id,
-                last_edited_by = current_user.id,
-                name = book_form.book_publisher_name.data,
-                state = book_form.book_publisher_state.data,
-                city = book_form.book_publisher_city.data,
-                country = book_form.book_publisher_country.data,
-                day = book_form.book_publication_day.data,
-                month = book_form.book_publication_month.data,
-                year = book_form.book_publication_year.data,
-                description = book_form.book_description.data,
-                link = book_form.book_link.data)
 
-            file_urls = book_form.book_file_urls.data
+            if "Save Book" in request.form.values():
+                book = Document(
+                    doc_type = "book",
+                    title = book_form.book_title.data,
+                    ISBN = book_form.book_ISBN.data,
+                    volume = book_form.book_volume.data,
+                    edition = book_form.book_edition.data,
+                    series = book_form.book_series.data,
+                    author_first_name = book_form.book_author_first_name.data,
+                    author_last_name = book_form.book_author_last_name.data,
+                    posted_by = current_user.id,
+                    last_edited_by = current_user.id,
+                    name = book_form.book_publisher_name.data,
+                    state = book_form.book_publisher_state.data,
+                    city = book_form.book_publisher_city.data,
+                    country = book_form.book_publisher_country.data,
+                    day = book_form.book_publication_day.data,
+                    month = book_form.book_publication_month.data,
+                    year = book_form.book_publication_year.data,
+                    description = book_form.book_description.data,
+                    link = book_form.book_link.data,
+                    document_status = "draft")
+                
+                db.session.add(book)
+                db.session.commit()
+                flash(
+                    'Book \"{}\" successfully saved'.format(
+                        book_form.book_title.data), 'form-success')
 
-            db.session.add(book)
-            db.session.commit()
-            flash(
-                'Book \"{}\" successfully created'.format(
-                    book_form.book_title.data), 'form-success')
-            return render_template('contributor/submit.html', book_form=book_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, active="book")
+                return view_all_drafts()
+
+            if "Submit Book" in request.form.values():
+                book = Document(
+                    doc_type = "book",
+                    title = book_form.book_title.data,
+                    ISBN = book_form.book_ISBN.data,
+                    volume = book_form.book_volume.data,
+                    edition = book_form.book_edition.data,
+                    series = book_form.book_series.data,
+                    author_first_name = book_form.book_author_first_name.data,
+                    author_last_name = book_form.book_author_last_name.data,
+                    posted_by = current_user.id,
+                    last_edited_by = current_user.id,
+                    name = book_form.book_publisher_name.data,
+                    state = book_form.book_publisher_state.data,
+                    city = book_form.book_publisher_city.data,
+                    country = book_form.book_publisher_country.data,
+                    day = book_form.book_publication_day.data,
+                    month = book_form.book_publication_month.data,
+                    year = book_form.book_publication_year.data,
+                    description = book_form.book_description.data,
+                    link = book_form.book_link.data,
+                    document_status = "needs review")
+
+                file_urls = book_form.book_file_urls.data
+
+                db.session.add(book)
+                db.session.commit()
+                flash(
+                    'Book \"{}\" successfully created'.format(
+                        book_form.book_title.data), 'form-success')
+
+                return my_contributions()
 
         if form_name == 'article_form' and article_form.validate_on_submit():
             article = Document(
@@ -182,7 +263,8 @@ def submit():
                 month = article_form.article_publication_month.data,
                 year = article_form.article_publication_year.data,
                 description = article_form.article_description.data,
-                link = article_form.article_link.data)
+                link = article_form.article_link.data,
+                document_status = "draft")
 
             file_urls = article_form.article_file_urls.data
 
@@ -207,7 +289,8 @@ def submit():
                 month = law_form.law_enactment_month.data,
                 year = law_form.law_enactment_year.data,
                 description = law_form.law_description.data,
-                link = law_form.law_link.data)
+                link = law_form.law_link.data,
+                document_status = "draft")
 
             file_urls = law_form.law_file_urls.data
 
@@ -232,7 +315,8 @@ def submit():
                 year = other_form.other_publication_year.data,
                 description = other_form.other_description.data,
                 link = other_form.other_link.data,
-                other_type = other_form.other_document_type.data)
+                other_type = other_form.other_document_type.data,
+                document_status = "draft")
 
             file_urls = other_form.other_file_urls.data
 

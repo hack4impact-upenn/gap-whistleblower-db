@@ -76,7 +76,7 @@
 {% endmacro %}
 
 {# Render a field for the form #}
-{% macro render_custom_select(field) %}
+{% macro render_custom_select(field, value) %}
     {{ field.label }}
     {% if field.description %}
         <div class="ui pointing below label">

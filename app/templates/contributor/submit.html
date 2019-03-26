@@ -88,7 +88,14 @@
                   <div class = "sixteen wide field">
                   {{ upload.file_upload('file_urls') }}
                   </div>
+                  <div class = "fields">
+                  <div class = "three wide field">
+                  {{ f.render_form_field(book_form.save_book) }}
+                  </div>
+                  <div class = "three wide field">
                   {{ f.render_form_field(book_form.submit_book) }}
+                  </div>
+                  </div>
                   {{ f.end_form(book_form) }}
               </div>
           </div>

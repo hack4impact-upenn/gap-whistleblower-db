@@ -41,7 +41,7 @@
                </thead>
                <tbody>
                {% for c in contributions %}
-                  {% if c.doc_type == 'needs review' or c.doc_type == 'under review' or c.doc_type == 'published' %}
+                  {% if c.document_status == 'needs review' or c.doc_type == 'under review' or c.doc_type == 'published' %}
                     <tr>
                          <td onclick="window.location.href = '{{ url_for('contributor.contribution', id=c.id) }}';">{{ c.title }}</td>
                          <td class="document doc_type">{{ c.doc_type }}</td>

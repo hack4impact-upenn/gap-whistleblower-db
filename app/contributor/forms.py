@@ -5,6 +5,10 @@ from wtforms import validators
 from flask_wtf.file import FileField
 from app import db
 
+class DraftEntryForm(Form):
+    draft_new_book_entry = SubmitField()
+
+
 class MultipleFileUploadField(StringField):
     pass
 
@@ -29,6 +33,7 @@ class BookForm(Form):
     book_description = TextAreaField() #description
     book_link = StringField() #link
     book_file_urls = MultipleFileUploadField()
+    save_book = SubmitField()
     submit_book = SubmitField()
 
 class ArticleForm(Form):
@@ -45,6 +50,7 @@ class ArticleForm(Form):
     article_description = TextAreaField()
     article_link = StringField()
     article_file_urls = MultipleFileUploadField()
+    save_book = SubmitField()
     submit_article = SubmitField()
 
 
@@ -81,3 +87,4 @@ class OtherForm(Form):
     other_link = StringField()
     other_file_urls = MultipleFileUploadField()
     submit_other = SubmitField()
+
