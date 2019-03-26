@@ -8,7 +8,7 @@
         <h2 class="ui dividing header">Create Database Entry</h2>
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
-                  <h3 class="ui dividing header">Submit a Book</h3>
+                  <h3 class="ui dividing header">Submit an Article</h3>
                    {% set book_flashes = {
                       'success': get_flashed_messages(category_filter=['form-success'])
                   } %}
@@ -18,7 +18,7 @@
                   {{ f.form_message(book_flashes['success'], header='Success!', class='success') }}
                   </div>
                   <div class = "sixteen wide field">
-                  {{ f.render_form_field(book_form.book_title, c.title) }}
+                  {{ f.render_form_field(book_form.book_title) }}
                   </div>
                   <div class = "fields">
                       <div class = "eight wide field">
@@ -81,7 +81,14 @@
                   <div class = "sixteen wide field">
                   {{ upload.file_upload('file_urls') }}
                   </div>
+                  <div class = "fields">
+                  <div class = "three wide field">
+                  {{ f.render_form_field(book_form.save_book) }}
+                  </div>
+                  <div class = "three wide field">
                   {{ f.render_form_field(book_form.submit_book) }}
+                  </div>
+                  </div>
                   {{ f.end_form(book_form) }}
               </div>
           </div>

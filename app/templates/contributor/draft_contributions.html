@@ -1,11 +1,13 @@
 {% extends 'layouts/base.html' %}
-
 {% block content %}
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
             <a class="ui basic compact button" href="{{ url_for('contributor.index') }}">
                 <i class="caret left icon"></i>
                 Back to dashboard
+            </a>
+            <a class="ui basic compact button" href="{{ url_for('contributor.submit') }}">
+                Draft New Entry
             </a>
             <h2 class="ui header">
                 Review Your Drafts
@@ -42,6 +44,7 @@
                </thead>
                <tbody>
                {% for c in contributions %}
+               {% if c.document_status == 'draft' %}
                    <tr>
                       {% if c.doc_type == 'book' %}
                         <td onclick="window.location.href = '{{ url_for('contributor.view_book_draft', id=c.id) }}';">{{ c.title }}</td>
@@ -57,6 +60,7 @@
                        <td class="document doc_type">{{ c.doc_type }}</td>
                        </div>
                    </tr>
+                   {% endif %}
                {% endfor %}
                </tbody>
            </table>

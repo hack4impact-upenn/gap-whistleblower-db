@@ -88,7 +88,14 @@
                   <div class = "sixteen wide field">
                   {{ upload.file_upload('file_urls') }}
                   </div>
+                  <div class = "fields">
+                  <div class = "three wide field">
+                  {{ f.render_form_field(book_form.save_book) }}
+                  </div>
+                  <div class = "three wide field">
                   {{ f.render_form_field(book_form.submit_book) }}
+                  </div>
+                  </div>
                   {{ f.end_form(book_form) }}
               </div>
           </div>
@@ -142,12 +149,19 @@
                <div class = "sixteen wide field">
                {{ upload.file_upload('file_urls') }}
                </div>
-               {{ f.render_form_field(article_form.submit_article) }}
+               <div class = "fields">
+                  <div class = "three wide field">
+                  {{ f.render_form_field(article_form.save_article) }}
+                  </div>
+                  <div class = "three wide field">
+                  {{ f.render_form_field(article_form.submit_article) }}
+                  </div>
+                  </div>
+              </div>
                {{ f.end_form(article_form) }}
               </div>
             </div>
-        </div>
-        <div class="ui bottom attached {% if active == 'article' %}active {% endif %}tab segment" data-tab="third">
+        <div class="ui bottom attached {% if active == 'law' %}active {% endif %}tab segment" data-tab="third">
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
                   <h3 class="ui dividing header">Submit a Law</h3>
@@ -206,7 +220,14 @@
                   <div class = "sixteen wide field">
                   {{ upload.file_upload('file_urls') }}
                   </div>
+                  <div class = "fields">
+                  <div class = "three wide field">
+                  {{ f.render_form_field(law_form.save_law) }}
+                  </div>
+                  <div class = "three wide field">
                   {{ f.render_form_field(law_form.submit_law) }}
+                  </div>
+                  </div>
                   {{ f.end_form(law_form) }}
               </div>
           </div>
@@ -260,8 +281,16 @@
                   <div class = "sixteen wide field">
                   {{ upload.file_upload('file_urls') }}
                   </div>
+                  <div class = "fields">
+                  <div class = "three wide field">
+                  {{ f.render_form_field(other_form.save_other) }}
+                  </div>
+                  <div class = "three wide field">
                   {{ f.render_form_field(other_form.submit_other) }}
+                  </div>
+                  </div>
                   {{ f.end_form(other_form) }}
+              </div>
               </div>
           </div>
         </div>
