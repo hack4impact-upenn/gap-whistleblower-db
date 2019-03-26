@@ -50,7 +50,7 @@ class ArticleForm(Form):
     article_description = TextAreaField()
     article_link = StringField()
     article_file_urls = MultipleFileUploadField()
-    save_book = SubmitField()
+    save_article = SubmitField()
     submit_article = SubmitField()
 
 
@@ -70,6 +70,7 @@ class LawForm(Form):
     law_description = TextAreaField() #description
     law_link = StringField() #link
     law_file_urls = MultipleFileUploadField()
+    save_law = SubmitField()
     submit_law = SubmitField()
 
 class OtherForm(Form):
@@ -86,5 +87,6 @@ class OtherForm(Form):
     other_description = TextAreaField()
     other_link = StringField()
     other_file_urls = MultipleFileUploadField()
+    save_other = SubmitField()
     submit_other = SubmitField()
 
