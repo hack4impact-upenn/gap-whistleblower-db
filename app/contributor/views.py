@@ -25,11 +25,13 @@ contributor = Blueprint('contributor', __name__)
 
 @contributor.route('/index',methods=['GET', 'POST'])
 @login_required
+@contributor_required
 def index():
         return render_template('contributor/index.html')
 
 @contributor.route('/my_contributions',methods=['GET', 'POST'])
 @login_required
+@contributor_required
 def my_contributions():
     """Contribution Review page."""
     user_id = current_user.id
@@ -38,6 +40,7 @@ def my_contributions():
 
 @contributor.route('/view_all_drafts',methods=['GET', 'POST'])
 @login_required
+@contributor_required
 def view_all_drafts():
     user_id = current_user.id
     contributions = Document.query.filter(Document.posted_by == user_id)
@@ -45,6 +48,7 @@ def view_all_drafts():
 
 @contributor.route('/contribution/<int:id>', methods=['GET'])
 @login_required
+@contributor_required
 def contribution(id):
     """Contribution Review page."""
     contribution = Document.query.get(id)
@@ -53,6 +57,7 @@ def contribution(id):
 # 5 different types of draft editing forms
 @contributor.route('/contribution/draft/book/<int:id>', methods=['GET', 'POST'])
 @login_required
+@contributor_required
 def view_book_draft(id):
     """Contribution Review page."""
     contribution = Document.query.get(id)
@@ -103,7 +108,7 @@ def view_book_draft(id):
                 flash(
                     'Book \"{}\" successfully saved'.format(
                         book_form.book_title.data), 'form-success')
-                
+
                 return view_all_drafts()
 
             if "Submit Book" in request.form.values():
@@ -134,12 +139,14 @@ def view_book_draft(id):
                         book_form.book_title.data), 'form-success')
 
                 return my_contributions()
-                
+
 
     return render_template('contributor/edit_book_draft.html', book_form=book_form, c=contribution)
 
+
 @contributor.route('/contribution/draft/article/<int:id>', methods=['GET', 'POST'])
 @login_required
+@contributor_required
 def view_article_draft(id):
     contribution = Document.query.get(id)
     article_entry = Document.query.filter_by(id=id).first()
@@ -175,7 +182,7 @@ def view_article_draft(id):
                 flash(
                     'Article \"{}\" successfully saved'.format(
                         article_form.article_title.data), 'form-success')
-                
+
                 return view_all_drafts()
 
             if "Submit Article" in request.form.values():
@@ -207,6 +214,7 @@ def view_article_draft(id):
 
 @contributor.route('/contribution/draft/research/<int:id>', methods=['GET'])
 @login_required
+@contributor_required
 def view_research_draft(id):
     """Contribution Review page."""
     contribution = Document.query.get(id)
@@ -214,6 +222,7 @@ def view_research_draft(id):
 
 @contributor.route('/contribution/draft/law/<int:id>', methods=['GET', 'POST'])
 @login_required
+@contributor_required
 def view_law_draft(id):
     """Contribution Review page."""
     contribution = Document.query.get(id)
@@ -255,7 +264,7 @@ def view_law_draft(id):
                 flash(
                     'Law \"{}\" successfully saved'.format(
                         law_form.law_title.data), 'form-success')
-                
+
                 return view_all_drafts()
 
             if "Submit Law" in request.form.values():
@@ -285,6 +294,7 @@ def view_law_draft(id):
 
 @contributor.route('/contribution/draft/other/<int:id>', methods=['GET', 'POST'])
 @login_required
+@contributor_required
 def view_other_draft(id):
     contribution = Document.query.get(id)
     other_entry = Document.query.filter_by(id=id).first()
@@ -320,7 +330,7 @@ def view_other_draft(id):
                 flash(
                     'Other \"{}\" successfully saved'.format(
                         other_form.other_title.data), 'form-success')
-                
+
                 return view_all_drafts()
 
             if "Submit Other" in request.form.values():
@@ -346,10 +356,9 @@ def view_other_draft(id):
     return render_template('contributor/edit_other_draft.html', other_form=other_form, c=contribution)
 
 
-
-
 @contributor.route('/submit', methods=['GET', 'POST'])
 @login_required
+@contributor_required
 def submit():
     """Book page."""
     book_form = BookForm()
@@ -385,7 +394,7 @@ def submit():
                     description = book_form.book_description.data,
                     link = book_form.book_link.data,
                     document_status = "draft")
-                
+
                 db.session.add(book)
                 db.session.commit()
                 flash(
@@ -586,6 +595,8 @@ def submit():
 
 
 @contributor.route('sign-s3/')
+@login_required
+@contributor_required
 def sign_s3():
     # Load necessary information into the application
         S3_BUCKET = "h4i-test2"
@@ -625,4 +636,3 @@ def sign_s3():
             'https://%s.amazonaws.com/%s/json/%s' % (S3_REGION, S3_BUCKET,
                                                      file_name)
         })
-
