@@ -4,11 +4,11 @@ import boto3
 from flask import Blueprint, request, render_template, redirect, url_for
 from random import randint
 from time import sleep
-from app.models import EditableHTML, Document, Saved, User
+from app.models import EditableHTML, Document, Saved, User, Suggestion
 from flask_login import current_user, login_required
 # import flask_whooshalchemyplus as whooshalchemy
 # from flask_whooshee import Whooshee
-from app.main.forms import SaveForm, UnsaveForm
+from app.main.forms import SaveForm, UnsaveForm, SuggestionForm
 from app import db
 
 main = Blueprint('main', __name__)
@@ -18,12 +18,30 @@ main = Blueprint('main', __name__)
 def index():
     return render_template('main/index.html', search_results=[])
 
-
 @main.route('/about')
 def about():
     editable_html_obj = EditableHTML.get_editable_html('about')
     return render_template(
         'main/about.html', editable_html_obj=editable_html_obj)
+
+@main.route('/suggestion', methods=['GET', 'POST'])
+def suggestion():
+    """Suggestion page."""
+    form = SuggestionForm()
+
+    if form.validate_on_submit():
+        suggestion = Suggestion(
+            title=form.title.data, link=form.link.data,
+            doc_type = form.type.data, description=form.description.data)
+        db.session.add(suggestion)
+        db.session.commit()
+        flash(
+            'Suggestion \"{}\" successfully created'.format(
+                form.title.data), 'form-success')
+        return render_template(
+            'main/suggestion.html', form=form)
+
+    return render_template('main/suggestion.html', form=form)
 
 @main.route('/sign-s3')
 def sign_s3():

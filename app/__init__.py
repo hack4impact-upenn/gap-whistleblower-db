@@ -74,10 +74,4 @@ def create_app(config_name):
     from .contributor import contributor as contributor_blueprint
     app.register_blueprint(contributor_blueprint, url_prefix='/contributor')
 
-    from .suggestion import suggestion as suggestion_blueprint
-    app.register_blueprint(suggestion_blueprint, url_prefix='/suggestion')
-
-    from .contributor import contributor as contributor_blueprint
-    app.register_blueprint(contributor_blueprint, url_prefix='/contributor')
-
     return app
