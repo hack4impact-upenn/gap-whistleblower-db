@@ -7,7 +7,7 @@ from sqlalchemy import update
 
 from app import db, csrf
 from app.contributor.forms import BookForm, ArticleForm, OtherForm, LawForm, DraftEntryForm
-from app.decorators import admin_required
+from app.decorators import admin_required, contributor_required
 from app.models import Document, User
 
 import json

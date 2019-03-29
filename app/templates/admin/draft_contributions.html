@@ -1,0 +1,122 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+    <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+            <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+                <i class="caret left icon"></i>
+                Back to dashboard
+            </a>
+            <a class="ui basic compact button" href="{{ url_for('admin.submit') }}">
+                Draft New Entry
+            </a>
+            <h2 class="ui header">
+                Review Your Drafts
+                <div class="sub header">Review and edit drafts</div>
+            </h2>
+            <div class="ui menu">
+                <div id="select-type" class="ui dropdown item">
+                    <div class="text">
+                        All resource types
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item" data-value="">All resource types</div>
+                        <div class="item" data-value="book">Books</div>
+                        <div class="item" data-value="article">Articles</div>
+                        <div class="item" data-value="research">Research</div>
+                        <div class="item" data-value="law">Laws</div>
+                        <div class="item" data-value="other">Other</div>
+                    </div>
+                </div>
+                <div class="ui right search item">
+                    <div class="ui transparent icon input">
+                        <input id="search-suggestions" type="text" placeholder="Search contributions...">
+                        <i class="search icon"></i>
+                    </div>
+                </div>
+            </div>
+            <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
+               <thead>
+                   <tr>
+                       <th>Title</th>
+                       <th>Type</th>
+                   </tr>
+               </thead>
+               <tbody>
+               {% for c in contributions %}
+               {% if c.document_status == 'draft' %}
+                   <tr>
+                      {% if c.doc_type == 'book' %}
+                        <td onclick="window.location.href = '{{ url_for('admin.view_book_draft', id=c.id) }}';">{{ c.title }}</td>
+                      {% elif c.doc_type == 'article' %}
+                         <td onclick="window.location.href = '{{ url_for('admin.view_article_draft', id=c.id) }}';">{{ c.title }}</td>
+                      {% elif c.doc_type == 'research' %}
+                         <td onclick="window.location.href = '{{ url_for('admin.view_research_draft', id=c.id) }}';">{{ c.title }}</td>
+                      {% elif c.doc_type == 'law' %}
+                         <td onclick="window.location.href = '{{ url_for('admin.view_law_draft', id=c.id) }}';">{{ c.title }}</td>
+                      {% elif c.doc_type == 'other' %}
+                         <td onclick="window.location.href = '{{ url_for('admin.view_other_draft', id=c.id) }}';">{{ c.title }}</td>
+                      {% endif %}
+                       <td class="document doc_type">{{ c.doc_type }}</td>
+                       </div>
+                   </tr>
+                   {% endif %}
+               {% endfor %}
+               </tbody>
+           </table>
+
+        </div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        $('.delete-suggestion').on('click', function(e) {
+            id = e.target.id; // gets the id and shows the appropriate modal
+            $('#modal-' + id).modal('show');
+        });
+        $('#search-suggestions').keyup(function () {
+                var searchText = $(this).val();
+                if (searchText.length > 0) {
+                    $('tbody td:icontains(' + searchText + ')').addClass('positive');
+                    $('td.positive').not(':icontains(' + searchText + ')').removeClass('positive');
+                    $('tbody td').not(':icontains(' + searchText + ')').closest('tr').addClass('hidden').hide();
+                    $('tr.hidden:icontains(' + searchText + ')').removeClass('hidden').show();
+                } else {
+                    $('td.positive').removeClass('positive');
+                    $('tr.hidden').removeClass('hidden').show();
+                }
+        });
+        $('#select-type').dropdown({
+            onChange: function (value, text, $selectedItem) {
+                $('td.document.doc_type:contains(' + value + ')').closest('tr').removeClass('hidden').show();
+                $('td.document.doc_type').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
+            }
+        });
+      });
+      function linkMe(link) {
+        console.log(link)
+          if (isValidDomain(link)) {
+              var re  = "^(https?://)"
+              var regexHTTP = new RegExp(re,"i");
+              if (regexHTTP.test(link)) {
+                window.open(link)
+              }
+              else {
+                window.open('https://'.concat(link))
+              }
+          }
+          else {
+            alert("This suggestion has a malformed URL.")
+          }
+      }
+      function isValidDomain(v) {
+        if (!v) return false;
+        var re  = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
+        var regexUrl = new RegExp(re,"i");
+        return regexUrl.test(v);
+      }
+      function startDraft(id) {
+        window.open('draft/'.concat(id))
+      }
+    </script>
+{% endblock %}

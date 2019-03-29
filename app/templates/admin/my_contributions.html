@@ -9,21 +9,19 @@
             </a>
             <h2 class="ui header">
                 Review Contributions
-                <div class="sub header">Review contributions suggested by users</div>
+                <div class="sub header">Review your own contributions</div>
             </h2>
             <div class="ui menu">
                 <div id="select-type" class="ui dropdown item">
                     <div class="text">
-                        All resource types
+                        All resource statuses
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <div class="item" data-value="">All resource types</div>
-                        <div class="item" data-value="book">Books</div>
-                        <div class="item" data-value="article">Articles</div>
-                        <div class="item" data-value="research">Research</div>
-                        <div class="item" data-value="law">Laws</div>
-                        <div class="item" data-value="other">Other</div>
+                        <div class="item" data-value="">All resources</div>
+                        <div class="item" data-value="needs review">Needs Review</div>
+                        <div class="item" data-value="under review">Under Review</div>
+                        <div class="item" data-value="published">Published</div>
                     </div>
                 </div>
                 <div class="ui right search item">
@@ -43,12 +41,14 @@
                </thead>
                <tbody>
                {% for c in contributions %}
-                   <tr>
-                       <td onclick="window.location.href = '{{ url_for('admin.contribution', id=c.id) }}';">{{ c.title }}</td>
-                       <td class="suggestion type">{{ c.doc_type }}</td>
-                       <td class="suggestion status">{{ c.document_status }}</td>
-                       </div>
-                   </tr>
+                  {% if c.document_status == 'needs review' or c.doc_type == 'under review' or c.doc_type == 'published' %}
+                    <tr>
+                         <td onclick="window.location.href = '{{ url_for('admin.contribution', id=c.id) }}';">{{ c.title }}</td>
+                         <td class="document doc_type">{{ c.doc_type }}</td>
+                         <td class="document document_status">{{ c.document_status }}</td>
+                         </div>
+                    </tr>
+                  {% endif %}
                {% endfor %}
                </tbody>
            </table>
@@ -76,9 +76,8 @@
         });
         $('#select-type').dropdown({
             onChange: function (value, text, $selectedItem) {
-                $('td.suggestion.type:contains(' + value + ')').closest('tr').removeClass('hidden').show();
-                $('td.suggestion.type').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
-                 $('td.suggestion.status').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
+                $('td.document.document_status:contains(' + value + ')').closest('tr').removeClass('hidden').show();
+                $('td.document.document_status').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
             }
         });
       });

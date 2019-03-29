@@ -8,7 +8,7 @@
                 Back to contributions
             </a>
             <h2 class="ui header">
-                Review Suggestion
+                Review Contribution
                 <div class="sub header">Review this contribution</div>
             </h2>
             <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
@@ -151,6 +151,12 @@
                    {% endif %}     
                </tbody>
            </table>
+           <a class="ui basic compact button" href ="{{ url_for('admin.publish_contribution', id=contribution.id) }}">
+                Publish Contribution
+            </a>
+            <a class="ui basic compact button" href="{{ url_for('admin.review_contributions') }}">
+                Edit Contribution
+            </a>
         </div>
     </div>
 {% endblock %}
