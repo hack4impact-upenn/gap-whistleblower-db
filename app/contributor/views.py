@@ -678,7 +678,7 @@ def submit():
                     db.session.commit()
                     flash(
                         'Article \"{}\" successfully saved'.format(
-                            article_form.article_title.data), 'form-success')
+                            journal_form.article_title.data), 'form-success')
 
                     return view_all_drafts()
 
@@ -705,7 +705,7 @@ def submit():
                     db.session.commit()
                     flash(
                         'Article \"{}\" successfully submitted'.format(
-                            article_form.article_title.data), 'form-success')
+                            journal_form.article_title.data), 'form-success')
 
                     return my_contributions()
             
@@ -882,7 +882,7 @@ def submit():
                     db.session.commit()
                     flash(
                         'Law \"{}\" successfully submitted'.format(
-                            law_form.law_title.data), 'form-success')
+                            other_form.other_title.data), 'form-success')
 
                     return my_contributions()
 
