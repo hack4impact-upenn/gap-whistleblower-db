@@ -269,7 +269,7 @@ def view_journal_draft(id):
                 journal_entry.name = journal_form.publisher_name.data,
                 journal_entry.volume = journal_form.volume.data,
                 journal_entry.start_page = journal_form.start_page.data,
-                journal_entr.end_page = journal_form.end_page.data,
+                journal_entry.end_page = journal_form.end_page.data,
                 journal_entry.name = journal_form.article_publication.data
                 journal_entry.day = journal_form.article_publication_day.data
                 journal_entry.month = journal_form.article_publication_month.data
