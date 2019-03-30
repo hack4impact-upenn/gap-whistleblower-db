@@ -33,11 +33,14 @@ class Document(db.Model):
     ISBN = db.Column(db.String(30))
 
     #Specific to Book/Article
-    publication = db.Column(db.String(1000))
     author_first_name = db.Column(db.String(100))
     author_last_name = db.Column(db.String(100))
 
-    #Specific to Book/Court Case
+    #Specific to Journal Article
+    page_start = db.Column(db.Integer())
+    page_end = db.Column(db.Integer())
+
+    #Specific to Book
     name = db.Column(db.String(1000)) #Publisher or court name
     city = db.Column(db.String(500)) #Publisher or court city
     state = db.Column(db.String(500)) #Publisher or court state
@@ -46,9 +49,13 @@ class Document(db.Model):
     #Specific to Law
     govt_body = db.Column(db.String(1000))
     section = db.Column(db.String(1000))
+    region = db.Column(db.String(1000))
 
     #Specific to other
     other_type = db.Column(db.String(1000)) #Doc type (if other selected)
+
+    #Specific to video
+    post_source = db.Column(db.String(1000))
 
     @staticmethod
     def generate_fake(count=10, **kwargs):
@@ -82,11 +89,11 @@ class Document(db.Model):
         for i in range(count):
             user_id = random.randint(2,11)
             article = Document(
-                doc_type = "article",
+                doc_type = "news article",
                 day =  random.randint(1, 28),
                 month = fake.month_name(),
                 year = fake.year(),
-                publication = fake.sentence(),
+                name = fake.sentence(),
                 posted_by = user_id,
                 last_edited_by = user_id,
                 title = fake.text(max_nb_chars=50),
@@ -97,6 +104,27 @@ class Document(db.Model):
                 document_status = random.choice(["draft", "needs review", "under review","published"])
             )
             db.session.add(article)
+        for i in range(count):
+            user_id = random.randint(2,11)
+            journal = Document(
+                doc_type = "journal article",
+                day =  random.randint(1, 28),
+                month = fake.month_name(),
+                year = fake.year(),
+                name = fake.sentence(),
+                volume = random.randint(1, 10),
+                page_start = random.randint(1,10),
+                page_end = random.randint(11,20),
+                posted_by = user_id,
+                last_edited_by = user_id,
+                title = fake.text(max_nb_chars=50),
+                description = fake.text(max_nb_chars=500),
+                link = fake.domain_name(),
+                author_first_name = fake.first_name(),
+                author_last_name = fake.last_name(),
+                document_status = random.choice(["draft", "needs review", "under review","published"])
+            )
+            db.session.add(journal)
         for i in range(count):
             user_id = random.randint(2,11)
             doc_type = random.choice(["film", "audio", "photograph"])
@@ -124,6 +152,8 @@ class Document(db.Model):
                 day =  random.randint(1, 28),
                 month = fake.month_name(),
                 year = fake.year(),
+                citation = fake.sentence(),
+                region = fake.country(),
                 posted_by = user_id,
                 last_edited_by = user_id,
                 title = fake.text(max_nb_chars=50),
@@ -137,7 +167,25 @@ class Document(db.Model):
                 document_status = random.choice(["draft", "needs review", "under review","published"])
             )
             db.session.add(law)
-
+        for i in range(count):
+            user_id = random.randint(2,11)
+            video = Document(
+                doc_type = "video",
+                day =  random.randint(1, 28),
+                month = fake.month_name(),
+                year = fake.year(),
+                name = fake.sentence(),
+                post_source = fake.name(),
+                posted_by = user_id,
+                last_edited_by = user_id,
+                title = fake.text(max_nb_chars=50),
+                description = fake.text(max_nb_chars=500),
+                link = fake.domain_name(),
+                author_first_name = fake.first_name(),
+                author_last_name = fake.last_name(),
+                document_status = random.choice(["draft", "needs review", "under review","published"])
+            )
+            db.session.add(video)
         db.session.commit()
 
     def __repr__(self):
