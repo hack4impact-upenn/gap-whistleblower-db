@@ -342,7 +342,6 @@ def save_or_submit_doc(form, doc_type, submit=False):
             description=book_form.book_description.data,
             link=book_form.book_link.data,
             document_status="draft" if not submit else "published")
-
         db.session.add(book)
         db.session.commit()
         flash(
@@ -512,10 +511,11 @@ def view_law_draft(id):
 
     if request.method == 'POST':
         if law_form.validate_on_submit():
-            if "Save Article" in request.form.values():
+
+            if "Save Law" in request.form.values():
                 save_or_submit_doc(law_form, doc_type='law', submit=False)
 
-            if "Submit Article" in request.form.values():
+            if "Submit Law" in request.form.values():
                 save_or_submit_doc(law_form, doc_type='law', submit=True)
 
             return review_suggestions()
@@ -537,10 +537,10 @@ def view_video_draft(id):
 
     if request.method == 'POST':
         if video_form.validate_on_submit():
-            if "Save Article" in request.form.values():
+            if "Save Video" in request.form.values():
                 save_or_submit_doc(video_form, doc_type='video', submit=False)
 
-            if "Submit Article" in request.form.values():
+            if "Submit Video" in request.form.values():
                 save_or_submit_doc(video_form, doc_type='video', submit=True)
 
             return review_suggestions()
@@ -555,7 +555,6 @@ def view_other_draft(id):
     other_entry = Suggestion.query.get(id)
     other_form = OtherForm(
         doc_type="other",
-        other_document_type=other_entry.other_type,
         other_title=other_entry.title,
         other_description=other_entry.description,
         other_link=other_entry.link,
@@ -563,10 +562,10 @@ def view_other_draft(id):
 
     if request.method == 'POST':
         if other_form.validate_on_submit():
-            if "Save Article" in request.form.values():
+            if "Save Other" in request.form.values():
                 save_or_submit_doc(other_form, doc_type='other', submit=False)
 
-            if "Submit Article" in request.form.values():
+            if "Submit Other" in request.form.values():
                 save_or_submit_doc(other_form, doc_type='other', submit=True)
 
             return review_suggestions()
