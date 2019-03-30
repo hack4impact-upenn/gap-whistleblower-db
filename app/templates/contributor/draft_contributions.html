@@ -6,12 +6,13 @@
                 <i class="caret left icon"></i>
                 Back to dashboard
             </a>
-            <a class="ui basic compact button" href="{{ url_for('contributor.submit') }}">
-                Draft New Entry
+            <a class="ui secondary compact button" href="{{ url_for('contributor.submit') }}">
+               <i class="pencil icon"></i>
+                Draft new entry
             </a>
             <h2 class="ui header">
-                Review Your Drafts
-                <div class="sub header">Review and edit drafts</div>
+                Review Entries
+                <div class="sub header">View, edit, and submit my database entries</div>
             </h2>
             <div class="ui menu">
                 <div id="select-type" class="ui dropdown item">
@@ -20,12 +21,11 @@
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <div class="item" data-value="">All resource types</div>
-                        <div class="item" data-value="book">Books</div>
-                        <div class="item" data-value="article">Articles</div>
-                        <div class="item" data-value="research">Research</div>
-                        <div class="item" data-value="law">Laws</div>
-                        <div class="item" data-value="other">Other</div>
+                      <div class="item" data-value="">All resources</div>
+                      <div class="item" data-value="draft">Draft</div>
+                      <div class="item" data-value="needs review">Needs Review</div>
+                      <div class="item" data-value="under review">Under Review</div>
+                      <div class="item" data-value="published">Published</div>
                     </div>
                 </div>
                 <div class="ui right search item">
@@ -39,28 +39,55 @@
                <thead>
                    <tr>
                        <th>Title</th>
-                       <th>Type</th>
+                       <th class="two wide">Status</th>
+                       <th class="one wide">Link</th>
+                       <th class="two wide">Type</th>
+                       <th class="one wide">Delete</th>
+                       <th class="one wide">Draft</th>
                    </tr>
                </thead>
                <tbody>
                {% for c in contributions %}
-               {% if c.document_status == 'draft' %}
                    <tr>
-                      {% if c.doc_type == 'book' %}
-                        <td onclick="window.location.href = '{{ url_for('contributor.view_book_draft', id=c.id) }}';">{{ c.title }}</td>
-                      {% elif c.doc_type == 'article' %}
-                         <td onclick="window.location.href = '{{ url_for('contributor.view_article_draft', id=c.id) }}';">{{ c.title }}</td>
-                      {% elif c.doc_type == 'research' %}
-                         <td onclick="window.location.href = '{{ url_for('contributor.view_research_draft', id=c.id) }}';">{{ c.title }}</td>
-                      {% elif c.doc_type == 'law' %}
-                         <td onclick="window.location.href = '{{ url_for('contributor.view_law_draft', id=c.id) }}';">{{ c.title }}</td>
-                      {% elif c.doc_type == 'other' %}
-                         <td onclick="window.location.href = '{{ url_for('contributor.view_other_draft', id=c.id) }}';">{{ c.title }}</td>
-                      {% endif %}
-                       <td class="document doc_type">{{ c.doc_type }}</td>
-                       </div>
+                        <td onclick="window.location.href = '{{ url_for('contributor.contribution', id=c.id) }}';">{{ c.title }}</td>
+                        <td class="document document_status">{{ c.document_status }}</td>
+                        <td>
+                          <div class="ui buttons">
+                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
+                            <button class="ui small compact icon button"  onclick="linkMe('{{ c.link }}')"
+                            id="{{ c.id }}">
+                              <i class="linkify icon" id="{{ c.id }}"></i>
+                            </button>
+                          </div>
+                        </td>
+                        <td class="document doc_type">{{ c.doc_type }}</td>
+                        <td>
+                          <div class="ui buttons">
+                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
+                            <button class="ui small compact icon button delete-suggestion {% if c.document_status != 'draft' %}disabled{% endif %}" id="{{ c.id }}">
+                              <i class="trash alternate icon" id="{{ c.id }}"></i>
+                            </button>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="ui buttons">
+                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
+                            <button class="ui small compact icon button {% if c.document_status != 'draft' %}disabled{% endif %}" id="{{ c.id }}"
+                                  onclick="window.location.href = '{{ url_for('contributor.view_' + c.doc_type + '_draft', id=c.id) }}';">
+                              <i class="edit icon" id="{{ c.id }}"></i>
+                            </button>
+                          </div>
+                        </td>
+                        <div id="modal-{{ c.id }}" class="ui tiny modal delete-suggestion-modal">
+                           <div class="header">Delete Draft</div>
+                           <div class="content">Are you sure you want to delete {{ c.title }}?</div>
+                           <div class="actions">
+                             <div class="ui cancel button">Cancel</div>
+                             <a href="{{ url_for('contributor.delete_draft', id=c.id) }}"
+                               class="negative ui button">Yes, delete this draft</a>
+                           </div>
+                        </div>
                    </tr>
-                   {% endif %}
                {% endfor %}
                </tbody>
            </table>
@@ -88,8 +115,8 @@
         });
         $('#select-type').dropdown({
             onChange: function (value, text, $selectedItem) {
-                $('td.document.doc_type:contains(' + value + ')').closest('tr').removeClass('hidden').show();
-                $('td.document.doc_type').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
+                $('td.document.document_status:contains(' + value + ')').closest('tr').removeClass('hidden').show();
+                $('td.document.document_status').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
             }
         });
       });

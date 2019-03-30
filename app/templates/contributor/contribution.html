@@ -3,7 +3,7 @@
 {% block content %}
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
-            <a class="ui basic compact button" href="{{ url_for('contributor.my_contributions') }}">
+            <a class="ui basic compact button" href="{{ url_for('contributor.view_all_drafts') }}">
                 <i class="caret left icon"></i>
                 Back to contributions
             </a>
@@ -28,7 +28,7 @@
                      <td>Type (if other)</td>
                      <td>{{ contribution.other_type }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                      <td>Description</td>
                      <td>{{ contribution.description }}</td>
                    </tr>
@@ -44,87 +44,87 @@
                      <td>Publication Month</td>
                      <td>{{ contribution.month }}</td>
                    </tr>
-                   {% endif %}   
+                   {% endif %}
                     {% if contribution.year %}
                    <tr>
                      <td>Publication Year</td>
                      <td>{{ contribution.year }}</td>
                    </tr>
-                   {% endif %}   
+                   {% endif %}
                    <tr>
                      <td>Posted Date</td>
                      <td>{{ contribution.posted_date }}</td>
-                   </tr> 
+                   </tr>
                    <tr>
                      <td>Last Edited Date</td>
                      <td>{{ contribution.last_edited_date }}</td>
-                   </tr> 
+                   </tr>
                    {% if contribution.link %}
                    <tr>
                      <td>Link</td>
                      <td>{{ contribution.link }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if contribution.file %}
                    <tr>
                      <td>File</td>
                      <td>{{ contribution.file }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if contribution.citation %}
                    <tr>
                      <td>File</td>
                      <td>{{ contribution.citation }}</td>
                    </tr>
-                   {% endif %} 
+                   {% endif %}
                    {% if contribution.volume %}
                    <tr>
                      <td>Volume</td>
                      <td>{{ contribution.volume }}</td>
                    </tr>
-                   {% endif %} 
+                   {% endif %}
                    {% if contribution.edition %}
                    <tr>
                      <td>Edition</td>
                      <td>{{ contribution.edition }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if contribution.series %}
                    <tr>
                      <td>Series</td>
                      <td>{{ contribution.series }}</td>
                    </tr>
-                   {% endif %} 
+                   {% endif %}
                    {% if contribution.ISBN %}
                    <tr>
                      <td>ISBN</td>
                      <td>{{ contribution.ISBN }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if contribution.author_first_name %}
                    <tr>
                      <td>Author First Name</td>
                      <td>{{ contribution.author_first_name }}</td>
                    </tr>
-                   {% endif %} 
+                   {% endif %}
                    {% if contribution.author_last_name %}
                    <tr>
                      <td>Author Last Name</td>
                      <td>{{ contribution.author_last_name }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if contribution.name %}
                    <tr>
                      <td>Name</td>
                      <td>{{ contribution.name }}</td>
                    </tr>
-                   {% endif %}   
+                   {% endif %}
                    {% if contribution.city %}
                    <tr>
                      <td>City</td>
                      <td>{{ contribution.city }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if contribution.state %}
                    <tr>
                      <td>State</td>
@@ -142,16 +142,15 @@
                      <td>Government Body</td>
                      <td>{{ contribution.govt_body }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if contribution.section %}
                    <tr>
                      <td>Section</td>
                      <td>{{ contribution.section }}</td>
                    </tr>
-                   {% endif %}     
+                   {% endif %}
                </tbody>
            </table>
         </div>
     </div>
 {% endblock %}
-  

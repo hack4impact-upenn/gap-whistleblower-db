@@ -29,15 +29,6 @@ contributor = Blueprint('contributor', __name__)
 def index():
         return render_template('contributor/index.html')
 
-@contributor.route('/my_contributions',methods=['GET', 'POST'])
-@login_required
-@contributor_required
-def my_contributions():
-    """Contribution Review page."""
-    user_id = current_user.id
-    contributions = Document.query.filter(Document.posted_by == user_id)
-    return render_template('contributor/my_contributions.html', contributions=contributions)
-
 @contributor.route('/view_all_drafts',methods=['GET', 'POST'])
 @login_required
 @contributor_required
@@ -50,7 +41,6 @@ def view_all_drafts():
 @login_required
 @contributor_required
 def contribution(id):
-    """Contribution Review page."""
     contribution = Document.query.get(id)
     return render_template('contributor/contribution.html', contribution=contribution)
 
@@ -59,7 +49,6 @@ def contribution(id):
 @login_required
 @contributor_required
 def view_book_draft(id):
-    """Contribution Review page."""
     contribution = Document.query.get(id)
     book_entry = Document.query.filter_by(id=id).first()
     book_form = BookForm(
@@ -138,7 +127,7 @@ def view_book_draft(id):
                     'Book \"{}\" successfully created'.format(
                         book_form.book_title.data), 'form-success')
 
-                return my_contributions()
+                return view_all_drafts()
 
 
     return render_template('contributor/edit_book_draft.html', book_form=book_form, c=contribution)
@@ -203,7 +192,7 @@ def view_article_draft(id):
                     'Article \"{}\" successfully created'.format(
                         article_form.article_title.data), 'form-success')
 
-                return my_contributions()
+                return view_all_drafts()
 
     return render_template('contributor/edit_article_draft.html', article_form=article_form, c=contribution)
 
@@ -287,7 +276,7 @@ def view_law_draft(id):
                     'Law \"{}\" successfully created'.format(
                         law_form.law_title.data), 'form-success')
 
-                return my_contributions()
+                return view_all_drafts()
 
     return render_template('contributor/edit_law_draft.html', law_form=law_form, c=contribution)
 
@@ -351,7 +340,7 @@ def view_other_draft(id):
                     'Other \"{}\" successfully created'.format(
                         other_form.other_title.data), 'form-success')
 
-                return my_contributions()
+                return view_all_drafts()
 
     return render_template('contributor/edit_other_draft.html', other_form=other_form, c=contribution)
 
@@ -432,7 +421,7 @@ def submit():
                     'Book \"{}\" successfully created'.format(
                         book_form.book_title.data), 'form-success')
 
-                return my_contributions()
+                return view_all_drafts()
 
         if form_name == 'article_form' and article_form.validate_on_submit():
 
@@ -482,7 +471,7 @@ def submit():
                     'Article \"{}\" successfully submitted'.format(
                         article_form.article_title.data), 'form-success')
 
-                return my_contributions()
+                return view_all_drafts()
 
         if form_name == 'law_form' and law_form.validate_on_submit():
 
@@ -538,7 +527,7 @@ def submit():
                     'Law \"{}\" successfully submitted'.format(
                         law_form.law_title.data), 'form-success')
 
-                return my_contributions()
+                return view_all_drafts()
 
         if form_name == 'other_form' and other_form.validate_on_submit():
 
@@ -588,7 +577,7 @@ def submit():
                     'Law \"{}\" successfully submitted'.format(
                         law_form.law_title.data), 'form-success')
 
-                return my_contributions()
+                return view_all_drafts()
 
     return render_template('contributor/submit.html', book_form=book_form,
     article_form=article_form, law_form=law_form, other_form=other_form, active="book")
@@ -636,3 +625,23 @@ def sign_s3():
             'https://%s.amazonaws.com/%s/json/%s' % (S3_REGION, S3_BUCKET,
                                                      file_name)
         })
+
+@contributor.route('/view_all_drafts/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+@contributor_required
+def delete_draft(id):
+    """Draft deletion endpoint."""
+    draft = Document.query.get(id)
+    if draft is None:
+        abort(404)
+    db.session.delete(draft)
+    try:
+        db.session.commit()
+        flash(
+            'Draft {} successfully deleted'.format(
+                draft.title), 'form-success')
+    except IntegrityError:
+        db.session.rollback()
+        flash('Error occurred. Please try again.', 'form-error')
+        return redirect(url_for('contributor.view_all_drafts'))
+    return redirect(url_for('contributor.view_all_drafts'))

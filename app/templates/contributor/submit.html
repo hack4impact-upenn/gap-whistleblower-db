@@ -5,6 +5,14 @@
 {% block content %}
 <div class="ui grid container">
     <div class="twelve wide computer sixteen wide mobile centered column">
+      <a class="ui basic compact button" href="{{ url_for('contributor.index') }}">
+          <i class="caret left icon"></i>
+          Back to dashboard
+      </a>
+      <a class="ui basic compact button" href="{{ url_for('contributor.view_all_drafts') }}">
+          <i class="caret left icon"></i>
+          Back to my contributions
+      </a>
         <h2 class="ui dividing header">Create Database Entry</h2>
         <div class="ui top attached tabular menu">
           <a class="{% if active == 'book' %}active {% endif %}item" data-tab="first">Book</a>
