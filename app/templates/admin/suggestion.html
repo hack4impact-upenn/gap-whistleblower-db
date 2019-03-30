@@ -37,7 +37,7 @@
                    {% endif %}
                </tbody>
            </table>
-           <a class="ui black button" onclick="startDraft('{{ suggestion.id }}')">Draft an entry<i class="edit right icon"></i></a>
+           <a class="ui black button" onclick="startDraft('{{ suggestion.id }}', '{{ suggestion.doc_type }}')">Draft an entry<i class="edit right icon"></i></a>
         </div>
     </div>
 <script>
@@ -63,8 +63,24 @@
     var regexUrl = new RegExp(re,"i");
     return regexUrl.test(v);
   }
-  function startDraft(id) {
-    window.open('../contribution/draft/article/'.concat(id))
+  function startDraft(id, docType) {
+    switch (docType) {
+        case 'journal article':
+            window.open('../contribution/from_suggestion/journal/'.concat(id));
+            break;
+        case 'law':
+            window.open('../contribution/from_suggestion/law/'.concat(id));
+            break;
+        case 'article':
+        case 'news article':
+            window.open('../contribution/from_suggestion/article/'.concat(id));
+            break;
+        case 'video':
+            window.open('../contribution/from_suggestion/video/'.concat(id));
+            break;
+        default:
+            window.open('../contribution/from_suggestion/other/'.concat(id));
+    }
   }
 </script>
 {% endblock %}

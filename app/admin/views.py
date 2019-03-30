@@ -373,7 +373,7 @@ def save_or_submit_doc(form, doc_type, submit=False):
         flash(
             'Article \"{}\" successfully saved'.format(
                 journal_form.article_title.data), 'form-success')
-    elif doc_type == 'law form':
+    elif doc_type == 'law':
         law_form = form
         law = Document(
             doc_type="law",
@@ -447,7 +447,7 @@ def save_or_submit_doc(form, doc_type, submit=False):
                 other_form.other_title.data), 'form-success')
 
 
-@admin.route('/contribution/draft/article/<int:id>', methods=['GET', 'POST'])
+@admin.route('/contribution/from_suggestion/article/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def view_article_draft(id):
@@ -486,10 +486,10 @@ def view_journal_draft(id):
     if request.method == 'POST':
         if journal_form.validate_on_submit():
             if "Save Article" in request.form.values():
-                save_or_submit_doc(journal_form, doc_type='news article', submit=False)
+                save_or_submit_doc(journal_form, doc_type='journal article', submit=False)
 
             if "Submit Article" in request.form.values():
-                save_or_submit_doc(journal_form, doc_type='news article', submit=True)
+                save_or_submit_doc(journal_form, doc_type='journal article', submit=True)
 
             return review_suggestions()
 
@@ -513,10 +513,10 @@ def view_law_draft(id):
     if request.method == 'POST':
         if law_form.validate_on_submit():
             if "Save Article" in request.form.values():
-                save_or_submit_doc(law_form, doc_type='news article', submit=False)
+                save_or_submit_doc(law_form, doc_type='law', submit=False)
 
             if "Submit Article" in request.form.values():
-                save_or_submit_doc(law_form, doc_type='news article', submit=True)
+                save_or_submit_doc(law_form, doc_type='law', submit=True)
 
             return review_suggestions()
 
@@ -538,10 +538,10 @@ def view_video_draft(id):
     if request.method == 'POST':
         if video_form.validate_on_submit():
             if "Save Article" in request.form.values():
-                save_or_submit_doc(video_form, doc_type='news article', submit=False)
+                save_or_submit_doc(video_form, doc_type='video', submit=False)
 
             if "Submit Article" in request.form.values():
-                save_or_submit_doc(video_form, doc_type='news article', submit=True)
+                save_or_submit_doc(video_form, doc_type='video', submit=True)
 
             return review_suggestions()
 
@@ -564,10 +564,10 @@ def view_other_draft(id):
     if request.method == 'POST':
         if other_form.validate_on_submit():
             if "Save Article" in request.form.values():
-                save_or_submit_doc(other_form, doc_type='news article', submit=False)
+                save_or_submit_doc(other_form, doc_type='other', submit=False)
 
             if "Submit Article" in request.form.values():
-                save_or_submit_doc(other_form, doc_type='news article', submit=True)
+                save_or_submit_doc(other_form, doc_type='other', submit=True)
 
             return review_suggestions()
 
