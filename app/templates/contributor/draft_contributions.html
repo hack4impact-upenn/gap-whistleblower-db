@@ -48,7 +48,7 @@
                    <tr>
                       {% if c.doc_type == 'book' %}
                         <td onclick="window.location.href = '{{ url_for('contributor.view_book_draft', id=c.id) }}';">{{ c.title }}</td>
-                      {% elif c.doc_type == 'article' %}
+                      {% elif c.doc_type == 'news article' %}
                          <td onclick="window.location.href = '{{ url_for('contributor.view_article_draft', id=c.id) }}';">{{ c.title }}</td>
                       {% elif c.doc_type == 'research' %}
                          <td onclick="window.location.href = '{{ url_for('contributor.view_research_draft', id=c.id) }}';">{{ c.title }}</td>
@@ -56,6 +56,10 @@
                          <td onclick="window.location.href = '{{ url_for('contributor.view_law_draft', id=c.id) }}';">{{ c.title }}</td>
                       {% elif c.doc_type == 'other' %}
                          <td onclick="window.location.href = '{{ url_for('contributor.view_other_draft', id=c.id) }}';">{{ c.title }}</td>
+                      {% elif c.doc_type == 'journal article' %}
+                         <td onclick="window.location.href = '{{ url_for('contributor.view_journal_draft', id=c.id) }}';">{{ c.title }}</td>
+                         {% elif c.doc_type == 'video' %}
+                         <td onclick="window.location.href = '{{ url_for('contributor.view_video_draft', id=c.id) }}';">{{ c.title }}</td>
                       {% endif %}
                        <td class="document doc_type">{{ c.doc_type }}</td>
                        </div>

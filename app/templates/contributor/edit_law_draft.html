@@ -23,11 +23,19 @@
                       </div>
                   </div>
                   <div class = "fields">
-                      <div class = "eight wide field">
+                      <div class = "sixteen wide field">
+                      {{ f.render_form_field(law_form.law_citation) }}
+                      </div>
+                  </div>
+                  <div class = "three fields">
+                      <div class = "field">
                       {{ f.render_form_field(law_form.law_government_body) }}
                       </div>
-                      <div class = "eight wide field">
+                      <div class = "field">
                       {{ f.render_form_field(law_form.law_section) }}
+                      </div>
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_region) }}
                       </div>
                   </div>
                   <div class = "three fields">

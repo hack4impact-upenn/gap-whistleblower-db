@@ -21,14 +21,18 @@
                      <td>Type</td>
                      <td>{{ contribution.doc_type }}</td>
                    </tr>
-                   {% if contribution.description %}
+                   <tr>
+                     <td>Document Status</td>
+                     <td>{{ contribution.document_status }}</td>
+                   </tr>
                    <tr>
                   {% if contribution.other_type %}
                    <tr>
                      <td>Type (if other)</td>
                      <td>{{ contribution.other_type }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %} 
+                    {% if contribution.description %}
                      <td>Description</td>
                      <td>{{ contribution.description }}</td>
                    </tr>
@@ -50,7 +54,19 @@
                      <td>Publication Year</td>
                      <td>{{ contribution.year }}</td>
                    </tr>
-                   {% endif %}   
+                   {% endif %}
+                  {% if contribution.posted_by %}
+                   <tr>
+                     <td>Publication By</td>
+                     <td>{{ contribution.posted_by }}</td>
+                   </tr>
+                   {% endif %}
+                   {% if contribution.last_edited_by %}
+                   <tr>
+                     <td>Last Edited By</td>
+                     <td>{{ contribution.last_edited_by }}</td>
+                   </tr>
+                   {% endif %}
                    <tr>
                      <td>Posted Date</td>
                      <td>{{ contribution.posted_date }}</td>
@@ -59,6 +75,12 @@
                      <td>Last Edited Date</td>
                      <td>{{ contribution.last_edited_date }}</td>
                    </tr> 
+                   {% if contribution.post_source %}
+                   <tr>
+                     <td>Link</td>
+                     <td>{{ contribution.post_source }}</td>
+                   </tr>
+                   {% endif %}  
                    {% if contribution.link %}
                    <tr>
                      <td>Link</td>
@@ -95,6 +117,18 @@
                      <td>{{ contribution.series }}</td>
                    </tr>
                    {% endif %} 
+                   {% if contribution.page_start %}
+                   <tr>
+                     <td>Page Start</td>
+                     <td>{{ contribution.page_start }}</td>
+                   </tr>
+                   {% endif %} 
+                   {% if contribution.page_end %}
+                   <tr>
+                     <td>Page End</td>
+                     <td>{{ contribution.page_end }}</td>
+                   </tr>
+                   {% endif %} 
                    {% if contribution.ISBN %}
                    <tr>
                      <td>ISBN</td>
@@ -118,7 +152,7 @@
                      <td>Name</td>
                      <td>{{ contribution.name }}</td>
                    </tr>
-                   {% endif %}   
+                   {% endif %}  
                    {% if contribution.city %}
                    <tr>
                      <td>City</td>
@@ -135,6 +169,12 @@
                    <tr>
                      <td>Country</td>
                      <td>{{ contribution.country }}</td>
+                   </tr>
+                   {% endif %}
+                   {% if contribution.region %}
+                   <tr>
+                     <td>Country</td>
+                     <td>{{ contribution.region }}</td>
                    </tr>
                    {% endif %}
                    {% if contribution.govt_body %}
