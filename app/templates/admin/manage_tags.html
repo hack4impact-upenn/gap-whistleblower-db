@@ -14,41 +14,15 @@
             </h2>
             <h3 class="ui dividing header">Existing Tags</h3>
             {% for t in tags %}
-            <a class="ui label" style="margin-bottom:3px">
+            <div class="ui label" style="margin-bottom:3px">
               <div style="display: inline-block">{{ t.tag }}</div>
-              <div class="delete-tag" style="display: inline-block; margin-right: -8px;">
-                <i class="delete icon" id="{{ t.id }}"></i>
-              </div>
-            </a>
-            <div id="modal-{{ t.id }}" class="ui mini modal">
-              <div class="header">
-                Delete Tag
-              </div>
-              <div class="content">
-                <p>Are you sure you want to delete this tag?</p>
-              </div>
-              <div class="actions">
-                <div class="ui cancel red button">Cancel</div>
-                <div class="ui approve green button">
-                  <a href="{{ url_for('admin.delete_tag', id=t.id) }}"
-                  style="color: white; text-decoration: none;">OK</a>
-                </div>
-              </div>
+              <a style="display: inline-block; margin-right: -8px;" href="{{ url_for('admin.delete_tag', id=t.id) }}">
+                <i class="delete icon" style="text-decoration: inherit;" id="{{ t.id }}"></i>
+              </a>
             </div>
             {% endfor %}
             <h3 class="ui dividing header">Add a New Tag</h3>
             {{ f.render_form(form) }}
         </div>
     </div>
-
-
-    <script>
-      $(document).ready(function () {
-        $('.delete-tag').on('click', function(e) {
-          console.log(e.target)
-            id = e.target.id; // gets the id and shows the appropriate modal
-            $('#modal-' + id).modal('show');
-        });
-      });
-    </script>
 {% endblock %}

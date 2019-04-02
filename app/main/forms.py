@@ -18,7 +18,7 @@ class UnsaveForm(Form):
 class SuggestionForm(Form):
     title = StringField(validators=[InputRequired()])
     link = StringField()
-    type = SelectField(choices=[('book', 'Book'), ('article', 'Article'),
-    ('research', 'Research Paper'), ('law', 'Law'), ('other', 'Other')])
+    type = SelectField(choices=[('book', 'Book'), ('news article', 'News Article'),
+    ('journal article', 'Journal Aritcle'), ('law', 'Law'),  ('video', 'Video'), ('other', 'Other')])
     description = TextAreaField()
     submit = SubmitField()

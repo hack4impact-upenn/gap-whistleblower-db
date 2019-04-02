@@ -21,7 +21,6 @@ from app.models import Role, User, Tag
 from flask_wtf.file import FileField
 
 
-
 class ChangeUserEmailForm(Form):
     email = EmailField(
         'New email', validators=[InputRequired(),
@@ -133,11 +132,33 @@ class ArticleForm(Form):
     save_article = SubmitField()
     submit_article = SubmitField()
 
+class JournalArticleForm(Form):
+    article_title = StringField(validators=[InputRequired()])
+    article_author_first_name = StringField()
+    article_author_last_name = StringField()
+    publisher_name = StringField()
+    volume = StringField()
+    start_page = IntegerField()
+    end_page = IntegerField()
+    article_publication_day = IntegerField(validators=[validators.optional()])
+    article_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
+    ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
+    , ('August', 'August'), ('September', 'September'), ('October', 'October'),
+    ('November', 'November'), ('December', 'December')])
+    article_publication_year = IntegerField(validators=[validators.optional()])
+    article_description = TextAreaField()
+    article_link = StringField()
+    article_file_urls = MultipleFileUploadField()
+    save_article = SubmitField()
+    submit_article = SubmitField()
+
 
 class LawForm(Form):
     law_title = StringField(validators=[InputRequired()]) #title
+    law_citation = StringField(validators=[InputRequired()]) #citation
     law_government_body = StringField() #govt_body
     law_section = StringField() #section
+    law_region = StringField() #region
     law_enactment_day = IntegerField(validators=[validators.optional()]) #day
     law_enactment_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
     ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
@@ -152,6 +173,21 @@ class LawForm(Form):
     law_file_urls = MultipleFileUploadField()
     save_law = SubmitField()
     submit_law = SubmitField()
+
+class VideoForm(Form):
+    video_title = StringField(validators=[InputRequired()])
+    director_first_name = StringField()
+    director_last_name = StringField()
+    video_post_source = StringField()
+    video_city = StringField()
+    video_country = StringField()
+    video_publisher = StringField()
+    video_publication_year = StringField()
+    video_description = TextAreaField()
+    video_link = StringField()
+    video_file_urls = MultipleFileUploadField()
+    save_video = SubmitField()
+    submit_video = SubmitField()
 
 class OtherForm(Form):
     other_document_type = StringField(validators = [InputRequired()])
@@ -169,4 +205,3 @@ class OtherForm(Form):
     other_file_urls = MultipleFileUploadField()
     save_other = SubmitField()
     submit_other = SubmitField()
-
