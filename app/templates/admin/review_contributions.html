@@ -38,6 +38,7 @@
                    <tr>
                        <th>Title</th>
                        <th>Type</th>
+                       <th>Status</th>
                    </tr>
                </thead>
                <tbody>
@@ -45,6 +46,7 @@
                    <tr>
                        <td onclick="window.location.href = '{{ url_for('admin.contribution', id=c.id) }}';">{{ c.title }}</td>
                        <td class="suggestion type">{{ c.doc_type }}</td>
+                       <td class="suggestion status">{{ c.document_status }}</td>
                        </div>
                    </tr>
                {% endfor %}
@@ -76,6 +78,7 @@
             onChange: function (value, text, $selectedItem) {
                 $('td.suggestion.type:contains(' + value + ')').closest('tr').removeClass('hidden').show();
                 $('td.suggestion.type').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
+                 $('td.suggestion.status').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
             }
         });
       });

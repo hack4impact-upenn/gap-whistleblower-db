@@ -20,9 +20,10 @@
                     <div class="menu">
                         <div class="item" data-value="">All resource types</div>
                         <div class="item" data-value="book">Books</div>
-                        <div class="item" data-value="article">Articles</div>
-                        <div class="item" data-value="research">Research</div>
+                        <div class="item" data-value="news article">News Articles</div>
+                        <div class="item" data-value="journal article">Journal Articles</div>
                         <div class="item" data-value="law">Laws</div>
+                        <div class="item" data-value="video">Videos</div>
                         <div class="item" data-value="other">Other</div>
                     </div>
                 </div>
@@ -69,10 +70,10 @@
                        <td>
                          <div class="ui buttons">
                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
-                           <button class="ui small compact icon button" id="{{ s.id }}"
-                            onclick="startDraft('{{ s.id }}')">
+                           <a class="ui small compact icon button" id="{{ s.id }}"
+                            href="{{ url_for('admin.suggestion_' + convert[s.doc_type] + '_draft', id=s.id) }}"">
                              <i class="edit icon" id="{{ s.id }}"></i>
-                           </button>
+                           </a>
                          </div>
                        </td>
                        <div id="modal-{{ s.id }}" class="ui tiny modal delete-suggestion-modal">

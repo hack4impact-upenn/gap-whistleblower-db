@@ -4,11 +4,11 @@ import boto3
 from flask import Blueprint, request, render_template, redirect, url_for
 from random import randint
 from time import sleep
-from app.models import EditableHTML, Document, Saved, User
+from app.models import EditableHTML, Document, Saved, User, Suggestion
 from flask_login import current_user, login_required
 # import flask_whooshalchemyplus as whooshalchemy
 # from flask_whooshee import Whooshee
-from app.main.forms import SaveForm, UnsaveForm
+from app.main.forms import SaveForm, UnsaveForm, SuggestionForm
 from app import db
 
 main = Blueprint('main', __name__)
@@ -25,47 +25,26 @@ def about():
     return render_template(
         'main/about.html', editable_html_obj=editable_html_obj)
 
-@main.route('/sign-s3')
-def sign_s3():
-    # Load necessary information into the application
-        S3_BUCKET = "h4i-test2"
-        TARGET_FOLDER = 'json/'
-        # Load required data from the request
-        pre_file_name = request.args.get('file-name')
-        file_name = ''.join(pre_file_name.split('.')[:-1]) +\
-            str(time.time()).replace('.',  '-') + '.' +  \
-            ''.join(pre_file_name.split('.')[-1:])
-        file_type = request.args.get('file-type')
 
-        # Initialise the S3 client
-        s3 = boto3.client('s3', 'us-east-2')
+@main.route('/suggestion', methods=['GET', 'POST'])
+def suggestion():
+    """Suggestion page."""
+    form = SuggestionForm()
 
-        # Generate and return the presigned URL
-        S3_REGION = "us-east-2"
-        presigned_post = s3.generate_presigned_post(
-        Bucket=S3_BUCKET,
-        Key=TARGET_FOLDER + file_name,
-        Fields={
-            "acl": "public-read",
-            "Content-Type": file_type
-        },
-        Conditions=[{
-            "acl": "public-read"
-        }, {
-            "Content-Type": file_type
-        }],
-        ExpiresIn=60000)
+    if form.validate_on_submit():
+        suggestion = Suggestion(
+            title=form.title.data, link=form.link.data,
+            doc_type = form.type.data, description=form.description.data)
+        db.session.add(suggestion)
+        db.session.commit()
+        flash(
+            'Suggestion \"{}\" successfully created'.format(
+                form.title.data), 'form-success')
+        return render_template(
+            'main/suggestion.html', form=form)
 
-        # Return the data to the client
-        return json.dumps({
-            'data':
-            presigned_post,
-            'url_upload':
-            'https://s3.%s.amazonaws.com/%s/' % (S3_REGION, S3_BUCKET),
-            'url':
-            'https://s3.%s.amazonaws.com/%s/json/%s' % (S3_REGION, S3_BUCKET,
-                file_name)
-        })
+    return render_template('main/suggestion.html', form=form)
+
 
 @main.route('/resource/saved/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -91,6 +70,7 @@ def resource(id, from_saved=False):
         'main/resource.html', resource=resource, user_id=user_id, saved=saved, form=form, from_saved=from_saved
     )
 
+
 @main.route('/saved')
 @login_required
 def review_saved():
@@ -98,3 +78,4 @@ def review_saved():
     user = User.query.get(user_id)
     saved = user.saved
     return render_template('main/review_saved.html', saved=saved)
+    

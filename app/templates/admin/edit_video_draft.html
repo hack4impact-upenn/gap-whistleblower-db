@@ -1,0 +1,76 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+{% import 'macros/file_upload.html' as upload %}
+
+{% block content %}
+<div class="ui grid container">
+    <div class="twelve wide computer sixteen wide mobile centered column">
+        <h2 class="ui dividing header">Create Database Entry</h2>
+          <div class="ui grid container">
+              <div class="sixteen wide computer sixteen wide mobile centered column">
+                  <h3 class="ui dividing header">Submit a Video</h3>
+                   {% set video_flashes = {
+                      'success': get_flashed_messages(category_filter=['form-success'])
+                  } %}
+            {{ f.begin_form(video_form, video_flashes) }}
+             <input type="hidden" name="form-name" value="video_form">
+             <div class = "sixteen wide field">
+             {{ f.form_message(video_form['success'], header='Success!', class='success') }}
+             </div>
+             <div class = "sixteen wide field">
+             {{ f.render_form_field(video_form.video_title) }}
+             </div>
+             <div class="fields">
+               <div class = "eight wide field">
+               {{ f.render_form_field(video_form.director_first_name) }}
+               </div>
+               <div class = "eight wide field">
+               {{ f.render_form_field(video_form.director_last_name) }}
+               </div>
+             </div>
+             <div class = "sixteen wide field">
+             {{ f.render_form_field(video_form.video_post_source) }}
+             </div>
+             <div class = "three fields">
+               <div class = "field">
+               {{ f.render_form_field(video_form.video_city) }}
+               </div>
+               <div class = "field">
+               {{ f.render_form_field(video_form.video_country) }}
+               </div>
+               <div class = "field">
+               {{ f.render_form_field(video_form.video_publication_year) }}
+               </div>
+             </div>
+               <div class = "sixteen wide field">
+               {{ f.render_form_field(video_form.video_description) }}
+               </div>
+               <div class = "sixteen wide field">
+               {{ f.render_form_field(video_form.video_link) }}
+               </div>
+               <div class = "sixteen wide field">
+               {{ f.render_form_input(video_form.video_file_urls) }}
+               </div>
+               <div class = "sixteen wide field">
+               {{ upload.file_upload('file_urls') }}
+               </div>
+               <div class = "fields">
+                  <div class = "three wide field">
+                  {{ f.render_form_field(video_form.save_video) }}
+                  </div>
+                  <div class = "three wide field">
+                  {{ f.render_form_field(video_form.submit_video) }}
+                  </div>
+                  </div>
+              </div>
+               {{ f.end_form(video_form) }}
+              </div>
+          </div>
+        </div>
+    </div>
+</div>
+<script>
+  $('.menu .item').tab();
+</script>
+
+{% endblock %}
