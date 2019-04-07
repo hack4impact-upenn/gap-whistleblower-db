@@ -40,7 +40,8 @@
                      <td>Type (if other)</td>
                      <td>{{ resource.other_type }}</td>
                    </tr>
-                   {% endif %}  
+                   <tr>
+                   {% endif %}
                      <td>Description</td>
                      <td>{{ resource.description }}</td>
                    </tr>
@@ -56,87 +57,87 @@
                      <td>Publication Month</td>
                      <td>{{ resource.month }}</td>
                    </tr>
-                   {% endif %}   
+                   {% endif %}
                     {% if resource.year %}
                    <tr>
                      <td>Publication Year</td>
                      <td>{{ resource.year }}</td>
                    </tr>
-                   {% endif %}   
+                   {% endif %}
                    <tr>
                      <td>Posted Date</td>
                      <td>{{ resource.posted_date }}</td>
-                   </tr> 
+                   </tr>
                    <tr>
                      <td>Last Edited Date</td>
                      <td>{{ resource.last_edited_date }}</td>
-                   </tr> 
+                   </tr>
                    {% if resource.link %}
                    <tr>
                      <td>Link</td>
                      <td>{{ resource.link }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if resource.file %}
                    <tr>
                      <td>File</td>
                      <td>{{ resource.file }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if resource.citation %}
                    <tr>
                      <td>File</td>
                      <td>{{ resource.citation }}</td>
                    </tr>
-                   {% endif %} 
+                   {% endif %}
                    {% if resource.volume %}
                    <tr>
                      <td>Volume</td>
                      <td>{{ resource.volume }}</td>
                    </tr>
-                   {% endif %} 
+                   {% endif %}
                    {% if resource.edition %}
                    <tr>
                      <td>Edition</td>
                      <td>{{ resource.edition }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if resource.series %}
                    <tr>
                      <td>Series</td>
                      <td>{{ resource.series }}</td>
                    </tr>
-                   {% endif %} 
+                   {% endif %}
                    {% if resource.ISBN %}
                    <tr>
                      <td>ISBN</td>
                      <td>{{ resource.ISBN }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if resource.author_first_name %}
                    <tr>
                      <td>Author First Name</td>
                      <td>{{ resource.author_first_name }}</td>
                    </tr>
-                   {% endif %} 
+                   {% endif %}
                    {% if resource.author_last_name %}
                    <tr>
                      <td>Author Last Name</td>
                      <td>{{ resource.author_last_name }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if resource.name %}
                    <tr>
                      <td>Name</td>
                      <td>{{ resource.name }}</td>
                    </tr>
-                   {% endif %}   
+                   {% endif %}
                    {% if resource.city %}
                    <tr>
                      <td>City</td>
                      <td>{{ resource.city }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if resource.state %}
                    <tr>
                      <td>State</td>
@@ -154,13 +155,13 @@
                      <td>Government Body</td>
                      <td>{{ resource.govt_body }}</td>
                    </tr>
-                   {% endif %}  
+                   {% endif %}
                    {% if resource.section %}
                    <tr>
                      <td>Section</td>
                      <td>{{ resource.section }}</td>
                    </tr>
-                   {% endif %}     
+                   {% endif %}
                </tbody>
            </table>
         </div>
@@ -175,4 +176,3 @@
         });
     </script>
 {% endblock %}
-  

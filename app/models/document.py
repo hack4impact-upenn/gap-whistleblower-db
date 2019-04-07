@@ -5,10 +5,15 @@ from faker import Faker
 from sqlalchemy import Column, Integer, DateTime
 import datetime
 
+from sqlalchemy_searchable import make_searchable
+from sqlalchemy_utils.types import TSVectorType
+
+make_searchable(db.Model.metadata)
 
 class Document(db.Model):
     __tablename__ = 'document'
     id = db.Column(db.Integer, primary_key=True)
+    search_vector = db.Column(TSVectorType('title', 'author_first_name', 'author_last_name', 'govt_body', 'post_source', 'description'))
 
     #These files are generic
     doc_type = db.Column(db.String(200))
@@ -17,8 +22,8 @@ class Document(db.Model):
     year = db.Column(db.Integer()) #Publication/case/enactment of law year
     posted_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     last_edited_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    posted_by = db.Column(db.String, db.ForeignKey('users.id'))
-    last_edited_by = db.Column(db.String, db.ForeignKey('users.id'))
+    posted_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    last_edited_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     title = db.Column(db.String(10000))
     description = db.Column(db.Text())
     link = db.Column(db.String())
@@ -207,10 +212,9 @@ class Document(db.Model):
                 f'Edition: {self.edition}\n>'
                 f'Series: {self.series}\n>'
                 f'ISBN: {self.ISBN}\n>'
-                f'Author Frst Name: {self.author_first_name}\n>'
+                f'Author First Name: {self.author_first_name}\n>'
                 f'Author Last Name: {self.author_last_name}\n>'
-                f'Court Name: {self.court_name}\n>'
-                f'Name: {self.court_name}\n>'
+                f'Name: {self.name}\n>'
                 f'City: {self.city}\n>'
                 f'State: {self.state}\n>'
                 f'Country: {self.country}\n>'

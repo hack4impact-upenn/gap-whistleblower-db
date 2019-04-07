@@ -76,8 +76,16 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     ASSETS_DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+
+    POSTGRES = {
+        'user': 'sarahraines',
+        'pw': 'hello123',
+        'db': 'postgres',
+        'host': 'gap-whistleblower-db.cmgekcdmmaaq.us-east-1.rds.amazonaws.com',
+        'port': '5432',
+    }
+
+    SQLALCHEMY_DATABASE_URI = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 
     @classmethod
     def init_app(cls, app):

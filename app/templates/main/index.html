@@ -1,5 +1,6 @@
 {% import 'macros/nav_macros.html' as nav %}
 {% import 'macros/location_macros.html' as loc %}
+{% import 'macros/form_macros.html' as f %}
 
 <!DOCTYPE html>
 <html>
@@ -9,6 +10,7 @@
         {% block custom_head_tags %}{% endblock %}
     </head>
     <body onresize="resizeFilter()">
+      <form method=post>
         <div class="ui inverted vertical masthead center aligned segment">
             <div class="ui container">
                 {% block nav %}
@@ -37,9 +39,13 @@
                     Government Accountability Project is the international leader in whistleblower protection. <br/>
                     This database is a curated, searchable list of scholarly materials related to whistleblowing. <br/>
                 </p>
+                <p>
+                    {{ first }}
+                </p>
+                <br>
                 <div class="ui action input fluid large">
-                  <input type="text" placeholder="Search...">
-                  <div class="ui button large">Search</div>
+                  {{ form.query(class='ui input large fluid') }}
+                  <button class="ui button large" type="submit">Search</button>
                 </div>
             </div>
         </div>
@@ -52,87 +58,44 @@
                     <p style="font-size: 1.5em;">Filter Resources</p>
                   </div>
                 </div>
-                <div class="item">
-                  <div class="ui header small">Resource Type</div>
-                  <div class="ui form">
-                    <div class="grouped fields">
-                      <div class="field">
-                        <div class="ui checked checkbox">
-                        <input type="checkbox" checked="">
-                        <label>Book</label>
-                        </div>
-                      </div>
-                      <div class="field">
-                        <div class="ui checked checkbox">
-                          <input type="checkbox" checked="">
-                          <label>Article</label>
-                        </div>
-                      </div>
-                      <div class="field">
-                        <div class="ui checked checkbox">
-                          <input type="checkbox" checked="">
-                          <label>Research</label>
-                        </div>
-                      </div>
-                      <div class="field">
-                        <div class="ui checked checkbox">
-                          <input type="checkbox" checked="">
-                          <label>Law</label>
-                        </div>
-                      </div>
-                      <div class="field">
-                        <div class="ui checked checkbox">
-                          <input type="checkbox" checked="">
-                          <label>Other</label>
-                        </div>
+                <div class="ui form">
+                  <div class="item">
+                    <div class="ui header small">Resource Type</div>
+                      <div class="grouped fields">
+                        {{ f.render_form_field(form.book) }}
+                        {{ f.render_form_field(form.news_article) }}
+                        {{ f.render_form_field(form.journal_article) }}
+                        {{ f.render_form_field(form.law) }}
+                        {{ f.render_form_field(form.video) }}
+                        {{ f.render_form_field(form.other) }}
                       </div>
                     </div>
+                  <div class="item">
+                    <div class="ui header small">Location</div>
+                        {{ form.location()}}
                   </div>
-                </div>
-                <div class="item">
-                  <div class="ui header small">Location</div>
-                  {% block loc %}
-                    <select name="country" class="ui dropdown fluid">
-                    {{ loc.country_dropdown() }}
-                    </select>
-                  {% endblock %}
-                </div>
-                <div class="item">
-                  <div class="ui header small">Date Posted</div>
-                    <div class="ui form">
-                        <div class="field">
-                          <label>Start date</label>
-                          <div class="ui calendar" id="rangestart">
-                            <div class="ui input left icon">
-                              <i class="calendar icon"></i>
-                              <input type="text" placeholder="Start">
-                            </div>
-                          </div>
+                  <div class="item">
+                    <div class="ui header small">Date Posted</div>
+                      <div class="ui calendar">
+                        {{ form.start_date.label }}
+                        <div class="ui input left icon" id="start_date">
+                          <i class="calendar icon"></i>
+                          {{ form.start_date(class="ui calendar")}}
                         </div>
-                        <div class="field">
-                          <label>End date</label>
-                          <div class="ui calendar" id="rangeend">
-                            <div class="ui input left icon">
-                              <i class="calendar icon"></i>
-                              <input type="text" placeholder="End">
-                            </div>
-                          </div>
+                      </div>
+                      <br>
+                      <div class="ui calendar">
+                        {{ form.end_date.label }}
+                        <div class="ui input left icon" id="end_date">
+                          <i class="calendar icon"></i>
+                          {{ form.end_date(class="ui calendar")}}
                         </div>
-                    </div>
-                    <br/>
-                </div>
-                <div class="item">
-                  <div class="ui header small">Tags</div>
-                  <select class="ui fluid search dropdown" multiple="">
-                    <option value="">Topics</option>
-                    <option value="AL">Scientific Integrity</option>
-                    <option value="AK">Public Health</option>
-                    <option value="AZ">Immigration</option>
-                    <option value="AR">National Security</option>
-                    <option value="CA">Government Accountability</option>
-                    <option value="CO">Corporate Accountability</option>
-                    <option value="CT">International Rights</option>
-                  </select>
+                      </div>
+                  </div>
+                  <div class="item">
+                    <div class="ui header small">Tags</div>
+                    {{ f.render_form_field(form.tags) }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -141,34 +104,57 @@
                 <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
                     <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Keywords</th>
+                            <th class="three wide">Title</th>
+                            <th class="three wide">Author</th>
+                            <th>Description</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for c in search_results %}
+                    {% for c in search_results[:10] %}
                         <tr>
                             <td>{{ c.title }}</td>
-                            <td>{{ c.author }}</td>
-                            <td>{{ c.description }}</td>
+                            <td>{% if c.author_last_name or c.author_first_name %}
+                                  {{ c.author_first_name + ' ' + c.author_last_name}}
+                                {% elif c.name %}
+                                  {{ c.name }}
+                                {% elif c.govt_body %}
+                                  {{ c.govt_body }}
+                                {% endif %}
+                            </td>
+                            <td>
+                              {{ c.description.split(' ')[:19]|join(' ') + '...'}}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
+                <div class="ui horizontal buttons">
+                  <div class="ui button">1</div>
+                  <div class="ui button">2</div>
+                  <div class="ui button">3</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </form>
         <script>
           $( document ).ready(function() {
-              $('#rangestart').calendar({
+              $( '#state' ).attr( "disabled", "disabled")
+              $('#start_date').calendar({
               type: 'date',
-              endCalendar: $('#rangeend')
+              endCalendar: $('#end_date')
               });
-              $('#rangeend').calendar({
+              $('#end_date').calendar({
               type: 'date',
-              startCalendar: $('#rangestart')
+              startCalendar: $('#start_date')
+              });
+              $('#country').change(function (){
+                if ($('#country').val() == 'US') {
+
+                }
+                else {
+                }
               });
           });
           function resizeFilter() {

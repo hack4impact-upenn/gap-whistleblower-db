@@ -4,20 +4,35 @@ import boto3
 from flask import Blueprint, request, render_template, redirect, url_for
 from random import randint
 from time import sleep
-from app.models import EditableHTML, Document, Saved, User, Suggestion
+from app.models import EditableHTML, Document, Saved, User, Suggestion, Tag
 from flask_login import current_user, login_required
 # import flask_whooshalchemyplus as whooshalchemy
 # from flask_whooshee import Whooshee
-from app.main.forms import SaveForm, UnsaveForm, SuggestionForm
+from app.main.forms import SaveForm, UnsaveForm, SuggestionForm, SearchForm
 from app import db
+from sqlalchemy_searchable import search
 
 main = Blueprint('main', __name__)
 
 
-@main.route('/')
+@main.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('main/index.html', search_results=[])
+    form = SearchForm()
+    tags = Tag.query.all()
+    choices = []
+    for t in tags:
+        choices.append((t.tag, t.tag))
 
+    form.tags.choices = choices
+
+    if form.validate_on_submit():
+        query = form.query.data
+        sql = db.session.query(Document)
+        results = search(sql, query)
+        return render_template('main/index.html', search_results=results, form=form)
+
+    results = Document.query.filter_by(document_status="published")
+    return render_template('main/index.html', search_results=results, form=form)
 
 @main.route('/about')
 def about():
@@ -78,4 +93,3 @@ def review_saved():
     user = User.query.get(user_id)
     saved = user.saved
     return render_template('main/review_saved.html', saved=saved)
-    

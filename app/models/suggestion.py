@@ -5,7 +5,7 @@ from faker import Faker
 class Suggestion(db.Model):
     __tablename__ = 'suggestion'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64))
+    title = db.Column(db.String(1000))
     link = db.Column(db.String())
     doc_type = db.Column(db.String())
     description = db.Column(db.Text)
