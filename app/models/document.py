@@ -2,7 +2,7 @@ from .. import db, login_manager
 from . import User
 import random
 from faker import Faker
-from sqlalchemy import Column, Integer, DateTime
+from sqlalchemy import Column, Integer, DateTime, PickleType
 import datetime
 
 from sqlalchemy_searchable import make_searchable
@@ -61,6 +61,8 @@ class Document(db.Model):
 
     #Specific to video
     post_source = db.Column(db.String(1000))
+
+    tf = db.Column(db.PickleType())
 
     @staticmethod
     def generate_fake(count=10, **kwargs):

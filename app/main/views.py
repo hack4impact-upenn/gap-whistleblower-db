@@ -11,12 +11,14 @@ from flask_login import current_user, login_required
 from app.main.forms import SaveForm, UnsaveForm, SuggestionForm, SearchForm
 from app import db
 from sqlalchemy_searchable import search
+from flask_paginate import Pagination
 
 main = Blueprint('main', __name__)
 
 
-@main.route('/', methods=['GET', 'POST'])
-def index():
+@main.route('/', defaults={'page': 1}, methods=['GET', 'POST'])
+@main.route('/<int:page>', methods=['GET', 'POST'])
+def index(page):
     form = SearchForm()
     tags = Tag.query.all()
     choices = []
@@ -24,15 +26,20 @@ def index():
         choices.append((t.tag, t.tag))
 
     form.tags.choices = choices
+    results = Document.query.filter_by(document_status="published").paginate(page,10,error_out=False)
 
-    if form.validate_on_submit():
-        query = form.query.data
-        sql = db.session.query(Document)
-        results = search(sql, query)
-        return render_template('main/index.html', search_results=results, form=form)
+    # if form.validate_on_submit():
+    #     query = form.query.data
+    #     sql = db.session.query(Document)
+    #     results = search(sql, query)
+    #     return render_template('main/index.html', search_results=results, form=form)
+    if not results and page != 1:
+        abort(404)
 
-    results = Document.query.filter_by(document_status="published")
-    return render_template('main/index.html', search_results=results, form=form)
+    return render_template('main/index.html', form=form, search_results=results, page=page)
+
+def get_users(results, offset=0, per_page=10):
+    return results[offset: offset + per_page]
 
 @main.route('/about')
 def about():
