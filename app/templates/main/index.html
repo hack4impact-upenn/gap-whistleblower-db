@@ -11,7 +11,7 @@
     </head>
     <body onresize="resizeFilter()">
       <form method=post>
-        <div class="ui inverted vertical masthead center aligned segment">
+        <div class="ui inverted vertical masthead center aligned segment" style="background-color: #487ea6">
             <div class="ui container">
                 {% block nav %}
                   {# add dropdown variable here to the render_nav method to render dropdowns #}
@@ -38,9 +38,6 @@
                 <p>
                     Government Accountability Project is the international leader in whistleblower protection. <br/>
                     This database is a curated, searchable list of scholarly materials related to whistleblowing. <br/>
-                </p>
-                <p>
-                    {{ first }}
                 </p>
                 <br>
                 <div class="ui action input fluid large">
@@ -70,10 +67,6 @@
                         {{ f.render_form_field(form.other) }}
                       </div>
                     </div>
-                  <div class="item">
-                    <div class="ui header small">Location</div>
-                        {{ form.location()}}
-                  </div>
                   <div class="item">
                     <div class="ui header small">Date Posted</div>
                       <div class="ui calendar">
@@ -105,12 +98,13 @@
                     <thead>
                         <tr>
                             <th class="three wide">Title</th>
-                            <th class="three wide">Author</th>
+                            <th class="three wide">Attribution</th>
+                            <th class="two wide">Resource Type</th>
                             <th>Description</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for c in search_results[:10] %}
+                    {% for c in search_results.items %}
                         <tr>
                             <td>{{ c.title }}</td>
                             <td>{% if c.author_last_name or c.author_first_name %}
@@ -122,16 +116,27 @@
                                 {% endif %}
                             </td>
                             <td>
+                              {{ c.doc_type }}
+                            </td>
+                            <td>
                               {{ c.description.split(' ')[:19]|join(' ') + '...'}}
                             </td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
-                <div class="ui horizontal buttons">
-                  <div class="ui button">1</div>
-                  <div class="ui button">2</div>
-                  <div class="ui button">3</div>
+                <div class="ui buttons" style="width: 100%; align-items: center; justify-content: center;">
+                  <a class="ui {% if not search_results.has_prev %}disabled {% endif %} labeled icon button" type='button' {% if search_results.has_prev %} href="{{url_for('main.index', page=search_results.prev_num)}}"{% endif %}>
+                    <i class="left chevron icon"></i>
+                    Back
+                  </a>
+                  <a class="ui basic button"  type='button'>
+                    Page {{ page }}
+                  </a>
+                  <a class="ui button {% if not search_results.has_next %}disabled {% endif %}right labeled icon button" type='button' {% if search_results.has_next %} href="{{url_for('main.index', page=search_results.next_num)}}"{% endif %}>
+                    Next
+                    <i class="right chevron icon"></i>
+                  </a>
                 </div>
               </div>
             </div>

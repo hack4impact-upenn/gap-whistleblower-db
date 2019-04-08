@@ -37,4 +37,3 @@ class SearchForm(Form):
     tags = SelectMultipleField()
     start_date = StringField()
     end_date = StringField()
-    location = StringField()
