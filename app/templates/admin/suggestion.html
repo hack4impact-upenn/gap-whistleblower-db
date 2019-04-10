@@ -65,21 +65,24 @@
   }
   function startDraft(id, docType) {
     switch (docType) {
+        case 'book':
+          window.open('../from_suggestion/book/'.concat(id));
+          break;
         case 'journal article':
-            window.open('../contribution/from_suggestion/journal/'.concat(id));
+            window.open('../from_suggestion/journal/'.concat(id));
             break;
         case 'law':
-            window.open('../contribution/from_suggestion/law/'.concat(id));
+            window.open('../from_suggestion/law/'.concat(id));
             break;
         case 'article':
         case 'news article':
-            window.open('../contribution/from_suggestion/article/'.concat(id));
+            window.open('../from_suggestion/article/'.concat(id));
             break;
         case 'video':
-            window.open('../contribution/from_suggestion/video/'.concat(id));
+            window.open('../from_suggestion/video/'.concat(id));
             break;
         default:
-            window.open('../contribution/from_suggestion/other/'.concat(id));
+            window.open('../from_suggestion/other/'.concat(id));
     }
   }
 </script>

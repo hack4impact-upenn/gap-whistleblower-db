@@ -28,6 +28,7 @@ from app.admin.forms import (
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import EditableHTML, Role, User, Tag, Suggestion, Document
+from collections import Counter
 
 admin = Blueprint('admin', __name__)
 
@@ -266,6 +267,7 @@ def suggestion(id):
     suggestion = Suggestion.query.get(id)
     return render_template('admin/suggestion.html', suggestion=suggestion)
 
+
 @admin.route('/suggestion/delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -286,6 +288,7 @@ def delete_suggestion(id):
         return redirect(url_for('admin.review_suggestions'))
     return redirect(url_for('admin.review_suggestions'))
 
+
 @admin.route('/view_all_drafts',methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -293,6 +296,7 @@ def view_all_drafts():
     user_id = current_user.id
     contributions = Document.query.filter(Document.posted_by == user_id).order_by(Document.id.desc()).all()
     return render_template('admin/draft_contributions.html', contributions=contributions)
+
 
 @admin.route('/publish/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -306,12 +310,14 @@ def publish_contribution(id):
     contributions = Document.query.order_by(Document.id.desc()).all()
     return redirect(url_for('admin.review_contributions'))
 
+
 @admin.route('/review_contributions',methods=['GET', 'POST'])
 @login_required
 @admin_required
 def review_contributions():
     contributions = Document.query.filter(Document.document_status != 'draft').filter(Document.document_status != 'published').order_by(Document.id.desc()).all()
     return render_template('admin/review_contributions.html', contributions=contributions)
+
 
 @admin.route('/contribution/<int:id>', methods=['GET'])
 @login_required
@@ -323,8 +329,8 @@ def contribution(id):
     contribution = Document.query.get(id)
     return render_template('admin/contribution.html', contribution=contribution, convert=convert)
 
-# 5 different types of draft editing forms
-@admin.route('/contribution/draft/book/<int:id>', methods=['GET', 'POST'])
+
+@admin.route('/draft/book/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def view_book_draft(id):
@@ -351,68 +357,17 @@ def view_book_draft(id):
     if request.method == 'POST':
         if book_form.validate_on_submit():
             if "Save Book" in request.form.values():
-                book_entry.doc_type = "book"
-                book_entry.title = book_form.book_title.data
-                book_entry.ISBN = book_form.book_ISBN.data
-                book_entry.volume = book_form.book_volume.data
-                book_entry.edition = book_form.book_edition.data
-                book_entry.series = book_form.book_series.data
-                book_entry.author_first_name = book_form.book_author_first_name.data
-                book_entry.author_last_name = book_form.book_author_last_name.data
-                book_entry.posted_by = current_user.id
-                book_entry.last_edited_by = current_user.id
-                book_entry.name = book_form.book_publisher_name.data
-                book_entry.state = book_form.book_publisher_state.data
-                book_entry.city = book_form.book_publisher_city.data
-                book_entry.country = book_form.book_publisher_country.data
-                book_entry.day = book_form.book_publication_day.data
-                book_entry.month = book_form.book_publication_month.data
-                book_entry.year = book_form.book_publication_year.data
-                book_entry.description = book_form.book_description.data
-                book_entry.link = book_form.book_link.data
-                book_entry.document_status = "draft"
-
-                db.session.commit()
-                flash(
-                    'Book \"{}\" successfully saved'.format(
-                        book_form.book_title.data), 'form-success')
-
-                return view_all_drafts()
+                save_or_submit_doc(book_form, doc_type='book', submit=False)
 
             if "Submit Book" in request.form.values():
-                book_entry.doc_type = "book"
-                book_entry.title = book_form.book_title.data
-                book_entry.ISBN = book_form.book_ISBN.data
-                book_entry.volume = book_form.book_volume.data
-                book_entry.edition = book_form.book_edition.data
-                book_entry.series = book_form.book_series.data
-                book_entry.author_first_name = book_form.book_author_first_name.data
-                book_entry.author_last_name = book_form.book_author_last_name.data
-                book_entry.posted_by = current_user.id
-                book_entry.last_edited_by = current_user.id
-                book_entry.name = book_form.book_publisher_name.data
-                book_entry.state = book_form.book_publisher_state.data
-                book_entry.city = book_form.book_publisher_city.data
-                book_entry.country = book_form.book_publisher_country.data
-                book_entry.day = book_form.book_publication_day.data
-                book_entry.month = book_form.book_publication_month.data
-                book_entry.year = book_form.book_publication_year.data
-                book_entry.description = book_form.book_description.data
-                book_entry.link = book_form.book_link.data
-                book_entry.document_status = "needs review"
+                save_or_submit_doc(book_form, doc_type='book', submit=True)
 
-                db.session.commit()
-                flash(
-                    'Book \"{}\" successfully created'.format(
-                        book_form.book_title.data), 'form-success')
-
-                return view_all_drafts()
-
+            return view_all_drafts()
 
     return render_template('admin/edit_book_draft.html', book_form=book_form, c=contribution)
 
 
-@admin.route('/contribution/draft/article/<int:id>', methods=['GET', 'POST'])
+@admin.route('/draft/article/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def view_article_draft(id):
@@ -434,53 +389,17 @@ def view_article_draft(id):
     if request.method == 'POST':
         if article_form.validate_on_submit():
             if "Save Article" in request.form.values():
-                article_entry.doc_type = "news article"
-                article_entry.title = article_form.article_title.data
-                article_entry.author_first_name = article_form.article_author_first_name.data
-                article_entry.author_last_name = article_form.article_author_last_name.data
-                article_entry.name = article_form.article_publication.data
-                article_entry.day = article_form.article_publication_day.data
-                article_entry.month = article_form.article_publication_month.data
-                article_entry.year = article_form.article_publication_year.data
-                article_entry.description = article_form.article_description.data
-                article_entry.link = article_form.article_link.data
-                article_entry.document_status = "draft"
-
-                db.session.commit()
-                flash(
-                    'News Article \"{}\" successfully saved'.format(
-                        article_form.article_title.data), 'form-success')
-
-                return view_all_drafts()
+                save_or_submit_doc(article_form, doc_type='news article', submit=False)
 
             if "Submit Article" in request.form.values():
-                article_entry.doc_type = "news article"
-                article_entry.title = article_form.article_title.data
-                article_entry.author_first_name = article_form.article_author_first_name.data
-                article_entry.author_last_name = article_form.article_author_last_name.data
-                article_entry.name = article_form.article_publication.data
-                article_entry.day = article_form.article_publication_day.data
-                article_entry.month = article_form.article_publication_month.data
-                article_entry.year = article_form.article_publication_year.data
-                article_entry.description = article_form.article_description.data
-                article_entry.link = article_form.article_link.data
-                article_entry.document_status = "needs review"
+                save_or_submit_doc(article_form, doc_type='news article', submit=True)
 
-                db.session.commit()
-                flash(
-                    'News Article \"{}\" successfully created'.format(
-                        article_form.article_title.data), 'form-success')
-
-                return view_all_drafts()
+            return view_all_drafts()
 
     return render_template('admin/edit_article_draft.html', article_form=article_form, c=contribution)
 
 
-    """Contribution Review page."""
-    contribution = Document.query.get(id)
-    return render_template('admin/edit_article_draft.html', contribution=contribution)
-
-@admin.route('/contribution/draft/journal/<int:id>', methods=['GET', 'POST'])
+@admin.route('/draft/journal/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def view_journal_draft(id):
@@ -506,69 +425,19 @@ def view_journal_draft(id):
     if request.method == 'POST':
         if journal_form.validate_on_submit():
             if "Save Article" in request.form.values():
-                journal_entry.doc_type = "journal article"
-                journal_entry.title = journal_form.article_title.data
-                journal_entry.author_first_name = journal_form.article_author_first_name.data
-                journal_entry.author_last_name = journal_form.article_author_last_name.data
-                journal_entry.name = journal_form.publisher_name.data
-                journal_entry.volume = journal_form.volume.data
-                journal_entry.page_start = journal_form.start_page.data
-                journal_entry.page_end = journal_form.end_page.data
-                journal_entry.name = journal_form.publisher_name.data
-                journal_entry.day = journal_form.article_publication_day.data
-                journal_entry.month = journal_form.article_publication_month.data
-                journal_entry.year = journal_form.article_publication_year.data
-                journal_entry.description = journal_form.article_description.data
-                journal_entry.link = journal_form.article_link.data
-                journal_entry.document_status = "draft"
-
-                db.session.commit()
-                flash(
-                    'Journal Article \"{}\" successfully saved'.format(
-                        journal_form.article_title.data), 'form-success')
-
-                return view_all_drafts()
+                save_or_submit_doc(journal_form, doc_type='journal article', submit=False)
 
             if "Submit Article" in request.form.values():
-                journal_entry.doc_type = "journal article"
-                journal_entry.title = journal_form.article_title.data
-                journal_entry.author_first_name = journal_form.article_author_first_name.data
-                journal_entry.author_last_name = journal_form.article_author_last_name.data
-                journal_entry.name = journal_form.publisher_name.data,
-                journal_entry.volume = journal_form.volume.data,
-                journal_entry.start_page = journal_form.start_page.data,
-                journal_entry.end_page = journal_form.end_page.data,
-                journal_entry.name = journal_form.article_publication.data
-                journal_entry.day = journal_form.article_publication_day.data
-                journal_entry.month = journal_form.article_publication_month.data
-                journal_entry.year = journal_form.article_publication_year.data
-                journal_entry.description = journal_form.article_description.data
-                journal_entry.link = journal_form.article_link.data
-                journal_entry.document_status = "needs review"
+                save_or_submit_doc(journal_form, doc_type='journal article', submit=True)
 
-                db.session.commit()
-                flash(
-                    'Journal Article \"{}\" successfully created'.format(
-                        journal_form.article_title.data), 'form-success')
+            return view_all_drafts()
 
-                return view_all_drafts()
 
     return render_template('admin/edit_journal_draft.html', journal_form=journal_form, c=contribution)
 
 
-    """Contribution Review page."""
-    contribution = Document.query.get(id)
-    return render_template('admin/edit_article_draft.html', contribution=contribution)
 
-@admin.route('/contribution/draft/research/<int:id>', methods=['GET'])
-@login_required
-@admin_required
-def view_research_draft(id):
-    """Contribution Review page."""
-    contribution = Document.query.get(id)
-    return render_template('admin/edit_research_draft.html', contribution=contribution)
-
-@admin.route('/contribution/draft/law/<int:id>', methods=['GET', 'POST'])
+@admin.route('/draft/law/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def view_law_draft(id):
@@ -596,56 +465,16 @@ def view_law_draft(id):
     if request.method == 'POST':
         if law_form.validate_on_submit():
             if "Save Law" in request.form.values():
-                law_entry.doc_type = "law"
-                law_entry.title = law_form.law_title.data
-                law_entry.govt_body = law_form.law_government_body.data
-                law_entry.citation = law_form.law_citation.data
-                law_entry.region = law_form.law_region.data
-                law_entry.section = law_form.law_section.data
-                law_entry.day = law_form.law_enactment_day.data
-                law_entry.month = law_form.law_enactment_month.data
-                law_entry.year = law_form.law_enactment_year.data
-                law_entry.city = law_form.law_city.data
-                law_entry.state = law_form.law_state.data
-                law_entry.country = law_form.law_country.data
-                law_entry.description = law_form.law_description.data
-                law_entry.link = law_form.law_link.data
-                law_entry.document_status = "draft"
-
-                db.session.commit()
-                flash(
-                    'Law \"{}\" successfully saved'.format(
-                        law_form.law_title.data), 'form-success')
-
-                return view_all_drafts()
+                save_or_submit_doc(law_form, doc_type='law', submit=False)
 
             if "Submit Law" in request.form.values():
-                law_entry.doc_type = "law"
-                law_entry.title = law_form.law_title.data
-                law_entry.govt_body = law_form.law_government_body.data
-                law_entry.citation = law_form.law_citation.data
-                law_entry.region = law_form.law_region.data
-                law_entry.section = law_form.law_section.data
-                law_entry.day = law_form.law_enactment_day.data
-                law_entry.month = law_form.law_enactment_month.data
-                law_entry.year = law_form.law_enactment_year.data
-                law_entry.city = law_form.law_city.data
-                law_entry.state = law_form.law_state.data
-                law_entry.country = law_form.law_country.data
-                law_entry.description = law_form.law_description.data
-                law_entry.link = law_form.law_link.data
-                law_entry.document_status = "needs review"
+                save_or_submit_doc(law_form, doc_type='law', submit=True)
 
-                db.session.commit()
-                flash(
-                    'Law \"{}\" successfully created'.format(
-                        law_form.law_title.data), 'form-success')
-
-                return view_all_drafts()
+            return view_all_drafts()
 
     return render_template('admin/edit_law_draft.html', law_form=law_form, c=contribution)
 
-@admin.route('/contribution/draft/video/<int:id>', methods=['GET', 'POST'])
+@admin.route('/draft/video/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def view_video_draft(id):
@@ -668,55 +497,17 @@ def view_video_draft(id):
     if request.method == 'POST':
         if video_form.validate_on_submit():
             if "Save Video" in request.form.values():
-                video_entry.doc_type = "video"
-                video_entry.title = video_form.video_title.data
-                video_entry.author_first_name = video_form.director_first_name.data
-                video_entry.author_last_name = video_form.director_last_name.data
-                video_entry.post_source = video_form.video_post_source.data
-                video_entry.city = video_form.video_city.data
-                video_entry.country = video_form.video_country.data
-                video_entry.name = video_form.video_publisher.data
-                video_entry.year = video_form.video_publication_year.data
-                video_entry.description = video_form.video_description.data
-                video_entry.link = video_form.video_link.data
-                video_entry.document_status = "draft"
-
-                db.session.commit()
-                flash(
-                    'Video \"{}\" successfully saved'.format(
-                        video_form.video_title.data), 'form-success')
-
-                return view_all_drafts()
+                save_or_submit_doc(video_form, doc_type='video', submit=False)
 
             if "Submit Video" in request.form.values():
-                video_entry.doc_type = "video"
-                video_entry.title = video_form.video_title.data
-                video_entry.author_first_name = video_form.director_first_name.data
-                video_entry.author_last_name = video_form.director_last_name.data
-                video_entry.post_source = video_form.video_post_source.data
-                video_entry.city = video_form.video_city.data
-                video_entry.country = video_form.video_country.data
-                video_entry.name = video_form.video_publisher.data
-                video_entry.year = video_form.video_publication_year.data
-                video_entry.description = video_form.video_description.data
-                video_entry.link = video_form.video_link.data
-                video_entry.document_status = "needs review"
+                save_or_submit_doc(video_form, doc_type='video', submit=True)
 
-                db.session.commit()
-                flash(
-                    'Video \"{}\" successfully created'.format(
-                        video_form.video_title.data), 'form-success')
-
-                return view_all_drafts()
+            return view_all_drafts()
 
     return render_template('admin/edit_video_draft.html', video_form=video_form, c=contribution)
 
 
-    """Contribution Review page."""
-    contribution = Document.query.get(id)
-    return render_template('admin/edit_article_draft.html', contribution=contribution)
-
-@admin.route('/contribution/draft/other/<int:id>', methods=['GET', 'POST'])
+@admin.route('/draft/other/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def view_other_draft(id):
@@ -738,44 +529,12 @@ def view_other_draft(id):
     if request.method == 'POST':
         if other_form.validate_on_submit():
             if "Save Other" in request.form.values():
-                other_entry.doc_type = "other"
-                other_entry.other_type = other_form.other_document_type.data
-                other_entry.title = other_form.other_title.data
-                other_entry.author_first_name = other_form.other_author_first_name.data
-                other_entry.author_last_name = other_form.other_author_last_name.data
-                other_entry.day = other_form.other_publication_day.data
-                other_entry.month = other_form.other_publication_month.data
-                other_entry.year = other_form.other_publication_year.data
-                other_entry.description = other_form.other_description.data
-                other_entry.link = other_form.other_link.data
-                other_entry.document_status = "draft"
-
-                db.session.commit()
-                flash(
-                    'Other \"{}\" successfully saved'.format(
-                        other_form.other_title.data), 'form-success')
-
-                return view_all_drafts()
+                save_or_submit_doc(other_form, doc_type='other', submit=False)
 
             if "Submit Other" in request.form.values():
-                other_entry.doc_type = "other"
-                other_entry.other_type = other_form.other_document_type.data
-                other_entry.title = other_form.other_title.data
-                other_entry.author_first_name = other_form.other_author_first_name.data
-                other_entry.author_last_name = other_form.other_author_last_name.data
-                other_entry.day = other_form.other_publication_day.data
-                other_entry.month = other_form.other_publication_month.data
-                other_entry.year = other_form.other_publication_year.data
-                other_entry.description = other_form.other_description.data
-                other_entry.link = other_form.other_link.data
-                other_entry.document_status = "needs review"
+                save_or_submit_doc(other_form, doc_type='other', submit=True)
 
-                db.session.commit()
-                flash(
-                    'Other \"{}\" successfully created'.format(
-                        other_form.other_title.data), 'form-success')
-
-                return view_all_drafts()
+            return view_all_drafts()
 
     return render_template('admin/edit_other_draft.html', other_form=other_form, c=contribution)
 
@@ -953,7 +712,7 @@ def delete_draft(id):
     return redirect(url_for('admin.view_all_drafts'))
 
 
-@admin.route('/contribution/from_suggestion/book/<int:id>', methods=['GET', 'POST'])
+@admin.route('/from_suggestion/book/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def suggestion_book_draft(id):
@@ -978,7 +737,7 @@ def suggestion_book_draft(id):
     return render_template('admin/edit_book_draft.html', book_form=book_form, c=book_entry)
 
 
-@admin.route('/contribution/from_suggestion/article/<int:id>', methods=['GET', 'POST'])
+@admin.route('/from_suggestion/article/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def suggestion_article_draft(id):
@@ -1002,7 +761,7 @@ def suggestion_article_draft(id):
 
     return render_template('admin/edit_article_draft.html', article_form=article_form, c=article_entry)
 
-@admin.route('/contribution/from_suggestion/journal/<int:id>', methods=['GET', 'POST'])
+@admin.route('/from_suggestion/journal/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def suggestion_journal_draft(id):
@@ -1027,7 +786,7 @@ def suggestion_journal_draft(id):
     return render_template('admin/edit_journal_draft.html', journal_form=journal_form, c=journal_entry)
 
 
-@admin.route('/contribution/from_suggestion/law/<int:id>', methods=['GET', 'POST'])
+@admin.route('/from_suggestion/law/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def suggestion_law_draft(id):
@@ -1043,7 +802,6 @@ def suggestion_law_draft(id):
 
     if request.method == 'POST':
         if law_form.validate_on_submit():
-
             if "Save Law" in request.form.values():
                 save_or_submit_doc(law_form, doc_type='law', submit=False)
 
@@ -1055,7 +813,7 @@ def suggestion_law_draft(id):
     return render_template('admin/edit_law_draft.html', law_form=law_form, c=law_entry)
 
 
-@admin.route('/contribution/from_suggestion/video/<int:id>', methods=['GET', 'POST'])
+@admin.route('/from_suggestion/video/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def suggestion_video_draft(id):
@@ -1080,7 +838,7 @@ def suggestion_video_draft(id):
     return render_template('admin/edit_video_draft.html', video_form=video_form, c=video_entry)
 
 
-@admin.route('/contribution/from_suggestion/other/<int:id>', methods=['GET', 'POST'])
+@admin.route('/from_suggestion/other/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def suggestion_other_draft(id):
@@ -1120,7 +878,8 @@ def save_or_submit_doc(form, doc_type, submit=False):
             year=article_form.article_publication_year.data,
             description=article_form.article_description.data,
             link=article_form.article_link.data,
-            document_status="draft" if not submit else "published")
+            document_status="draft" if not submit else "published",
+            tf=Counter(article_form.other_description.data))
         db.session.add(article)
         db.session.commit()
         flash(

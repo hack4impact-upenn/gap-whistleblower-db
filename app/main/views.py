@@ -28,11 +28,12 @@ def index(page):
     form.tags.choices = choices
     results = Document.query.filter_by(document_status="published").paginate(page,10,error_out=False)
 
-    # if form.validate_on_submit():
-    #     query = form.query.data
-    #     sql = db.session.query(Document)
-    #     results = search(sql, query)
-    #     return render_template('main/index.html', search_results=results, form=form)
+    if form.validate_on_submit():
+        query = form.query.data
+        sql = db.session.query(Document)
+        results = search(sql, query)
+        return render_template('main/index.html', search_results=results, form=form)
+
     if not results and page != 1:
         abort(404)
 

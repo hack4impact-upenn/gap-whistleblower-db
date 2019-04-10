@@ -55,7 +55,7 @@
 
 {% macro mobile_nav(current_user, dropdown=None) %}
     <div class="mobile only row">
-        <div class="ui fixed inverted main menu" style="background-color: #487ea6">
+        <div class="ui fixed inverted main menu" style="background-color: #345073">
             {{ header_items(current_user) }}
             <div class="right menu">
                 <a class="icon item" id="open-nav"><i class="sidebar icon"></i></a>
@@ -76,7 +76,7 @@
       {{ render_menu_items([item]) }}
     {% elif item | length == 2 %}
       <div class="ui dropdown item" onClick="changeMenu(this)">{{ item[0] }} <i class="dropdown icon"></i>
-        <div class="inverted black menu" style="background-color: #487ea6">
+        <div class="inverted black menu" style="background-color: #345073">
           {{ create_dropdown(item[1]) }}
         </div>
       </div>
@@ -86,7 +86,7 @@
 
 {% macro desktop_nav(current_user, dropdown=None) %}
     <div class="computer tablet only row">
-        <div class="ui fixed inverted black main menu" style="background-color: #487ea6">
+        <div class="ui fixed inverted black main menu" style="background-color: #345073">
             <div class="ui container">
                 {{ header_items(current_user) }}
                 {{ create_dropdown(dropdown) }}
