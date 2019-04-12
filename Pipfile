@@ -48,6 +48,8 @@ flask-whooshee = "==0.6.0"
 boto3 = "*"
 boto = "*"
 sklearn = "*"
+apscheduler = "*"
+validators = "*"
 
 [requires]
 python_version = "3.7"

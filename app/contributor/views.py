@@ -35,9 +35,9 @@ def index():
 @login_required
 @contributor_required
 def view_all_drafts():
-    user_id = current_user.id
-    contributions = Document.query.filter(Document.posted_by == user_id)
-    return render_template('contributor/draft_contributions.html', contributions=contributions)
+    user_name = current_user.first_name + " " + current_user.last_name
+    contributions = Document.query.filter(Document.posted_by == user_name).order_by(Document.id.desc()).all()
+    return render_template('admin/draft_contributions.html', contributions=contributions)
 
 
 @contributor.route('/contribution/<int:id>', methods=['GET'])
@@ -94,7 +94,7 @@ def view_article_draft(id):
     contribution = Document.query.get(id)
     article_entry = Document.query.filter_by(id=id).first()
     article_form = ArticleForm(
-                    doc_type = "news article",
+                    doc_type = "article",
                     article_title = article_entry.title,
                     article_author_first_name = article_entry.author_first_name,
                     article_author_last_name = article_entry.author_last_name,
@@ -109,10 +109,10 @@ def view_article_draft(id):
     if request.method == 'POST':
         if article_form.validate_on_submit():
             if "Save Article" in request.form.values():
-                save_or_submit_doc(article_form, doc_type='news article', submit=False)
+                save_or_submit_doc(article_form, doc_type='article', submit=False)
 
             if "Submit Article" in request.form.values():
-                save_or_submit_doc(article_form, doc_type='news article', submit=True)
+                save_or_submit_doc(article_form, doc_type='article', submit=True)
 
             return view_all_drafts()
 
@@ -131,7 +131,7 @@ def view_journal_draft(id):
     contribution = Document.query.get(id)
     journal_entry = Document.query.filter_by(id=id).first()
     journal_form = JournalArticleForm(
-                    doc_type = "journal article",
+                    doc_type = "journal",
                     article_title = journal_entry.title,
                     article_author_first_name = journal_entry.author_first_name,
                     article_author_last_name = journal_entry.author_last_name,
@@ -151,10 +151,10 @@ def view_journal_draft(id):
         if journal_form.validate_on_submit():
 
             if "Save Article" in request.form.values():
-                save_or_submit_doc(journal_form, doc_type='journal article', submit=False)
+                save_or_submit_doc(journal_form, doc_type='journal', submit=False)
 
             if "Submit Article" in request.form.values():
-                save_or_submit_doc(journal_form, doc_type='journal article', submit=True)
+                save_or_submit_doc(journal_form, doc_type='journal', submit=True)
 
             return view_all_drafts()
 
@@ -309,10 +309,10 @@ def submit():
             if article_form.validate_on_submit():
 
                 if "Save Article" in request.form.values():
-                    save_or_submit_doc(article_form, doc_type='news article', submit=False)
+                    save_or_submit_doc(article_form, doc_type='article', submit=False)
 
                 if "Submit Article" in request.form.values():
-                    save_or_submit_doc(article_form, doc_type='news article', submit=True)
+                    save_or_submit_doc(article_form, doc_type='article', submit=True)
 
                 return view_all_drafts()
 
@@ -324,10 +324,10 @@ def submit():
             if journal_form.validate_on_submit():
 
                 if "Save Article" in request.form.values():
-                    save_or_submit_doc(journal_form, doc_type='journal article', submit=False)
+                    save_or_submit_doc(journal_form, doc_type='journal', submit=False)
 
                 if "Submit Article" in request.form.values():
-                    save_or_submit_doc(journal_form, doc_type='journal article', submit=True)
+                    save_or_submit_doc(journal_form, doc_type='journal', submit=True)
 
                 return view_all_drafts()
 
@@ -449,15 +449,15 @@ def delete_draft(id):
 
 
 def save_or_submit_doc(form, doc_type, submit=False):
-    if doc_type == 'news article':
+    if doc_type == 'article':
         article_form = form
         article = Document(
-            doc_type="news article",
+            doc_type="article",
             title=article_form.article_title.data,
             author_first_name=article_form.article_author_first_name.data,
             author_last_name=article_form.article_author_last_name.data,
-            posted_by=current_user.id,
-            last_edited_by=current_user.id,
+            posted_by=current_user.first_name + " " + current_user.last_name,
+            last_edited_by=current_user.first_name + " " + current_user.last_name,
             name=article_form.article_publication.data,
             day=article_form.article_publication_day.data,
             month=article_form.article_publication_month.data,
@@ -482,8 +482,8 @@ def save_or_submit_doc(form, doc_type, submit=False):
             series=book_form.book_series.data,
             author_first_name=book_form.book_author_first_name.data,
             author_last_name=book_form.book_author_last_name.data,
-            posted_by=current_user.id,
-            last_edited_by=current_user.id,
+            posted_by=current_user.first_name + " " + current_user.last_name,
+            last_edited_by=current_user.first_name + " " + current_user.last_name,
             name=book_form.book_publisher_name.data,
             state=book_form.book_publisher_state.data,
             city=book_form.book_publisher_city.data,
@@ -500,15 +500,15 @@ def save_or_submit_doc(form, doc_type, submit=False):
         flash(
             'Book \"{}\" successfully saved'.format(
                 book_form.book_title.data), 'form-success')
-    elif doc_type == 'journal article':
+    elif doc_type == 'journal':
         journal_form = form
         article = Document(
-            doc_type="journal article",
+            doc_type="journal",
             title=journal_form.article_title.data,
             author_first_name=journal_form.article_author_first_name.data,
             author_last_name=journal_form.article_author_last_name.data,
-            posted_by=current_user.id,
-            last_edited_by=current_user.id,
+            posted_by=current_user.first_name + " " + current_user.last_name,
+            last_edited_by=current_user.first_name + " " + current_user.last_name,
             name=journal_form.publisher_name.data,
             volume=journal_form.volume.data,
             page_start=journal_form.start_page.data,
@@ -535,8 +535,8 @@ def save_or_submit_doc(form, doc_type, submit=False):
             year=law_form.law_enactment_year.data,
             citation=law_form.law_citation.data,
             region=law_form.law_region.data,
-            posted_by=current_user.id,
-            last_edited_by=current_user.id,
+            posted_by=current_user.first_name + " " + current_user.last_name,
+            last_edited_by=current_user.first_name + " " + current_user.last_name,
             title=law_form.law_title.data,
             description=law_form.law_description.data,
             city=law_form.law_city.data,
@@ -561,8 +561,8 @@ def save_or_submit_doc(form, doc_type, submit=False):
             author_first_name=video_form.director_first_name.data,
             author_last_name=video_form.director_last_name.data,
             post_source=video_form.video_post_source.data,
-            posted_by=current_user.id,
-            last_edited_by=current_user.id,
+            posted_by=current_user.first_name + " " + current_user.last_name,
+            last_edited_by=current_user.first_name + " " + current_user.last_name,
             city=video_form.video_city.data,
             country=video_form.video_country.data,
             name=video_form.video_publisher.data,
@@ -584,8 +584,8 @@ def save_or_submit_doc(form, doc_type, submit=False):
             title=other_form.other_title.data,
             author_first_name=other_form.other_author_first_name.data,
             author_last_name=other_form.other_author_last_name.data,
-            posted_by=current_user.id,
-            last_edited_by=current_user.id,
+            posted_by=current_user.first_name + " " + current_user.last_name,
+            last_edited_by=current_user.first_name + " " + current_user.last_name,
             day=other_form.other_publication_day.data,
             month=other_form.other_publication_month.data,
             year=other_form.other_publication_year.data,

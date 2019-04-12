@@ -10,8 +10,12 @@ from flask_login import current_user, login_required
 # from flask_whooshee import Whooshee
 from app.main.forms import SaveForm, UnsaveForm, SuggestionForm, SearchForm
 from app import db
-from sqlalchemy_searchable import search
 from flask_paginate import Pagination
+
+import atexit
+from apscheduler.schedulers.background import BackgroundScheduler
+import requests
+import validators
 
 main = Blueprint('main', __name__)
 
@@ -101,3 +105,24 @@ def review_saved():
     user = User.query.get(user_id)
     saved = user.saved
     return render_template('main/review_saved.html', saved=saved)
+
+def check_dead_links():
+    docs = Document.query.all()
+    for doc in docs:
+        if validators.url(doc.link) is True:
+            try:
+                r = requests.get(doc.link, timeout=5.0)
+                if r.status_code in [400, 403, 404, 500, 501]:
+                    doc.broken_link = True
+                else:
+                    doc.broken_link = False
+            except:
+                doc.broken_link = True
+        db.session.commit()
+    print('YUHHHH')
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=check_dead_links, trigger="interval", seconds=60)
+scheduler.start()
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())

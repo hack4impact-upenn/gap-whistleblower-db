@@ -50,7 +50,7 @@
             window.open(link)
           }
           else {
-            window.open('https://'.concat(link))
+            window.open('http://'.concat(link))
           }
       }
       else {
@@ -68,14 +68,14 @@
         case 'book':
           window.open('../from_suggestion/book/'.concat(id));
           break;
-        case 'journal article':
+        case 'journal':
             window.open('../from_suggestion/journal/'.concat(id));
             break;
         case 'law':
             window.open('../from_suggestion/law/'.concat(id));
             break;
         case 'article':
-        case 'news article':
+        case 'article':
             window.open('../from_suggestion/article/'.concat(id));
             break;
         case 'video':

@@ -18,7 +18,7 @@ class Suggestion(db.Model):
         fake = Faker()
         suggestions = []
         for i in range(count):
-            doc_type = random.choice(["book", "video", "news article", "journal article", "law", "other"])
+            doc_type = random.choice(["book", "video", "article", "journal", "law", "other"])
             item = Suggestion(
                 title=fake.sentence(),
                 link=fake.domain_name(),
