@@ -105,12 +105,12 @@
 {% endmacro %}
 
 {# Render a field for the form #}
-{% macro render_form_field(field, value, extra_classes='') %}
+{% macro render_form_field(field, value, name=field.label.text, extra_classes='') %}
     {% if field.type == 'RadioField' %}
         {% set extra_classes = extra_classes + ' grouped fields' %}
     {% endif %}
     <div class="field {% if field.errors %}error{% endif %} {{ extra_classes }}">
-        {{ render_form_input(field, value) }}
+        {{ render_form_input(field, value, name) }}
         {% if field.errors %}
             <div class="ui red pointing label">
                 {{ field.errors[0] | safe }}
@@ -119,11 +119,11 @@
     </div>
 {% endmacro %}
 
-{% macro render_form_input(field, value) %}
+{% macro render_form_input(field, value, name) %}
     {% if field.widget.input_type == 'checkbox' %}
         <div class="ui checkbox" checked>
             {{ field }}
-            {{ field.label }}
+            <label for="{{field.name}}}">{{name}}</label>
         </div>
     {% elif field.type == 'RadioField' %}
         <label>{{ field.label }}</label>
@@ -153,7 +153,7 @@
       <div id="{{field.name}}" class="ui fluid multiple search selection dropdown">
           {{ field }}
           <i class="dropdown icon"></i>
-          <div class="default text">{{field.label.text}}</div>
+          <div class="default text">{{name}}</div>
           <div class="menu">
               {% for choice in field.choices %}
                   <div class="item">{{choice[1]}}</div>
@@ -165,7 +165,7 @@
     {% elif field.type == 'CustomSelectField' %}
         {{ render_custom_select(field) }}
     {% else %}
-        {{ field.label }}
+        <label for="{{field.name}}">{{name}}</label>
         {% if field.description %}
             <div class="ui pointing below label">
                 {{ field.description }}
@@ -174,7 +174,7 @@
         {% if value %}
             {{ field(value=value) }}
         {% else %}
-            {{ field(placeholder=field.label.text) }}
+            {{ field(placeholder=name) }}
         {% endif %}
     {% endif %}
 {% endmacro %}

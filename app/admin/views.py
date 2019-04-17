@@ -21,6 +21,7 @@ from app.admin.forms import (
     ArticleForm,
     OtherForm,
     LawForm,
+    ReportForm,
     DraftEntryForm,
     JournalArticleForm,
     VideoForm
@@ -322,10 +323,8 @@ def review_contributions():
 @admin_required
 def contribution(id):
     """Contribution Review page."""
-    convert = dict([('book','book'), ('law', 'law'), ('article','article'),
-      ('video', 'video'), ('journal', 'journal'), ('other', 'other') ])
     contribution = Document.query.get(id)
-    return render_template('admin/contribution.html', contribution=contribution, convert=convert)
+    return render_template('admin/contribution.html', contribution=contribution)
 
 
 @admin.route('/draft/book/<int:id>', methods=['GET', 'POST'])
@@ -337,17 +336,12 @@ def view_book_draft(id):
     book_form = BookForm(
         doc_type = "book",
         book_title = book_entry.title,
-        book_ISBN = book_entry.ISBN,
         book_volume = book_entry.volume,
         book_edition = book_entry.edition,
         book_series = book_entry.series,
         book_author_first_name = book_entry.author_first_name,
         book_author_last_name = book_entry.author_last_name,
         book_publisher_name = book_entry.name,
-        book_publisher_state = book_entry.state,
-        book_publisher_city = book_entry.city,
-        book_publisher_country = book_entry.country,
-        book_publication_day = book_entry.day,
         book_publication_month = book_entry.month,
         book_publication_year = book_entry.year,
         book_description = book_entry.description,
@@ -485,8 +479,8 @@ def view_video_draft(id):
                     director_last_name = video_entry.author_last_name,
                     video_post_source = video_entry.post_source,
                     video_publisher = video_entry.name,
-                    video_city = video_entry.city,
-                    video_country = video_entry.country,
+                    video_publication_day = video_entry.day,
+                    video_publication_month = video_entry.month,
                     video_publication_year = video_entry.year,
                     video_description = video_entry.description,
                     video_link = video_entry.link,
@@ -503,6 +497,36 @@ def view_video_draft(id):
             return view_all_drafts()
 
     return render_template('admin/edit_video_draft.html', video_form=video_form, c=contribution)
+
+
+@admin.route('/draft/report/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def view_report_draft(id):
+    contribution = Document.query.get(id)
+    report_entry = Document.query.filter_by(id=id).first()
+    report_form = ReportForm(
+        doc_type = "report",
+        report_title = report_entry.title,
+        report_author_first_name = report_entry.author_first_name,
+        report_author_last_name = report_entry.author_last_name,
+        report_publisher_name = report_entry.name,
+        report_publication_day= report_entry.day,
+        report_publication_month = report_entry.month,
+        report_publication_year = report_entry.year,
+        report_description = report_entry.description,
+        report_link = report_entry.link)
+    if request.method == 'POST':
+        if report_form.validate_on_submit():
+            if "Save Report" in request.form.values():
+                save_or_submit_doc(report_form, doc_type='report', submit="under review")
+
+            if "Submit Report" in request.form.values():
+                save_or_submit_doc(report_form, doc_type='report', submit="published")
+
+            return view_all_drafts()
+
+    return render_template('admin/edit_report_draft.html', report_form=report_form, c=contribution)
 
 
 @admin.route('/draft/other/<int:id>', methods=['GET', 'POST'])
@@ -546,17 +570,12 @@ def contribution_book(id):
     book_form = BookForm(
         doc_type = "book",
         book_title = book_entry.title,
-        book_ISBN = book_entry.ISBN,
         book_volume = book_entry.volume,
         book_edition = book_entry.edition,
         book_series = book_entry.series,
         book_author_first_name = book_entry.author_first_name,
         book_author_last_name = book_entry.author_last_name,
         book_publisher_name = book_entry.name,
-        book_publisher_state = book_entry.state,
-        book_publisher_city = book_entry.city,
-        book_publisher_country = book_entry.country,
-        book_publication_day = book_entry.day,
         book_publication_month = book_entry.month,
         book_publication_year = book_entry.year,
         book_description = book_entry.description,
@@ -693,8 +712,8 @@ def contribution_video(id):
                     director_last_name = video_entry.author_last_name,
                     video_post_source = video_entry.post_source,
                     video_publisher = video_entry.name,
-                    video_city = video_entry.city,
-                    video_country = video_entry.country,
+                    video_publication_day = video_entry.day,
+                    video_publication_month = video_entry.month,
                     video_publication_year = video_entry.year,
                     video_description = video_entry.description,
                     video_link = video_entry.link,
@@ -711,6 +730,38 @@ def contribution_video(id):
             return view_all_drafts()
 
     return render_template('admin/edit_video_draft.html', video_form=video_form, c=contribution)
+
+
+@admin.route('/contribution/report/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def contribution_report(id):
+    contribution = Document.query.get(id)
+    report_entry = Document.query.filter_by(id=id).first()
+    report_form = ReportForm(
+                    doc_type = "report",
+                    report_title = report_entry.title,
+                    report_author_first_name = report_entry.author_first_name,
+                    report_author_last_name = report_entry.author_last_name,
+                    report_publisher_name = report_entry.name,
+                    report_publication_day= report_entry.day,
+                    report_publication_month = report_entry.month,
+                    report_publication_year = report_entry.year,
+                    report_description = report_entry.description,
+                    report_link = report_entry.link,
+                    document_status = 'draft')
+
+    if request.method == 'POST':
+        if report_form.validate_on_submit():
+            if "Save Report" in request.form.values():
+                save_or_submit_doc(video_form, doc_type='report', submit="under review")
+
+            if "Submit Report" in request.form.values():
+                save_or_submit_doc(video_form, doc_type='report', submit="published")
+
+            return view_all_drafts()
+
+    return render_template('admin/edit_report_draft.html', report_form=report_form, c=contribution)
 
 
 @admin.route('/contribution/other/<int:id>', methods=['GET', 'POST'])
@@ -753,6 +804,7 @@ def submit():
     article_form = ArticleForm()
     law_form = LawForm()
     other_form = OtherForm()
+    report_form = ReportForm()
     journal_form = JournalArticleForm()
     video_form = VideoForm()
 
@@ -772,7 +824,7 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('admin/submit.html', book_form=book_form,
+            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
             article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form=video_form, active="book")
 
         if form_name == 'article_form':
@@ -787,7 +839,7 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('admin/submit.html', book_form=book_form,
+            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
             article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="article")
 
         if form_name == 'journal_form':
@@ -802,7 +854,7 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('admin/submit.html', book_form=book_form,
+            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
             article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="journal")
 
         if form_name == 'law_form':
@@ -817,7 +869,7 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('admin/submit.html', book_form=book_form,
+            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
             article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="law")
 
         if form_name == 'video_form':
@@ -832,8 +884,23 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('admin/submit.html', book_form=book_form,
+            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
             article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="video")
+
+        if form_name == 'report_form':
+
+            if report_form.validate_on_submit():
+
+                if "Save Report" in request.form.values():
+                    save_or_submit_doc(report_form, doc_type='report', submit='draft')
+
+                if "Submit Report" in request.form.values():
+                    save_or_submit_doc(report_form, doc_type='report', submit='published')
+
+                return view_all_drafts()
+
+            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="report")
 
         if form_name == 'other_form':
 
@@ -847,10 +914,10 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('admin/submit.html', book_form=book_form,
+            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
             article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="other")
 
-    return render_template('admin/submit.html', book_form=book_form,
+    return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
     article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="book")
 
 
@@ -1044,6 +1111,31 @@ def suggestion_video_draft(id):
     return render_template('admin/edit_video_draft.html', video_form=video_form, c=video_entry)
 
 
+@admin.route('/from_suggestion/report/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def suggestion_report_draft(id):
+    report_entry = Suggestion.query.get(id)
+    report_form = ReportForm(
+        doc_type="report",
+        report_title=report_entry.title,
+        report_description=report_entry.description,
+        report_link=report_entry.link,
+        document_status="draft")
+
+    if request.method == 'POST':
+        if report_form.validate_on_submit():
+            if "Save Report" in request.form.values():
+                save_or_submit_doc(report_form, doc_type='report', submit='draft')
+
+            if "Submit Report" in request.form.values():
+                save_or_submit_doc(report_form, doc_type='report', submit='published')
+
+            return review_suggestions()
+
+    return render_template('admin/edit_report_draft.html', report_form=report_form, c=report_entry)
+
+
 @admin.route('/from_suggestion/other/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -1103,7 +1195,6 @@ def save_or_submit_doc(form, doc_type, submit='draft'):
         book = Document(
             doc_type="book",
             title=book_form.book_title.data,
-            ISBN=book_form.book_ISBN.data,
             volume=book_form.book_volume.data,
             edition=book_form.book_edition.data,
             series=book_form.book_series.data,
@@ -1112,10 +1203,6 @@ def save_or_submit_doc(form, doc_type, submit='draft'):
             posted_by=current_user.first_name + " " + current_user.last_name,
             last_edited_by=current_user.first_name + " " + current_user.last_name,
             name=book_form.book_publisher_name.data,
-            state=book_form.book_publisher_state.data,
-            city=book_form.book_publisher_city.data,
-            country=book_form.book_publisher_country.data,
-            day=book_form.book_publication_day.data,
             month=book_form.book_publication_month.data,
             year=book_form.book_publication_year.data,
             description=book_form.book_description.data,
@@ -1190,9 +1277,9 @@ def save_or_submit_doc(form, doc_type, submit='draft'):
             post_source=video_form.video_post_source.data,
             posted_by=current_user.first_name + " " + current_user.last_name,
             last_edited_by=current_user.first_name + " " + current_user.last_name,
-            city=video_form.video_city.data,
-            country=video_form.video_country.data,
             name=video_form.video_publisher.data,
+            day=video_form.video_publication_day.data,
+            month=video_form.video_publication_month.data,
             year=video_form.video_publication_year.data,
             description=video_form.video_description.data,
             link=video_form.video_link.data,
@@ -1204,6 +1291,31 @@ def save_or_submit_doc(form, doc_type, submit='draft'):
         flash(
             'Video \"{}\" successfully saved'.format(
                 video_form.video_title.data), 'form-success')
+
+    elif doc_type == 'report':
+        report_form = form
+        report = Document(
+            doc_type="report",
+            title=report_form.report_title.data,
+            author_first_name=report_form.report_author_first_name.data,
+            author_last_name=report_form.report_author_last_name.data,
+            posted_by=current_user.first_name + " " + current_user.last_name,
+            last_edited_by=current_user.first_name + " " + current_user.last_name,
+            name=report_form.report_publisher.data,
+            day=report_form.report_publication_day.data,
+            month=report_form.report_publication_month.data,
+            year=report_form.report_publication_year.data,
+            description=report_form.report_description.data,
+            link=report_form.report_link.data,
+            document_status=submit,
+            tf=(report_form.report_description.data))
+
+        db.session.add(report)
+        db.session.commit()
+        flash(
+            'Report \"{}\" successfully saved'.format(
+                report_form.report_title.data), 'form-success')
+
     elif doc_type == 'other':
         other_form = form
         other = Document(

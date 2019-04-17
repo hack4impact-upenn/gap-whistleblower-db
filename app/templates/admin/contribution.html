@@ -96,12 +96,6 @@
                      <td>{{ contribution.series }}</td>
                    </tr>
                    {% endif %}
-                   {% if contribution.ISBN %}
-                   <tr>
-                     <td>ISBN</td>
-                     <td>{{ contribution.ISBN }}</td>
-                   </tr>
-                   {% endif %}
                    {% if contribution.author_first_name %}
                    <tr>
                      <td>Author First Name</td>
@@ -155,7 +149,7 @@
            <a class="ui basic compact button" href ="{{ url_for('admin.publish_contribution', id=contribution.id) }}">
                 Publish Contribution
             </a>
-            <a class="ui basic compact button" href="{{ url_for('admin.view_' + convert[contribution.doc_type] + '_draft', id=contribution.id)}}">
+            <a class="ui basic compact button" href="{{ url_for('admin.view_' + contribution.doc_type + '_draft', id=contribution.id)}}">
                 Edit Contribution
             </a>
         </div>

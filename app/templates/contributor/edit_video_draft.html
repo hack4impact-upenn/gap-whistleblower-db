@@ -18,30 +18,30 @@
              {{ f.form_message(video_form['success'], header='Success!', class='success') }}
              </div>
              <div class = "sixteen wide field">
-             {{ f.render_form_field(video_form.video_title) }}
+             {{ f.render_form_field(video_form.video_title, name="Title") }}
              </div>
              <div class="fields">
                <div class = "eight wide field">
-               {{ f.render_form_field(video_form.director_first_name) }}
+               {{ f.render_form_field(video_form.director_first_name, name="First Name") }}
                </div>
                <div class = "eight wide field">
-               {{ f.render_form_field(video_form.director_last_name) }}
+               {{ f.render_form_field(video_form.director_last_name, name="Last Name") }}
                </div>
              </div>
              <div class = "sixteen wide field">
-             {{ f.render_form_field(video_form.video_post_source) }}
+             {{ f.render_form_field(video_form.video_post_source, name="Source") }}
              </div>
              <div class = "three fields">
                <div class = "field">
-               {{ f.render_form_field(video_form.video_city) }}
+               {{ f.render_form_field(video_form.video_publication_day, name="Day") }}
                </div>
                <div class = "field">
-               {{ f.render_form_field(video_form.video_country) }}
+               {{ f.render_form_field(video_form.video_publication_month, name="Month") }}
                </div>
                <div class = "field">
-               {{ f.render_form_field(video_form.video_publication_year) }}
+               {{ f.render_form_field(video_form.video_publication_year, name="Year") }}
                </div>
-             </div>
+            </div>
                <div class = "sixteen wide field">
                {{ f.render_form_field(video_form.video_description) }}
                </div>

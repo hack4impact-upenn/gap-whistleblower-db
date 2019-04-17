@@ -29,7 +29,6 @@ class Document(db.Model):
     volume = db.Column(db.String(10))
     edition = db.Column(db.String(10))
     series = db.Column(db.String(500))
-    ISBN = db.Column(db.String(30))
 
     #Specific to Book/Article
     author_first_name = db.Column(db.String(100))
@@ -80,13 +79,9 @@ class Document(db.Model):
                 volume = random.randint(1, 10),
                 edition = random.randint(1, 5),
                 series = fake.text(max_nb_chars=50),
-                ISBN = ISBN,
                 author_first_name = fake.first_name(),
                 author_last_name = fake.last_name(),
                 name = fake.company(),
-                city = fake.city(),
-                state = fake.state(),
-                country = "United States",
                 document_status = random.choice(["draft", "needs review", "under review","published"]),
                 tf = Counter(text))
 

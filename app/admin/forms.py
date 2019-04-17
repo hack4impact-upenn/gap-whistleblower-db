@@ -93,16 +93,12 @@ class MultipleFileUploadField(StringField):
 
 class BookForm(Form):
     book_title = StringField(validators=[InputRequired()]) #title
-    book_ISBN = StringField() #ISBN
     book_volume = StringField() #volme
     book_edition = StringField() #edition
     book_series = StringField() #series
     book_author_first_name = StringField() #author_first_name
     book_author_last_name = StringField() #author_last_name
     book_publisher_name = StringField() #name
-    book_publisher_city = StringField() #city
-    book_publisher_state = StringField() #state
-    book_publisher_country = StringField() #country
     book_publication_day = IntegerField(validators=[validators.optional()]) #day
     book_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
     ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
@@ -179,15 +175,35 @@ class VideoForm(Form):
     director_first_name = StringField()
     director_last_name = StringField()
     video_post_source = StringField()
-    video_city = StringField()
-    video_country = StringField()
     video_publisher = StringField()
-    video_publication_year = StringField()
+    video_publication_day = IntegerField(validators=[validators.optional()]) #day
+    video_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
+    ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
+    , ('August', 'August'), ('September', 'September'), ('October', 'October'),
+    ('November', 'November'), ('December', 'December')])
+    video_publication_year = IntegerField(validators=[validators.optional()])
     video_description = TextAreaField()
     video_link = StringField()
     video_file_urls = MultipleFileUploadField()
     save_video = SubmitField()
     submit_video = SubmitField()
+
+class ReportForm(Form):
+    report_title = StringField(validators=[InputRequired()])
+    report_author_first_name = StringField()
+    report_author_last_name = StringField()
+    report_publisher = StringField()
+    report_publication_day = IntegerField(validators=[validators.optional()])
+    report_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
+    ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
+    , ('August', 'August'), ('September', 'September'), ('October', 'October'),
+    ('November', 'November'), ('December', 'December')])
+    report_publication_year = IntegerField(validators=[validators.optional()])
+    report_description = TextAreaField()
+    report_link = StringField()
+    report_file_urls = MultipleFileUploadField()
+    save_report = SubmitField()
+    submit_report = SubmitField()
 
 class OtherForm(Form):
     other_document_type = StringField(validators = [InputRequired()])
