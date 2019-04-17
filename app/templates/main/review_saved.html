@@ -58,7 +58,8 @@
                        </td>
                        <td class="suggestion type">{{ s.doc_type }}</td>
                        <td>
-                         <a class="ui massive star rating" data-rating="1" data-max-rating="1" id="star-{{ s.id }}">
+                         <a class="ui massive star rating" data-rating="1" data-max-rating="1" id="star-{{ s.id }}"
+                            href="javascript:toggleSave('{{ s.id }}');">
                          </a>
                       </td>
                    </tr>
@@ -70,34 +71,12 @@
     </div>
 
     <script>
-      $(document).ready(function () {
-        $('.ui.rating')
-          .rating('setting', 'onRate', function(value) {
-            console.log(value)
-          });
-        $('.delete-suggestion').on('click', function(e) {
-            id = e.target.id; // gets the id and shows the appropriate modal
-            $('#modal-' + id).modal('show');
-        });
-        $('#search-suggestions').keyup(function () {
-                var searchText = $(this).val();
-                if (searchText.length > 0) {
-                    $('tbody td:icontains(' + searchText + ')').addClass('positive');
-                    $('td.positive').not(':icontains(' + searchText + ')').removeClass('positive');
-                    $('tbody td').not(':icontains(' + searchText + ')').closest('tr').addClass('hidden').hide();
-                    $('tr.hidden:icontains(' + searchText + ')').removeClass('hidden').show();
-                } else {
-                    $('td.positive').removeClass('positive');
-                    $('tr.hidden').removeClass('hidden').show();
-                }
-        });
-        $('#select-type').dropdown({
-            onChange: function (value, text, $selectedItem) {
-                $('td.suggestion.type:contains(' + value + ')').closest('tr').removeClass('hidden').show();
-                $('td.suggestion.type').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
-            }
-        });
+    $(document).ready(function () {
+    $('.ui.rating')
+      .rating('setting', 'onRate', function(value) {
+        console.log(value)
       });
+<<<<<<< HEAD
       function linkMe(link) {
         console.log(link)
           if (isValidDomain(link)) {
@@ -109,19 +88,75 @@
               else {
                 window.open('http://'.concat(link))
               }
+=======
+    $('.delete-suggestion').on('click', function(e) {
+        id = e.target.id; // gets the id and shows the appropriate modal
+        $('#modal-' + id).modal('show');
+    });
+    $('#search-suggestions').keyup(function () {
+            var searchText = $(this).val();
+            if (searchText.length > 0) {
+                $('tbody td:icontains(' + searchText + ')').addClass('positive');
+                $('td.positive').not(':icontains(' + searchText + ')').removeClass('positive');
+                $('tbody td').not(':icontains(' + searchText + ')').closest('tr').addClass('hidden').hide();
+                $('tr.hidden:icontains(' + searchText + ')').removeClass('hidden').show();
+            } else {
+                $('td.positive').removeClass('positive');
+                $('tr.hidden').removeClass('hidden').show();
+            }
+    });
+    $('#select-type').dropdown({
+        onChange: function (value, text, $selectedItem) {
+            $('td.suggestion.type:contains(' + value + ')').closest('tr').removeClass('hidden').show();
+            $('td.suggestion.type').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
+        }
+    });
+    });
+    function linkMe(link) {
+    console.log(link)
+      if (isValidDomain(link)) {
+          var re  = "^(https?://)"
+          var regexHTTP = new RegExp(re,"i");
+          if (regexHTTP.test(link)) {
+            window.open(link)
+>>>>>>> 50817e008f1c8710653ffef4cf46ca7abd92bd71
           }
           else {
-            alert("This suggestion has a malformed URL.")
+            window.open('https://'.concat(link))
           }
       }
-      function isValidDomain(v) {
-        if (!v) return false;
-        var re  = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
-        var regexUrl = new RegExp(re,"i");
-        return regexUrl.test(v);
+      else {
+        alert("This suggestion has a malformed URL.")
       }
-      function startDraft(id) {
-        window.open('draft/'.concat(id))
-      }
+    }
+    function isValidDomain(v) {
+    if (!v) return false;
+    var re  = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
+    var regexUrl = new RegExp(re,"i");
+    return regexUrl.test(v);
+    }
+    function startDraft(id) {
+    window.open('draft/'.concat(id))
+    }
+
+    var csrf_token = "{{ csrf_token() }}";
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            }
+        }
+    });
+
+    function toggleSave(id) {
+        $.post('/toggleSave', {
+            id: id
+        }).done(function(response) {
+            // TODO?
+        }).fail(function() {
+            // TODO?
+        });
+    }
     </script>
 {% endblock %}

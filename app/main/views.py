@@ -2,6 +2,7 @@ import json
 import time
 import boto3
 from flask import Blueprint, request, render_template, redirect, url_for
+from flask.json import jsonify
 from random import randint
 from time import sleep
 from app.models import EditableHTML, Document, Saved, User, Suggestion, Tag
@@ -77,6 +78,21 @@ def suggestion():
 @login_required
 def resource_saved(id):
     return resource(id, from_saved=True)
+
+@main.route('/toggleSave', methods=['POST'])
+@login_required
+def toggleSave():
+    id = request.form['id']
+    user_id = current_user.id
+    saved_objs = Saved.query.filter_by(user_id=user_id, doc_id=id)
+    saved = bool(user_id) and bool(saved_objs.all())
+    if saved:
+        saved_objs.delete()
+    else:
+        saved = Saved(user_id=user_id, doc_id=id)
+        db.session.add(saved)
+    return jsonify(success=True)
+
 
 @main.route('/resource/<int:id>', methods=['GET', 'POST'])
 def resource(id, from_saved=False):

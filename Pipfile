@@ -50,6 +50,8 @@ boto = "*"
 sklearn = "*"
 apscheduler = "*"
 validators = "*"
+sqlalchemy-searchable = "*"
+flask-paginate = "*"
 
 [requires]
 python_version = "3.7"
