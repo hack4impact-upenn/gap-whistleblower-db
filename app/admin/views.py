@@ -294,7 +294,7 @@ def delete_suggestion(id):
 def view_all_drafts():
     user_name = current_user.first_name + " " + current_user.last_name
     contributions = Document.query.filter(Document.posted_by == user_name).order_by(Document.id.desc()).all()
-    return render_template('admin/draft_contributions.html', contributions=contributions)
+    return render_template('adtributor/draft_contributions.html', contributions=contributions, user_type='admin')
 
 
 @admin.route('/publish/<int:id>', methods=['GET', 'POST'])
@@ -307,7 +307,7 @@ def publish_contribution(id):
     db.session.add(contribution)
     db.session.commit()
     contributions = Document.query.order_by(Document.id.desc()).all()
-    return redirect(url_for('admin.review_contributions'))
+    return redirect(url_for('admin.review_contribution'))
 
 
 @admin.route('/review_contributions',methods=['GET', 'POST'])
@@ -324,7 +324,15 @@ def review_contributions():
 def contribution(id):
     """Contribution Review page."""
     contribution = Document.query.get(id)
-    return render_template('admin/contribution.html', contribution=contribution)
+    return render_template('adtributor/contribution.html', contribution=contribution, user_type='admin')
+
+@admin.route('/see_contribution/<int:id>', methods=['GET'])
+@login_required
+@admin_required
+def other_contribution(id):
+    """Contribution Review page."""
+    contribution = Document.query.get(id)
+    return render_template('adtributor/contribution.html', contribution=contribution, user_type='admin', comes_from='contribution')
 
 
 @admin.route('/draft/book/<int:id>', methods=['GET', 'POST'])
@@ -356,7 +364,7 @@ def view_book_draft(id):
 
             return view_all_drafts()
 
-    return render_template('admin/edit_book_draft.html', book_form=book_form, c=contribution)
+    return render_template('adtributor/edit_book_draft.html', book_form=book_form, c=contribution)
 
 
 @admin.route('/draft/article/<int:id>', methods=['GET', 'POST'])
@@ -388,7 +396,7 @@ def view_article_draft(id):
 
             return view_all_drafts()
 
-    return render_template('admin/edit_article_draft.html', article_form=article_form, c=contribution)
+    return render_template('adtributor/edit_article_draft.html', article_form=article_form, c=contribution)
 
 
 @admin.route('/draft/journal/<int:id>', methods=['GET', 'POST'])
@@ -425,7 +433,7 @@ def view_journal_draft(id):
             return view_all_drafts()
 
 
-    return render_template('admin/edit_journal_draft.html', journal_form=journal_form, c=contribution)
+    return render_template('adtributor/edit_journal_draft.html', journal_form=journal_form, c=contribution)
 
 
 
@@ -464,7 +472,7 @@ def view_law_draft(id):
 
             return view_all_drafts()
 
-    return render_template('admin/edit_law_draft.html', law_form=law_form, c=contribution)
+    return render_template('adtributor/edit_law_draft.html', law_form=law_form, c=contribution)
 
 @admin.route('/draft/video/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -496,7 +504,7 @@ def view_video_draft(id):
 
             return view_all_drafts()
 
-    return render_template('admin/edit_video_draft.html', video_form=video_form, c=contribution)
+    return render_template('adtributor/edit_video_draft.html', video_form=video_form, c=contribution)
 
 
 @admin.route('/draft/report/<int:id>', methods=['GET', 'POST'])
@@ -526,7 +534,7 @@ def view_report_draft(id):
 
             return view_all_drafts()
 
-    return render_template('admin/edit_report_draft.html', report_form=report_form, c=contribution)
+    return render_template('adtributor/edit_report_draft.html', report_form=report_form, c=contribution)
 
 
 @admin.route('/draft/other/<int:id>', methods=['GET', 'POST'])
@@ -558,7 +566,7 @@ def view_other_draft(id):
 
             return view_all_drafts()
 
-    return render_template('admin/edit_other_draft.html', other_form=other_form, c=contribution)
+    return render_template('adtributor/edit_other_draft.html', other_form=other_form, c=contribution)
 
 
 @admin.route('/contribution/book/<int:id>', methods=['GET', 'POST'])
@@ -590,7 +598,7 @@ def contribution_book(id):
 
             return view_all_drafts()
 
-    return render_template('admin/edit_book_draft.html', book_form=book_form, c=contribution)
+    return render_template('adtributor/edit_book_draft.html', book_form=book_form, c=contribution)
 
 
 @admin.route('/contribution/article/<int:id>', methods=['GET', 'POST'])
@@ -622,7 +630,7 @@ def contribution_article(id):
 
             return view_all_drafts()
 
-    return render_template('admin/edit_article_draft.html', article_form=article_form, c=contribution)
+    return render_template('adtributor/edit_article_draft.html', article_form=article_form, c=contribution)
 
 
 @admin.route('/contribution/journal/<int:id>', methods=['GET', 'POST'])
@@ -659,7 +667,7 @@ def contribution_journal(id):
             return view_all_drafts()
 
 
-    return render_template('admin/edit_journal_draft.html', journal_form=journal_form, c=contribution)
+    return render_template('adtributor/edit_journal_draft.html', journal_form=journal_form, c=contribution)
 
 
 @admin.route('/contribution/law/<int:id>', methods=['GET', 'POST'])
@@ -697,7 +705,7 @@ def contribution_law(id):
 
             return view_all_drafts()
 
-    return render_template('admin/edit_law_draft.html', law_form=law_form, c=contribution)
+    return render_template('adtributor/edit_law_draft.html', law_form=law_form, c=contribution)
 
 @admin.route('/contribution/video/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -729,7 +737,7 @@ def contribution_video(id):
 
             return view_all_drafts()
 
-    return render_template('admin/edit_video_draft.html', video_form=video_form, c=contribution)
+    return render_template('adtributor/edit_video_draft.html', video_form=video_form, c=contribution)
 
 
 @admin.route('/contribution/report/<int:id>', methods=['GET', 'POST'])
@@ -761,7 +769,7 @@ def contribution_report(id):
 
             return view_all_drafts()
 
-    return render_template('admin/edit_report_draft.html', report_form=report_form, c=contribution)
+    return render_template('adtributor/edit_report_draft.html', report_form=report_form, c=contribution)
 
 
 @admin.route('/contribution/other/<int:id>', methods=['GET', 'POST'])
@@ -793,7 +801,7 @@ def contribution_other(id):
 
             return view_all_drafts()
 
-    return render_template('admin/edit_other_draft.html', other_form=other_form, c=contribution)
+    return render_template('adtributor/edit_other_draft.html', other_form=other_form, c=contribution)
 
 
 @admin.route('/submit', methods=['GET', 'POST'])
@@ -824,8 +832,8 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form=video_form, active="book")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form=video_form, active="book", user_type='admin')
 
         if form_name == 'article_form':
 
@@ -839,8 +847,8 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="article")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="article", user_type='admin')
 
         if form_name == 'journal_form':
 
@@ -854,8 +862,8 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="journal")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="journal", user_type='admin')
 
         if form_name == 'law_form':
 
@@ -869,8 +877,8 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="law")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="law", user_type='admin')
 
         if form_name == 'video_form':
 
@@ -884,8 +892,8 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="video")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="video", user_type='admin')
 
         if form_name == 'report_form':
 
@@ -899,8 +907,8 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="report")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="report", user_type='admin')
 
         if form_name == 'other_form':
 
@@ -914,11 +922,11 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="other")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="other", user_type='admin')
 
-    return render_template('admin/submit.html', book_form=book_form, report_form=report_form,
-    article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="book")
+    return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+    article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="book", user_type='admin')
 
 
 @admin.route('sign-s3/')
@@ -1007,7 +1015,7 @@ def suggestion_book_draft(id):
 
             return review_suggestions()
 
-    return render_template('admin/edit_book_draft.html', book_form=book_form, c=book_entry)
+    return render_template('adtributor/edit_book_draft.html', book_form=book_form, c=book_entry)
 
 
 @admin.route('/from_suggestion/article/<int:id>', methods=['GET', 'POST'])
@@ -1032,7 +1040,7 @@ def suggestion_article_draft(id):
 
             return review_suggestions()
 
-    return render_template('admin/edit_article_draft.html', article_form=article_form, c=article_entry)
+    return render_template('adtributor/edit_article_draft.html', article_form=article_form, c=article_entry)
 
 @admin.route('/from_suggestion/journal/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -1056,7 +1064,7 @@ def suggestion_journal_draft(id):
 
             return review_suggestions()
 
-    return render_template('admin/edit_journal_draft.html', journal_form=journal_form, c=journal_entry)
+    return render_template('adtributor/edit_journal_draft.html', journal_form=journal_form, c=journal_entry)
 
 
 @admin.route('/from_suggestion/law/<int:id>', methods=['GET', 'POST'])
@@ -1083,7 +1091,7 @@ def suggestion_law_draft(id):
 
             return review_suggestions()
 
-    return render_template('admin/edit_law_draft.html', law_form=law_form, c=law_entry)
+    return render_template('adtributor/edit_law_draft.html', law_form=law_form, c=law_entry)
 
 
 @admin.route('/from_suggestion/video/<int:id>', methods=['GET', 'POST'])
@@ -1108,7 +1116,7 @@ def suggestion_video_draft(id):
 
             return review_suggestions()
 
-    return render_template('admin/edit_video_draft.html', video_form=video_form, c=video_entry)
+    return render_template('adtributor/edit_video_draft.html', video_form=video_form, c=video_entry)
 
 
 @admin.route('/from_suggestion/report/<int:id>', methods=['GET', 'POST'])
@@ -1133,7 +1141,7 @@ def suggestion_report_draft(id):
 
             return review_suggestions()
 
-    return render_template('admin/edit_report_draft.html', report_form=report_form, c=report_entry)
+    return render_template('adtributor/edit_report_draft.html', report_form=report_form, c=report_entry)
 
 
 @admin.route('/from_suggestion/other/<int:id>', methods=['GET', 'POST'])
@@ -1158,7 +1166,7 @@ def suggestion_other_draft(id):
 
             return review_suggestions()
 
-    return render_template('admin/edit_other_draft.html', other_form=other_form, c=other_entry)
+    return render_template('adtributor/edit_other_draft.html', other_form=other_form, c=other_entry)
 
 @admin.route('/broken_link', methods=['GET', 'POST'])
 @login_required

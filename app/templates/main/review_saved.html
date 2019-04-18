@@ -20,8 +20,8 @@
                     <div class="menu">
                         <div class="item" data-value="">All resource types</div>
                         <div class="item" data-value="book">Books</div>
-                        <div class="item" data-value="article">News Article</div>
-                        <div class="item" data-value="journal">Journal Article</div>
+                        <div class="item" data-value="news article">News Article</div>
+                        <div class="item" data-value="journal article">Journal Article</div>
                         <div class="item" data-value="research">Research</div>
                         <div class="item" data-value="law">Laws</div>
                         <div class="item" data-value="other">Other</div>
@@ -76,19 +76,6 @@
       .rating('setting', 'onRate', function(value) {
         console.log(value)
       });
-<<<<<<< HEAD
-      function linkMe(link) {
-        console.log(link)
-          if (isValidDomain(link)) {
-              var re  = "^(https?://)"
-              var regexHTTP = new RegExp(re,"i");
-              if (regexHTTP.test(link)) {
-                window.open(link)
-              }
-              else {
-                window.open('http://'.concat(link))
-              }
-=======
     $('.delete-suggestion').on('click', function(e) {
         id = e.target.id; // gets the id and shows the appropriate modal
         $('#modal-' + id).modal('show');
@@ -119,7 +106,6 @@
           var regexHTTP = new RegExp(re,"i");
           if (regexHTTP.test(link)) {
             window.open(link)
->>>>>>> 50817e008f1c8710653ffef4cf46ca7abd92bd71
           }
           else {
             window.open('https://'.concat(link))
@@ -138,9 +124,7 @@
     function startDraft(id) {
     window.open('draft/'.concat(id))
     }
-
     var csrf_token = "{{ csrf_token() }}";
-
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
             if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
@@ -148,7 +132,6 @@
             }
         }
     });
-
     function toggleSave(id) {
         $.post('/toggleSave', {
             id: id

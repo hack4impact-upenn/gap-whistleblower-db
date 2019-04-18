@@ -135,10 +135,9 @@ def check_dead_links():
             except:
                 doc.broken_link = True
         db.session.commit()
-    print('YUHHHH')
 
-# scheduler = BackgroundScheduler()
-# scheduler.add_job(func=check_dead_links, trigger="interval", seconds=60)
-# scheduler.start()
-# # Shut down the scheduler when exiting the app
-# atexit.register(lambda: scheduler.shutdown())
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=check_dead_links, trigger="interval", seconds=60)
+scheduler.start()
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())

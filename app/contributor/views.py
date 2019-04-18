@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import update
 
 from app import db, csrf
-from app.contributor.forms import BookForm, ArticleForm, OtherForm, LawForm, DraftEntryForm, JournalArticleForm, VideoForm
+from app.contributor.forms import BookForm, ArticleForm, OtherForm, LawForm, DraftEntryForm, JournalArticleForm, VideoForm, ReportForm
 from app.decorators import contributor_required
 from app.models import Document, User
 
@@ -37,7 +37,7 @@ def index():
 def view_all_drafts():
     user_name = current_user.first_name + " " + current_user.last_name
     contributions = Document.query.filter(Document.posted_by == user_name).order_by(Document.id.desc()).all()
-    return render_template('contributor/draft_contributions.html', contributions=contributions)
+    return render_template('adtributor/draft_contributions.html', contributions=contributions, user_type='contributor')
 
 
 @contributor.route('/contribution/<int:id>', methods=['GET'])
@@ -45,7 +45,7 @@ def view_all_drafts():
 @contributor_required
 def contribution(id):
     contribution = Document.query.get(id)
-    return render_template('contributor/contribution.html', contribution=contribution)
+    return render_template('adtributor/contribution.html', contribution=contribution, user_type='contributor')
 
 
 @contributor.route('/draft/book/<int:id>', methods=['GET', 'POST'])
@@ -79,7 +79,7 @@ def view_book_draft(id):
             return view_all_drafts()
 
 
-    return render_template('contributor/edit_book_draft.html', book_form=book_form, c=contribution)
+    return render_template('adtributor/edit_book_draft.html', book_form=book_form, c=contribution)
 
 
 @contributor.route('/draft/article/<int:id>', methods=['GET', 'POST'])
@@ -111,12 +111,12 @@ def view_article_draft(id):
 
             return view_all_drafts()
 
-    return render_template('contributor/edit_article_draft.html', article_form=article_form, c=contribution)
+    return render_template('adtributor/edit_article_draft.html', article_form=article_form, c=contribution)
 
 
     """Contribution Review page."""
     contribution = Document.query.get(id)
-    return render_template('contributor/edit_article_draft.html', contribution=contribution)
+    return render_template('adtributor/edit_article_draft.html', contribution=contribution)
 
 
 @contributor.route('/draft/journal/<int:id>', methods=['GET', 'POST'])
@@ -153,12 +153,12 @@ def view_journal_draft(id):
 
             return view_all_drafts()
 
-    return render_template('contributor/edit_journal_draft.html', journal_form=journal_form, c=contribution)
+    return render_template('adtributor/edit_journal_draft.html', journal_form=journal_form, c=contribution)
 
 
     """Contribution Review page."""
     contribution = Document.query.get(id)
-    return render_template('contributor/edit_article_draft.html', contribution=contribution)
+    return render_template('adtributor/edit_article_draft.html', contribution=contribution)
 
 
 @contributor.route('/draft/law/<int:id>', methods=['GET', 'POST'])
@@ -196,7 +196,7 @@ def view_law_draft(id):
 
             return view_all_drafts()
 
-    return render_template('contributor/edit_law_draft.html', law_form=law_form, c=contribution)
+    return render_template('adtributor/edit_law_draft.html', law_form=law_form, c=contribution)
 
 
 @contributor.route('draft/video/<int:id>', methods=['GET', 'POST'])
@@ -230,7 +230,7 @@ def view_video_draft(id):
 
             return view_all_drafts()
 
-    return render_template('contributor/edit_video_draft.html', video_form=video_form, c=contribution)
+    return render_template('adtributor/edit_video_draft.html', video_form=video_form, c=contribution)
 
 
 @contributor.route('/draft/report/<int:id>', methods=['GET', 'POST'])
@@ -260,7 +260,7 @@ def view_report_draft(id):
 
             return view_all_drafts()
 
-    return render_template('contributor/edit_report_draft.html', report_form=report_form, c=contribution)
+    return render_template('adtributor/edit_report_draft.html', report_form=report_form, c=contribution)
 
 
 @contributor.route('/draft/other/<int:id>', methods=['GET', 'POST'])
@@ -292,7 +292,7 @@ def view_other_draft(id):
 
             return view_all_drafts()
 
-    return render_template('contributor/edit_other_draft.html', other_form=other_form, c=contribution)
+    return render_template('adtributor/edit_other_draft.html', other_form=other_form, c=contribution)
 
 
 @contributor.route('/submit', methods=['GET', 'POST'])
@@ -305,6 +305,7 @@ def submit():
     other_form = OtherForm()
     journal_form = JournalArticleForm()
     video_form = VideoForm()
+    report_form = ReportForm()
 
     if request.method == 'POST':
 
@@ -322,8 +323,8 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('contributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form=video_form, active="book")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form=video_form, active="book", user_type='contributor')
 
         if form_name == 'article_form':
 
@@ -337,8 +338,8 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('contributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="article")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="article", user_type='contributor')
 
         if form_name == 'journal_form':
 
@@ -352,8 +353,8 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('contributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="journal")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="journal", user_type='contributor')
 
         if form_name == 'law_form':
 
@@ -367,8 +368,8 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('contributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="law")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="law", user_type='contributor')
 
         if form_name == 'video_form':
 
@@ -382,8 +383,8 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('contributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="video")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="video", user_type='contributor')
 
         if form_name == 'report_form':
 
@@ -397,8 +398,8 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('contributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="report")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="report", user_type='contributor')
 
         if form_name == 'other_form':
 
@@ -412,11 +413,11 @@ def submit():
 
                 return view_all_drafts()
 
-            return render_template('contributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="other")
+            return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="other", user_type='contributor')
 
-    return render_template('contributor/submit.html', book_form=book_form, report_form=report_form,
-    article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="book")
+    return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
+    article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="book", user_type='contributor')
 
 
 @contributor.route('sign-s3/')

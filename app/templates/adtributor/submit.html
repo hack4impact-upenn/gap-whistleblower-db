@@ -5,11 +5,11 @@
 {% block content %}
 <div class="ui grid container">
     <div class="twelve wide computer sixteen wide mobile centered column">
-      <a class="ui basic compact button" href="{{ url_for('contributor.index') }}">
+      <a class="ui basic compact button" href="{{ url_for(user_type + '.index') }}">
           <i class="caret left icon"></i>
           Back to dashboard
       </a>
-      <a class="ui basic compact button" href="{{ url_for('contributor.view_all_drafts') }}">
+      <a class="ui basic compact button" href="{{ url_for(user_type + '.view_all_drafts') }}">
           <i class="caret left icon"></i>
           Back to my contributions
       </a>
@@ -32,6 +32,9 @@
                   } %}
                   {{ f.begin_form(book_form, book_flashes) }}
                   <input type="hidden" name="form-name" value="book_form">
+                  <div class = "sixteen wide field">
+                  {{ f.form_message(book_flashes['success'], header='Success!', class='success') }}
+                  </div>
                   <div class = "sixteen wide field">
                   {{ f.render_form_field(book_form.book_title, name="Title") }}
                   </div>

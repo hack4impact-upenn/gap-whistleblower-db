@@ -24,6 +24,7 @@
                       <div class="item" data-value="journal">Journal Articles</div>
                       <div class="item" data-value="law">Laws</div>
                       <div class="item" data-value="video">Videos</div>
+                      <div class="item" data-value="video">Reports</div>
                       <div class="item" data-value="other">Other</div>
                     </div>
                 </div>
@@ -46,7 +47,7 @@
                <tbody>
                {% for c in contributions %}
                    <tr>
-                       <td onclick="window.location.href = '{{ url_for('admin.contribution', id=c.id) }}';">{{ c.title }}</td>
+                       <td onclick="window.location.href = '{{ url_for('admin.other_contribution', id=c.id) }}';">{{ c.title }}</td>
                        <td class="suggestion type">{{ c.doc_type }}</td>
                        <td>{% if c.document_status == "under review" %} {{ c.last_edited_by }} {% endif %}</td>
                        <td class="suggestion status">{{ c.document_status }}</td>
