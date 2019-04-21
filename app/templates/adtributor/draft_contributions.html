@@ -2,11 +2,11 @@
 {% block content %}
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
-            <a class="ui basic compact button" href="{{ url_for('contributor.index') }}">
+            <a class="ui basic compact button" href="{{ url_for(user_type + '.index') }}">
                 <i class="caret left icon"></i>
                 Back to dashboard
             </a>
-            <a class="ui secondary compact button" href="{{ url_for('contributor.submit') }}">
+            <a class="ui secondary compact button" href="{{ url_for(user_type + '.submit') }}">
                <i class="pencil icon"></i>
                 Draft new entry
             </a>
@@ -49,7 +49,7 @@
                <tbody>
                {% for c in contributions %}
                    <tr>
-                        <td onclick="window.location.href = '{{ url_for('contributor.contribution', id=c.id) }}';">{{ c.title }}</td>
+                        <td onclick="window.location.href = '{{ url_for(user_type + '.contribution', id=c.id) }}';">{{ c.title }}</td>
                         <td class="document document_status">{{ c.document_status }}</td>
                         <td>
                           <div class="ui buttons">
@@ -73,7 +73,7 @@
                           <div class="ui buttons">
                             <!--we give the button and icon the same id to avoid weird things with hitboxes-->
                             <button class="ui small compact icon button {% if c.document_status != 'draft' %}disabled{% endif %}" id="{{ c.id }}"
-                                  onclick="window.location.href = '{{ url_for('contributor.view_' + c.doc_type + '_draft', id=c.id) }}';">
+                                  onclick="window.location.href = '{{ url_for(user_type + '.view_' + c.doc_type + '_draft', id=c.id) }}';">
                               <i class="edit icon" id="{{ c.id }}"></i>
                             </button>
                           </div>
@@ -83,7 +83,7 @@
                            <div class="content">Are you sure you want to delete {{ c.title }}?</div>
                            <div class="actions">
                              <div class="ui cancel button">Cancel</div>
-                             <a href="{{ url_for('contributor.delete_draft', id=c.id) }}"
+                             <a href="{{ url_for(user_type + '.delete_draft', id=c.id) }}"
                                class="negative ui button">Yes, delete this draft</a>
                            </div>
                         </div>
@@ -129,7 +129,7 @@
                 window.open(link)
               }
               else {
-                window.open('https://'.concat(link))
+                window.open('http://'.concat(link))
               }
           }
           else {

@@ -18,62 +18,43 @@
                   {{ f.form_message(book_flashes['success'], header='Success!', class='success') }}
                   </div>
                   <div class = "sixteen wide field">
-                  {{ f.render_form_field(book_form.book_title) }}
+                  {{ f.render_form_field(book_form.book_title, name="Title") }}
                   </div>
                   <div class = "fields">
                       <div class = "eight wide field">
-                      {{ f.render_form_field(book_form.book_author_first_name) }}
+                      {{ f.render_form_field(book_form.book_author_first_name, name="First Name") }}
                       </div>
                       <div class = "eight wide field">
-                      {{ f.render_form_field(book_form.book_author_last_name) }}
+                      {{ f.render_form_field(book_form.book_author_last_name, name="Last Name") }}
                       </div>
                   </div>
                   <div class = "three fields">
                       <div class = "field">
-                      {{ f.render_form_field(book_form.book_volume) }}
+                      {{ f.render_form_field(book_form.book_volume, name="Volume") }}
                       </div>
                       <div class = "field">
-                      {{ f.render_form_field(book_form.book_edition) }}
+                      {{ f.render_form_field(book_form.book_edition, name="Edition") }}
                       </div>
                       <div class = "field">
-                      {{ f.render_form_field(book_form.book_series) }}
-                      </div>
-                  </div>
-                <div class = "fields">
-                  <div class = "eight wide field">
-                  {{ f.render_form_field(book_form.book_ISBN) }}
-                  </div>
-                    <div class = "eight wide field">
-                    {{ f.render_form_field(book_form.book_publisher_name) }}
-                    </div>
-                </div>
-                  <div class = "three fields">
-      	            <div class = "field">
-      	            {{ f.render_form_field(book_form.book_publication_day) }}
-      	            </div>
-      	            <div class = "field">
-      	            {{ f.render_form_field(book_form.book_publication_month) }}
-      	            </div>
-      	            <div class = "field">
-      	            {{ f.render_form_field(book_form.book_publication_year) }}
-      	            </div>
-      	        </div>
-                  <div class = "three fields">
-                      <div class = "field">
-                      {{ f.render_form_field(book_form.book_publisher_city) }}
-                      </div>
-                      <div class = "field">
-                      {{ f.render_form_field(book_form.book_publisher_state) }}
-                      </div>
-                      <div class = "field">
-                      {{ f.render_form_field(book_form.book_publisher_country) }}
+                      {{ f.render_form_field(book_form.book_series, name="Series") }}
                       </div>
                   </div>
                   <div class = "sixteen wide field">
-                  {{ f.render_form_field(book_form.book_description) }}
+                  {{ f.render_form_field(book_form.book_publisher_name, name="Publisher") }}
+                  </div>
+                  <div class = "two fields">
+      	            <div class = "eight wide field">
+      	            {{ f.render_form_field(book_form.book_publication_month, name="Month") }}
+      	            </div>
+      	            <div class = "eight wide field">
+      	            {{ f.render_form_field(book_form.book_publication_year, name="Year") }}
+      	            </div>
+      	          </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(book_form.book_description, name="Description") }}
                   </div>
                   <div class = "sixteen wide field">
-                  {{ f.render_form_field(book_form.book_link) }}
+                  {{ f.render_form_field(book_form.book_link, name="Link") }}
                   </div>
                   <div class = "sixteen wide field">
                   {{ f.render_form_input(book_form.book_file_urls) }}

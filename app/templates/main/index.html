@@ -11,7 +11,7 @@
     </head>
     <body onresize="resizeFilter()">
       <form method=post>
-        <div class="ui inverted vertical masthead center aligned segment" style="background-color: #487ea6">
+        <div class="ui inverted vertical masthead center aligned segment" style="background-color: #345073">
             <div class="ui container">
                 {% block nav %}
                   {# add dropdown variable here to the render_nav method to render dropdowns #}
@@ -47,7 +47,8 @@
             </div>
         </div>
         <div class="ui container" style="padding: 100px 0 100px 0;">
-          <div class="ui grid">
+          <div class="ui two column grid">
+           <div class="row">
             <div class="four wide column" id="myDiv">
               <div class="ui vertical menu fluid">
                 <div class="item">
@@ -93,7 +94,6 @@
               </div>
             </div>
             <div class="twelve wide column" id="myDiv2">
-              <div class="ui fluid container">
                 <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
                     <thead>
                         <tr>
@@ -165,17 +165,9 @@
           function resizeFilter() {
             if($(window).width() < 800){
               $("#myDiv").hide();
-              if ($("myDiv2").hasClass('twelve wide')) {
-                $("#myDiv2").removeClass('twelve wide');
-              }
-              $("#myDiv2").addClass('sixteen wide');
             }
             else {
               $("#myDiv").show();
-              if ($("myDiv2").hasClass('sixteen wide')) {
-                $("#myDiv2").removeClass('sixteen wide');
-              }
-              $("#myDiv2").addClass('twelve wide');
             }
           };
         </script>

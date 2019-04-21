@@ -1,1 +1,1 @@
-from app.admin.views import admin  # noqa
+# from app.admin.views import admin  # noqa

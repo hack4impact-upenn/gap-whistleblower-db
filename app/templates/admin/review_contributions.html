@@ -18,12 +18,14 @@
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <div class="item" data-value="">All resource types</div>
-                        <div class="item" data-value="book">Books</div>
-                        <div class="item" data-value="article">Articles</div>
-                        <div class="item" data-value="research">Research</div>
-                        <div class="item" data-value="law">Laws</div>
-                        <div class="item" data-value="other">Other</div>
+                      <div class="item" data-value="">All resource types</div>
+                      <div class="item" data-value="book">Books</div>
+                      <div class="item" data-value="article">News Articles</div>
+                      <div class="item" data-value="journal">Journal Articles</div>
+                      <div class="item" data-value="law">Laws</div>
+                      <div class="item" data-value="video">Videos</div>
+                      <div class="item" data-value="video">Reports</div>
+                      <div class="item" data-value="other">Other</div>
                     </div>
                 </div>
                 <div class="ui right search item">
@@ -38,16 +40,17 @@
                    <tr>
                        <th>Title</th>
                        <th>Type</th>
+                       <th>Last edited by</th>
                        <th>Status</th>
                    </tr>
                </thead>
                <tbody>
                {% for c in contributions %}
                    <tr>
-                       <td onclick="window.location.href = '{{ url_for('admin.contribution', id=c.id) }}';">{{ c.title }}</td>
+                       <td onclick="window.location.href = '{{ url_for('admin.other_contribution', id=c.id) }}';">{{ c.title }}</td>
                        <td class="suggestion type">{{ c.doc_type }}</td>
+                       <td>{% if c.document_status == "under review" %} {{ c.last_edited_by }} {% endif %}</td>
                        <td class="suggestion status">{{ c.document_status }}</td>
-                       </div>
                    </tr>
                {% endfor %}
                </tbody>
@@ -91,7 +94,7 @@
                 window.open(link)
               }
               else {
-                window.open('https://'.concat(link))
+                window.open('http://'.concat(link))
               }
           }
           else {

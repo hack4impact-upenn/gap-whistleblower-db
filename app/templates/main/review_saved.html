@@ -124,9 +124,7 @@
     function startDraft(id) {
     window.open('draft/'.concat(id))
     }
-
     var csrf_token = "{{ csrf_token() }}";
-
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
             if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
@@ -134,7 +132,6 @@
             }
         }
     });
-
     function toggleSave(id) {
         $.post('/toggleSave', {
             id: id

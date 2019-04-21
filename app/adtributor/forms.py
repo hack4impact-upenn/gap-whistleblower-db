@@ -82,8 +82,6 @@ class TagForm(Form):
 
 
 # Document Submission Forms (copied from contributor/forms.py)
-
-
 class DraftEntryForm(Form):
     draft_new_book_entry = SubmitField()
 

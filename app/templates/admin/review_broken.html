@@ -8,8 +8,8 @@
                 Back to dashboard
             </a>
             <h2 class="ui header">
-                Review Suggestions
-                <div class="sub header">Review entries suggested by users</div>
+                Update Entries
+                <div class="sub header">Update entries with broken links</div>
             </h2>
             <div class="ui menu">
                 <div id="select-type" class="ui dropdown item">
@@ -38,53 +38,25 @@
                <thead>
                    <tr>
                        <th>Title</th>
-                       <th class="one wide">Link</th>
                        <th>Type</th>
-                       <th class="one wide">Delete</th>
-                       <th class="one wide">Draft</th>
+                       <th class="one wide">Edit</th>
                    </tr>
                </thead>
                <tbody>
-               {% for s in suggestions %}
+               {% for b in broken %}
                    <tr>
-                       <td onclick="window.location.href = '{{ url_for('admin.suggestion', id=s.id) }}';">{{ s.title }}</td>
-                       <td>
-                         <div class="ui buttons">
-                           <!--we give the button and icon the same id to avoid weird things with hitboxes-->
-                           <button class="ui small compact icon button"  onclick="linkMe('{{ s.link }}')"
-                           id="{{ s.id }}">
-                             <i class="linkify icon" id="{{ s.id }}"></i>
-                           </button>
-                         </div>
-                       </td>
-                       <td class="suggestion type">{{ s.doc_type }}</td>
-                       <td>
-                         <div class="ui buttons">
-                           <!--we give the button and icon the same id to avoid weird things with hitboxes-->
-                           <button class="ui small compact icon button delete-suggestion" id="{{ s.id }}">
-                             <i class="trash alternate icon" id="{{ s.id }}"></i>
-                           </button>
-                         </div>
-                       </td>
+                       <td onclick="window.location.href = '{{ url_for('admin.contribution', id=b.id) }}';">{{ b.title }}</td>
+                       <td class="suggestion type">{{ b.doc_type }}</td>
                        <!--confirmation modal for deleting a checklist item-->
                        <td>
                          <div class="ui buttons">
                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
-                           <a class="ui small compact icon button" id="{{ s.id }}"
-                            href="{{ url_for('admin.suggestion_' + s.doc_type + '_draft', id=s.id) }}"">
-                             <i class="edit icon" id="{{ s.id }}"></i>
+                           <a class="ui small compact icon button" id="{{ b.id }}"
+                            href="{{ url_for('admin.contribution_' + b.doc_type, id=b.id) }}">
+                             <i class="edit icon" id="{{ b.id }}"></i>
                            </a>
                          </div>
                        </td>
-                       <div id="modal-{{ s.id }}" class="ui tiny modal delete-suggestion-modal">
-                          <div class="header">Delete Suggestion</div>
-                          <div class="content">Are you sure you want to delete {{ s.title }}?</div>
-                          <div class="actions">
-                            <div class="ui cancel button">Cancel</div>
-                            <a href="{{ url_for('admin.delete_suggestion', id=s.id) }}"
-                              class="negative ui button">Yes, delete this suggestion</a>
-                          </div>
-                       </div>
                    </tr>
                {% endfor %}
                </tbody>
@@ -139,9 +111,6 @@
         var re  = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
         var regexUrl = new RegExp(re,"i");
         return regexUrl.test(v);
-      }
-      function startDraft(id) {
-        window.open('draft/'.concat(id))
       }
     </script>
 {% endblock %}

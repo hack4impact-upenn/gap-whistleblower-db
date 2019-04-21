@@ -8,62 +8,62 @@
         <h2 class="ui dividing header">Create Database Entry</h2>
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
-                  <h3 class="ui dividing header">Submit a Video</h3>
-                   {% set video_flashes = {
+                  <h3 class="ui dividing header">Submit a Report</h3>
+                   {% set report_flashes = {
                       'success': get_flashed_messages(category_filter=['form-success'])
                   } %}
-            {{ f.begin_form(video_form, video_flashes) }}
-             <input type="hidden" name="form-name" value="video_form">
+            {{ f.begin_form(report_form, report_flashes) }}
+             <input type="hidden" name="form-name" value="report_form">
              <div class = "sixteen wide field">
-             {{ f.form_message(video_form['success'], header='Success!', class='success') }}
+             {{ f.form_message(report_form['success'], header='Success!', class='success') }}
              </div>
              <div class = "sixteen wide field">
-             {{ f.render_form_field(video_form.video_title) }}
+             {{ f.render_form_field(report_form.report_title, name="Title") }}
              </div>
              <div class="fields">
                <div class = "eight wide field">
-               {{ f.render_form_field(video_form.director_first_name) }}
+               {{ f.render_form_field(report_form.report_author_first_name, name="First Name") }}
                </div>
                <div class = "eight wide field">
-               {{ f.render_form_field(video_form.director_last_name) }}
+               {{ f.render_form_field(report_form.report_author_last_name, name="Last Name") }}
                </div>
              </div>
              <div class = "sixteen wide field">
-             {{ f.render_form_field(video_form.video_post_source) }}
+             {{ f.render_form_field(report_form.report_publisher, name="Publisher") }}
              </div>
              <div class = "three fields">
                <div class = "field">
-               {{ f.render_form_field(video_form.video_city) }}
+               {{ f.render_form_field(report_form.report_publication_day, name="Day") }}
                </div>
                <div class = "field">
-               {{ f.render_form_field(video_form.video_country) }}
+               {{ f.render_form_field(report_form.report_publication_month, name="Month") }}
                </div>
                <div class = "field">
-               {{ f.render_form_field(video_form.video_publication_year) }}
+               {{ f.render_form_field(report_form.report_publication_year, name="Year") }}
                </div>
-             </div>
+            </div>
                <div class = "sixteen wide field">
-               {{ f.render_form_field(video_form.video_description) }}
-               </div>
-               <div class = "sixteen wide field">
-               {{ f.render_form_field(video_form.video_link) }}
+               {{ f.render_form_field(report_form.report_description) }}
                </div>
                <div class = "sixteen wide field">
-               {{ f.render_form_input(video_form.video_file_urls) }}
+               {{ f.render_form_field(report_form.report_link) }}
+               </div>
+               <div class = "sixteen wide field">
+               {{ f.render_form_input(report_form.report_file_urls) }}
                </div>
                <div class = "sixteen wide field">
                {{ upload.file_upload('file_urls') }}
                </div>
                <div class = "fields">
                   <div class = "three wide field">
-                  {{ f.render_form_field(video_form.save_video) }}
+                  {{ f.render_form_field(report_form.save_report) }}
                   </div>
                   <div class = "three wide field">
-                  {{ f.render_form_field(video_form.submit_video) }}
+                  {{ f.render_form_field(report_form.submit_report) }}
                   </div>
                   </div>
               </div>
-               {{ f.end_form(video_form) }}
+               {{ f.end_form(report_form) }}
               </div>
           </div>
         </div>
