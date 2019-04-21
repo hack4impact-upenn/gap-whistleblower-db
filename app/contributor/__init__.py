@@ -1,1 +1,1 @@
-from app.contributor.views import contributor  # noqa
+# from app.contributor.views import contributor  # noqa
