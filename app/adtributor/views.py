@@ -1432,77 +1432,77 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
 @login_required
 @admin_required
 def download():
-    file_path = '/Users/arunaprasad/Desktop/gap/'
+    file_path = '/Users/saraines/Desktop/'
     documents = Document.query.order_by(Document.id.desc()).all()
 
     #BOOK
     with io.open(file_path + 'book.csv', 'w', newline='') as csvfile:
-        
-        csv_writer = csv.writer(csvfile) 
+
+        csv_writer = csv.writer(csvfile)
 
         csv_writer.writerow(['Title', 'Author First Name', 'Author Last Name', 'Volume', 'Edition', 'Series', 'Publisher',
-            'Publication Month', 'Publication Year', 'Description', 'Link', 'Posted Date', 
+            'Publication Month', 'Publication Year', 'Description', 'Link', 'Posted Date',
             'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
         for d in documents:
             if d.doc_type == "book":
                 csv_writer.writerow([d.title, d.author_first_name, d.author_last_name, d.volume, d.edition, d.series, d.name,
-                    d.month, d.year, d.description, d.link, d.posted_date, 
+                    d.month, d.year, d.description, d.link, d.posted_date,
                     d.last_edited_date, d.posted_by, d.last_edited_by, d.document_status])
 
     #NEWS ARTICLE
     with io.open(file_path + 'news_article.csv', 'w', newline='') as csvfile:
-        
-        csv_writer = csv.writer(csvfile) 
+
+        csv_writer = csv.writer(csvfile)
 
         csv_writer.writerow(['Title', 'Author First Name', 'Author Last Name', 'Publication',
-            'Publication Day', 'Publication Month', 'Publication Year', 'Description', 'Link', 'Posted Date', 
+            'Publication Day', 'Publication Month', 'Publication Year', 'Description', 'Link', 'Posted Date',
             'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
         for d in documents:
             if d.doc_type == "article":
-                csv_writer.writerow([d.title, d.author_first_name, d.author_last_name, d.name, 
-                    d.day, d.month, d.year, d.description, d.link, d.posted_date, 
+                csv_writer.writerow([d.title, d.author_first_name, d.author_last_name, d.name,
+                    d.day, d.month, d.year, d.description, d.link, d.posted_date,
                     d.last_edited_date, d.posted_by, d.last_edited_by, d.document_status])
 
     #JOURNAL ARTICLE
     with io.open(file_path + 'journal_article.csv', 'w', newline='') as csvfile:
-        
-        csv_writer = csv.writer(csvfile) 
+
+        csv_writer = csv.writer(csvfile)
 
         csv_writer.writerow(['Title', 'Author First Name', 'Author Last Name', 'Publication',
-            'Volume', 'Start Page', 'End Page', 'Publication Day', 'Publication Month', 'Publication Year', 'Description', 
+            'Volume', 'Start Page', 'End Page', 'Publication Day', 'Publication Month', 'Publication Year', 'Description',
             'Link', 'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
         for d in documents:
             if d.doc_type == "journal":
-                csv_writer.writerow([d.title, d.author_first_name, d.author_last_name, d.name, 
-                    d.volume, d.page_start, d.page_end, d.day, d.month, d.year, d.description, 
+                csv_writer.writerow([d.title, d.author_first_name, d.author_last_name, d.name,
+                    d.volume, d.page_start, d.page_end, d.day, d.month, d.year, d.description,
                     d.link, d.posted_date, d.last_edited_date, d.posted_by, d.last_edited_by, d.document_status])
 
     #LAW
     with io.open(file_path + 'law.csv', 'w', newline='') as csvfile:
-        
-        csv_writer = csv.writer(csvfile) 
 
-        csv_writer.writerow(['Title', 'Citation', 'Government Body', 'Section', 
-            'Region', 'City', 'State', 'Country', 'Enactment Day', 
+        csv_writer = csv.writer(csvfile)
+
+        csv_writer.writerow(['Title', 'Citation', 'Government Body', 'Section',
+            'Region', 'City', 'State', 'Country', 'Enactment Day',
             'Enactment Month', 'Enactment Year', 'Description', 'Link',
             'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
         for d in documents:
             if d.doc_type == "law":
-                csv_writer.writerow([d.title, d.citation, d.govt_body, d.section, 
-                    d.region, d.city, d.state, d.country, d.day, 
+                csv_writer.writerow([d.title, d.citation, d.govt_body, d.section,
+                    d.region, d.city, d.state, d.country, d.day,
                     d.month, d.year, d.description, d.link,
                     d.posted_date, d.last_edited_date, d.posted_by, d.last_edited_by, d.document_status])
 
     #VIDEO
     with io.open(file_path + 'video.csv', 'w', newline='') as csvfile:
-        
-        csv_writer = csv.writer(csvfile) 
 
-        csv_writer.writerow(['Title', 'First Name', 'Last Name', 'Source', 
+        csv_writer = csv.writer(csvfile)
+
+        csv_writer.writerow(['Title', 'First Name', 'Last Name', 'Source',
             'Day', 'Month', 'Year', 'Description', 'Link',
             'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
@@ -1514,10 +1514,10 @@ def download():
 
     #REPORT
     with io.open(file_path + 'report.csv', 'w', newline='') as csvfile:
-        
-        csv_writer = csv.writer(csvfile) 
 
-        csv_writer.writerow(['Title', 'First Name', 'Last Name', 'Publisher', 
+        csv_writer = csv.writer(csvfile)
+
+        csv_writer.writerow(['Title', 'First Name', 'Last Name', 'Publisher',
             'Day', 'Month', 'Year', 'Description', 'Link',
             'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
@@ -1529,17 +1529,17 @@ def download():
 
     #OTHER
     with io.open(file_path + 'other.csv', 'w', newline='') as csvfile:
-        
-        csv_writer = csv.writer(csvfile) 
+
+        csv_writer = csv.writer(csvfile)
 
         csv_writer.writerow(['Title', 'Author First Name', 'Author Last Name', 'Other Document Type',
-            'Publication Day', 'Publication Month', 'Publication Year', 'Description', 'Link', 
+            'Publication Day', 'Publication Month', 'Publication Year', 'Description', 'Link',
             'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
         for d in documents:
             if d.doc_type == "other":
                 csv_writer.writerow([d.title, d.author_first_name, d.author_last_name, d.other_type,
-                    d.day, d.month, d.year, d.description, d.link, 
+                    d.day, d.month, d.year, d.description, d.link,
                     d.posted_date, d.last_edited_date, d.posted_by, d.last_edited_by, d.document_status])
 
     return redirect(url_for('admin.index'))
@@ -1584,5 +1584,21 @@ def upload():
                 db.session.add(document)
         db.session.commit()
 
-        return contents
     return render_template('admin/upload.html')
+
+
+@admin.route('/add_author', methods=['GET', 'POST'])
+@admin_required
+@contributor.route('/add_author', methods=['GET', 'POST'])
+@contributor_required
+@login_required
+def add_author():
+    return 'hello'
+
+@admin.route('/delete_author', methods=['GET', 'POST'])
+@admin_required
+@contributor.route('/delete_author', methods=['GET', 'POST'])
+@contributor_required
+@login_required
+def delete_author():
+    return 'hello'
