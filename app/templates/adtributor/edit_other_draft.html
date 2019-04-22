@@ -18,35 +18,35 @@
                   {{ f.form_message(other_flashes['success'], header='Success!', class='success') }}
                   </div>
                   <div class = "sixteen wide field">
-                    {{ f.render_form_field(other_form.other_title) }}
+                    {{ f.render_form_field(other_form.other_title, name='Title') }}
                   </div>
                   <div class="fields">
-                 <div class = "eight wide field">
-                 {{ f.render_form_field(other_form.other_author_first_name) }}
-                 </div>
-                 <div class = "eight wide field">
-                 {{ f.render_form_field(other_form.other_author_last_name) }}
-                 </div>
+      	            <div class = "eight wide field">
+      	            {{ f.render_form_field(other_form.other_author_first_name, name='First Name') }}
+      	            </div>
+      	            <div class = "eight wide field">
+      	            {{ f.render_form_field(other_form.other_author_last_name, name='Last Name') }}
+      	            </div>
                   </div>
                   <div class = "sixteen wide field">
-                  {{ f.render_form_field(other_form.other_document_type) }}
+                  {{ f.render_form_field(other_form.other_document_type, name='Resource Type') }}
                   </div>
                   <div class = "three fields">
-                 <div class = "field">
-                 {{ f.render_form_field(other_form.other_publication_day) }}
-                 </div>
-                 <div class = "field">
-                 {{ f.render_form_field(other_form.other_publication_month) }}
-                 </div>
-                 <div class = "field">
-                 {{ f.render_form_field(other_form.other_publication_year) }}
-                 </div>
-             </div>
+      	            <div class = "field">
+      	            {{ f.render_form_field(other_form.other_publication_day, name='Day') }}
+      	            </div>
+      	            <div class = "field">
+      	            {{ f.render_form_field(other_form.other_publication_month, name='Month') }}
+      	            </div>
+      	            <div class = "field">
+      	            {{ f.render_form_field(other_form.other_publication_year, name='Year') }}
+      	            </div>
+      	        </div>
                   <div class = "sixteen wide field">
-                  {{ f.render_form_field(other_form.other_description) }}
+                  {{ f.render_form_field(other_form.other_description, name='Description') }}
                   </div>
                   <div class = "sixteen wide field">
-                  {{ f.render_form_field(other_form.other_link) }}
+                  {{ f.render_form_field(other_form.other_link, name='Link') }}
                   </div>
                   <div class = "sixteen wide field">
                   {{ f.render_form_input(other_form.other_file_urls) }}

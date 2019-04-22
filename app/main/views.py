@@ -7,8 +7,6 @@ from random import randint
 from time import sleep
 from app.models import EditableHTML, Document, Saved, User, Suggestion, Tag
 from flask_login import current_user, login_required
-# import flask_whooshalchemyplus as whooshalchemy
-# from flask_whooshee import Whooshee
 from app.main.forms import SaveForm, UnsaveForm, SuggestionForm, SearchForm
 from app import db
 from flask_paginate import Pagination
@@ -21,22 +19,30 @@ import validators
 main = Blueprint('main', __name__)
 
 
-@main.route('/', defaults={'page': 1}, methods=['GET', 'POST'])
+@main.route('/', defaults={'page': 1, 'form': None}, methods=['GET', 'POST'])
 @main.route('/<int:page>', methods=['GET', 'POST'])
-def index(page):
-    form = SearchForm()
-    tags = Tag.query.all()
-    choices = []
-    for t in tags:
-        choices.append((t.tag, t.tag))
+def index(page, form):
+    if form is None:
+        form = SearchForm()
+        tags = Tag.query.all()
+        choices = []
+        for t in tags:
+            choices.append((t.tag, t.tag))
 
-    form.tags.choices = choices
+        form.tags.choices = choices
     results = Document.query.filter_by(document_status="published").paginate(page,10,error_out=False)
 
     if form.validate_on_submit():
         query = form.query.data
-        sql = db.session.query(Document)
-        results = search(sql, query)
+        types = ['book', 'news_article', 'journal_article', 'law', 'video', 'report', 'other']
+        selected_types = []
+        filters = ["document_status is \'published\'"]
+        if len(types) > 0:
+            for t in types:
+                if form.data[str(t)] == True:
+                    selected_types.append(t)
+
+        results = Document.query.filter(Document.document_status=='published', Document.doc_type.in_(selected_types)).paginate(page,10,error_out=False)
         return render_template('main/index.html', search_results=results, form=form)
 
     if not results and page != 1:
@@ -135,6 +141,9 @@ def check_dead_links():
             except:
                 doc.broken_link = True
         db.session.commit()
+
+def search():
+    print('jhelooo')
 
 # scheduler = BackgroundScheduler()
 # scheduler.add_job(func=check_dead_links, trigger="interval", seconds=60)

@@ -90,7 +90,7 @@ class Document(db.Model):
             name = fake.name()
             text = fake.text(max_nb_chars=500)
             article = Document(
-                doc_type = "article",
+                doc_type = "news_article",
                 day =  random.randint(1, 28),
                 month = fake.month_name(),
                 year = fake.year(),
@@ -110,7 +110,7 @@ class Document(db.Model):
             name = fake.name()
             text = fake.text(max_nb_chars=500)
             journal = Document(
-                doc_type = "journal",
+                doc_type = "journal_article",
                 day =  random.randint(1, 28),
                 month = fake.month_name(),
                 year = fake.year(),

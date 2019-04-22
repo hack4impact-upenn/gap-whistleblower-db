@@ -33,6 +33,7 @@ class SearchForm(Form):
     journal_article = BooleanField(default='true')
     law = BooleanField(default='true')
     video = BooleanField(default='true')
+    report = BooleanField(default='true')
     other = BooleanField(default='true')
     tags = SelectMultipleField()
     start_date = StringField()
