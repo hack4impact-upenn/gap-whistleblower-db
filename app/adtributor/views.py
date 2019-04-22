@@ -1549,37 +1549,40 @@ def download():
 @login_required
 @admin_required
 def upload():
+
     if request.method == 'POST':
         f = request.files['book-file']
-        contents = f.read()
+        name = f.filename
 
-        data = ","
-        line_info = contents.split(data.encode("utf-8"))
+        stream = io.StringIO(f.stream.read().decode("UTF8"), newline=None)
+        csv_input = csv.reader(stream)
 
-        return render_template('admin/upload_test.html', line_info = line_info)
+        header_row = True
+        for row in csv_input:
+            if header_row:
+                header_row = False
+                continue
 
+            if name == "book.csv":
+                document = Document(
+                    doc_type = "book",
+                    title = row[0].replace("\"", ""),
+                    author_first_name = row[1].replace("\"", ""),
+                    author_last_name = row[2].replace("\"", ""),
+                    editor_first_name = row[3].replace("\"", ""),
+                    editor_last_name = row[4].replace("\"", ""),
+                    volume = row[5].replace("\"", ""),
+                    edition = row[6].replace("\"", ""),
+                    series = row[7].replace("\"", ""),
+                    name = row[8].replace("\"", ""),
+                    month = row[9].replace("\"", ""),
+                    year = row[10].replace("\"", ""),
+                    description = row[11].replace("\"", ""),
+                    link = row[12].replace("\"", ""),
+                    document_status = "published")
 
-        '''for i in range(1, int(len(line_info) / 6)):
+                db.session.add(document)
+        db.session.commit()
 
-            arguments = line_info[6 * i + 6].split()
-            if len(arguments) == 1:
-                if(i == int(len(line_info) / 6) - 1):
-                    insert = arguments[0].strip()
-                else:
-                    insert = None
-            else:
-                insert = arguments[0].strip()
-
-            scattergram_data = ScattergramData(
-                name=line_info[6 * i + 1].strip(),
-                status=line_info[6 * i + 2].strip(),
-                GPA=line_info[6 * i + 3].strip(),
-                SAT2400=line_info[6 * i + 4].strip(),
-                SAT1600=line_info[6 * i + 5].strip(),
-                ACT=insert
-            )
-
-            db.session.add(scattergram_data)
-        db.session.commit()'''
         return contents
     return render_template('admin/upload.html')

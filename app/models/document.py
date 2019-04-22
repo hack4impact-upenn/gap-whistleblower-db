@@ -34,8 +34,8 @@ class Document(db.Model):
     editor_last_name = db.Column(db.String(10000))
 
     #Specific to Book/Article
-    author_first_name = db.Column(db.String(100))
-    author_last_name = db.Column(db.String(100))
+    author_first_name = db.Column(db.String(10000))
+    author_last_name = db.Column(db.String(10000))
 
     #Specific to Journal Article
     page_start = db.Column(db.Integer())
