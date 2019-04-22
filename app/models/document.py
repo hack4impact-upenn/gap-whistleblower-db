@@ -30,6 +30,9 @@ class Document(db.Model):
     edition = db.Column(db.String(10))
     series = db.Column(db.String(500))
 
+    editor_first_name = db.Column(db.String(10000))
+    editor_last_name = db.Column(db.String(10000))
+
     #Specific to Book/Article
     author_first_name = db.Column(db.String(100))
     author_last_name = db.Column(db.String(100))

@@ -96,6 +96,8 @@ class BookForm(Form):
     book_series = StringField() #series
     book_author_first_name = StringField() #author_first_name
     book_author_last_name = StringField() #author_last_name
+    book_editor_first_name = StringField()
+    book_editor_last_name = StringField()
     book_publisher_name = StringField() #name
     book_publication_day = IntegerField(validators=[validators.optional()]) #day
     book_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
