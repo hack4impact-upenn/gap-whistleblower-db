@@ -1585,20 +1585,3 @@ def upload():
         db.session.commit()
 
     return render_template('admin/upload.html')
-
-
-@admin.route('/add_author', methods=['GET', 'POST'])
-@admin_required
-@contributor.route('/add_author', methods=['GET', 'POST'])
-@contributor_required
-@login_required
-def add_author():
-    return 'hello'
-
-@admin.route('/delete_author', methods=['GET', 'POST'])
-@admin_required
-@contributor.route('/delete_author', methods=['GET', 'POST'])
-@contributor_required
-@login_required
-def delete_author():
-    return 'hello'

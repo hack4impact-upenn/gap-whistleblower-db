@@ -93,43 +93,25 @@
 </div>
 <script>
   $('.menu .item').tab();
-  var csrf_token = "{{ csrf_token() }}";
-  $.ajaxSetup({
-      beforeSend: function(xhr, settings) {
-          if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-              xhr.setRequestHeader("X-CSRFToken", csrf_token);
-          }
-      }
-  });
   function addAuthor() {
-      $.post('/admin/add_author', {
-      }).done(function(response) {
-        var numItems = $('.author').length
-        $("#beforeMe").before('<div class = "fields author" id="author-' + (numItems + 1) + '">\
-          <div class = "four wide field">\
-            <label for="">Remove this editor</label>\
-            <a class="ui fluid labeled icon button" href="javascript:deleteAuthor(' + (numItems + 1) + ')";><i class="icon close"></i>Remove editor</a>\
-          </div>\
-          <div class="six wide field">\
-            <label for="lname">Author First Name</label>\
-           <input id="lname" type="text" placeholder="Author First Name">\
-          </div>\
-          <div class="six wide field">\
-            <label for="fname">Author Last Name</label>\
-            <input id="fname"  type="text" placeholder="Author Last Name">\
-          </div>\
-       </div>')  // TODO?
-      }).fail(function() {
-          // TODO?
-      });
+    var numItems = $('.author').length
+    $("#beforeMe").before('<div class = "fields author" id="author-' + (numItems + 1) + '">\
+      <div class = "four wide field">\
+        <label for="">Remove this editor</label>\
+        <a class="ui fluid labeled icon button" href="javascript:deleteAuthor(' + (numItems + 1) + ')";><i class="icon close"></i>Remove editor</a>\
+      </div>\
+      <div class="six wide field">\
+        <label for="lname">Author First Name</label>\
+       <input id="lname" type="text" placeholder="Author First Name">\
+      </div>\
+      <div class="six wide field">\
+        <label for="fname">Author Last Name</label>\
+        <input id="fname"  type="text" placeholder="Author Last Name">\
+      </div>\
+   </div>')
   }
   function deleteAuthor(author_id) {
-      $.post('/admin/delete_author', {
-      }).done(function(response) {
-        $( "#author-" + author_id ).remove();  // TODO?
-      }).fail(function() {
-          // TODO?
-      });
+      ( "#author-" + author_id ).remove();
   }
 </script>
 
