@@ -1,10 +1,15 @@
 from .. import db, login_manager
-from . import User
+from . import User, Idf
 import random
 from faker import Faker
 from sqlalchemy import Column, Integer, DateTime, PickleType
 import datetime
 from collections import Counter
+import os
+import nltk
+nltk.data.path.append(os.environ.get('NLTK_DATA'))
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
 class Document(db.Model):
     __tablename__ = 'document'
@@ -65,7 +70,146 @@ class Document(db.Model):
         for i in range(count):
             ISBN = fake.numerify(text="###") + "-" + fake.numerify(text="#") + "-" + fake.numerify(text="##") + "-" + fake.numerify(text = "######") + "-" + fake.numerify(text="#")
             name = fake.name()
-            text = fake.text(max_nb_chars=500)
+            animals = [
+                  "aardvark",
+                  "alligator",
+                  "alpaca",
+                  "antelope",
+                  "ape",
+                  "armadillo",
+                  "baboon",
+                  "badger",
+                  "bat",
+                  "bear",
+                  "beaver",
+                  "bison",
+                  "boar",
+                  "buffalo",
+                  "bull",
+                  "camel",
+                  "canary",
+                  "capybara",
+                  "cat",
+                  "chameleon",
+                  "cheetah",
+                  "chimpanzee",
+                  "chinchilla",
+                  "chipmunk",
+                  "cougar",
+                  "cow",
+                  "coyote",
+                  "crocodile",
+                  "crow",
+                  "deer",
+                  "dingo",
+                  "dog",
+                  "donkey",
+                  "dromedary",
+                  "elephant",
+                  "elk",
+                  "ewe",
+                  "ferret",
+                  "finch",
+                  "fish",
+                  "fox",
+                  "frog",
+                  "gazelle",
+                  "gila monster",
+                  "giraffe",
+                  "gnu",
+                  "goat",
+                  "gopher",
+                  "gorilla",
+                  "grizzly bear",
+                  "ground hog",
+                  "guinea pig",
+                  "hamster",
+                  "hedgehog",
+                  "hippopotamus",
+                  "hog",
+                  "horse",
+                  "hyena",
+                  "ibex",
+                  "iguana",
+                  "impala",
+                  "jackal",
+                  "jaguar",
+                  "kangaroo",
+                  "koala",
+                  "lamb",
+                  "lemur",
+                  "leopard",
+                  "lion",
+                  "lizard",
+                  "llama",
+                  "lynx",
+                  "mandrill",
+                  "marmoset",
+                  "mink",
+                  "mole",
+                  "mongoose",
+                  "monkey",
+                  "moose",
+                  "mountain goat",
+                  "mouse",
+                  "mule",
+                  "muskrat",
+                  "mustang",
+                  "mynah bird",
+                  "newt",
+                  "ocelot",
+                  "opossum",
+                  "orangutan",
+                  "oryx",
+                  "otter",
+                  "ox",
+                  "panda",
+                  "panther",
+                  "parakeet",
+                  "parrot",
+                  "pig",
+                  "platypus",
+                  "polar bear",
+                  "porcupine",
+                  "porpoise",
+                  "prairie dog",
+                  "puma",
+                  "rabbit",
+                  "raccoon",
+                  "ram",
+                  "rat",
+                  "reindeer",
+                  "reptile",
+                  "rhinoceros",
+                  "salamander",
+                  "seal",
+                  "sheep",
+                  "shrew",
+                  "silver fox",
+                  "skunk",
+                  "sloth",
+                  "snake",
+                  "squirrel",
+                  "tapir",
+                  "tiger",
+                  "toad",
+                  "turtle",
+                  "walrus",
+                  "warthog",
+                  "weasel",
+                  "whale",
+                  "wildcat",
+                  "wolf",
+                  "wolverine",
+                  "wombat",
+                  "woodchuck",
+                  "yak",
+                  "zebra"
+                ]
+            text = fake.text(max_nb_chars=500, ext_word_list=animals)
+            stop_words = set(stopwords.words('english'))
+            word_tokens = word_tokenize(text)
+            filtered_query = [w for w in word_tokens if not w in stop_words]
             document = Document(
                 doc_type = "book",
                 day =  random.randint(1, 28),
@@ -82,10 +226,24 @@ class Document(db.Model):
                 author_first_name = fake.first_name(),
                 author_last_name = fake.last_name(),
                 name = fake.company(),
-                document_status = random.choice(["draft", "needs review", "under review","published"]),
-                tf = Counter(text))
+                document_status = random.choice(["draft", "needs review", "under review", "published"]),
+                tf = Counter(filtered_query))
 
             db.session.add(document)
+
+            for key in Counter(filtered_query):
+                entry = Idf.query.get(key)
+                if entry is None:
+                    idf = Idf(
+                        term = key,
+                        docs = [document.id]
+                    )
+                    db.session.add(idf)
+                else:
+                    entry.docs.append(document.id)
+            db.session.commit()
+
+
         for i in range(count):
             name = fake.name()
             text = fake.text(max_nb_chars=500)

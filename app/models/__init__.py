@@ -4,6 +4,7 @@ module (as opposed to just their python files)
 """
 
 from .user import *  # noqa
+from .idf import *
 from .miscellaneous import *  # noqa
 from .document import * # noqa
 from .tag import * # noqa

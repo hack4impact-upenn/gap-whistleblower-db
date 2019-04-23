@@ -22,6 +22,8 @@ if os.path.exists('config.env'):
 class Config:
     APP_NAME = os.environ.get('APP_NAME') or 'Flask-Base'
 
+    os.environ["NLTK_DATA"] = os.path.join(basedir, 'app/static/nltk_data/')
+
     if os.environ.get('SECRET_KEY'):
         SECRET_KEY = os.environ.get('SECRET_KEY')
     else:

@@ -105,7 +105,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for c in search_results.items %}
+                    {% for c in search_results %}
                         <tr>
                             <td>{{ c.title }}</td>
                             <td>{% if c.author_last_name or c.author_first_name %}
@@ -127,14 +127,14 @@
                     </tbody>
                 </table>
                 <div class="ui buttons" style="width: 100%; align-items: center; justify-content: center;">
-                  <a class="ui {% if not search_results.has_prev %}disabled {% endif %} labeled icon button" type='button' {% if search_results.has_prev %} href="{{url_for('main.index', page=search_results.prev_num)}}"{% endif %}>
+                  <a class="ui button left labeled icon button" type='button' href="#">
                     <i class="left chevron icon"></i>
                     Back
                   </a>
                   <a class="ui basic button"  type='button'>
-                    Page {{ page }}
+                    Page 1
                   </a>
-                  <a class="ui button {% if not search_results.has_next %}disabled {% endif %}right labeled icon button" type='button' {% if search_results.has_next %} href="{{url_for('main.index', page=search_results.next_num)}}"{% endif %}>
+                  <a class="ui button right labeled icon button" type='button' href="#">
                     Next
                     <i class="right chevron icon"></i>
                   </a>
