@@ -14,13 +14,16 @@
          
         
          <h4 class="ui header">Upload CSV File</h4>
+         <p>Notes:
+         <br/>Every field, including blank fields, in uploaded file must be enclosed in double quotes(e.g. "data here"). 
+         </br/> File Names: book.csv, news_article.csv, journal_article.csv, law.csv, video.csv, report.csv, other.csv
+         </p>
          <form class="ui form" method="POST" enctype="multipart/form-data">
             <label id="book-file-label" for="book-file" class="ui icon button">
-               <i class="file icon"></i>
-               Open File</label>
-            <input type="file" accept=".csv" id="book-file" name="book-file" style="display:none">
-            <br /><br />
-            <input class="ui submit primary button" type="submit"/>
+               <i class="upload icon"></i>
+               Upload File</label>
+            <input type="file" accept=".csv" id="book-file" name="book-file" style="display:none"> <input class="ui submit primary button" type="submit"/>
+           
          </form>
       </div>
    </div>

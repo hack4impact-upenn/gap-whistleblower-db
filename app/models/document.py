@@ -84,6 +84,8 @@ class Document(db.Model):
                 series = fake.text(max_nb_chars=50),
                 author_first_name = fake.first_name(),
                 author_last_name = fake.last_name(),
+                editor_first_name = fake.first_name(),
+                editor_last_name = fake.last_name(), 
                 name = fake.company(),
                 document_status = random.choice(["draft", "needs review", "under review","published"]),
                 tf = Counter(text))
