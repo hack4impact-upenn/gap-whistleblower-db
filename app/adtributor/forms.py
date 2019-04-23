@@ -7,7 +7,8 @@ from wtforms.fields import (
     SubmitField,
     TextAreaField,
     SelectField,
-    IntegerField
+    IntegerField,
+    BooleanField
 )
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import (
@@ -221,3 +222,13 @@ class OtherForm(Form):
     other_file_urls = MultipleFileUploadField()
     save_other = SubmitField()
     submit_other = SubmitField()
+
+class DownloadForm(Form):
+    book = BooleanField()
+    news_article = BooleanField()
+    journal_article = BooleanField()
+    law = BooleanField()
+    video = BooleanField()
+    report = BooleanField()
+    other = BooleanField()
+    download = SubmitField()
