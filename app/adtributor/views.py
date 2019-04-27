@@ -654,8 +654,6 @@ def submit():
 
             if book_form.validate_on_submit():
 
-                print(book_form.book_publication_month.data, book_form.book_tags.data, file=stderr)
-
                 if "Save Book" in request.form.values():
                     save_or_submit_doc(book_form, doc_type='book', submit='draft', new = True)
 

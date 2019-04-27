@@ -18,6 +18,7 @@ from wtforms.validators import (
     InputRequired,
     Length,
 )
+from app.utils import CustomSelectField
 from app import db
 from app.models import Role, User, Tag
 from flask_wtf.file import FileField
@@ -110,7 +111,7 @@ class BookForm(Form):
     ('November', 'November'), ('December', 'December')]) #month
     book_publication_year = IntegerField(validators=[validators.optional()]) #year
     book_description = TextAreaField() #description
-    book_tags = SelectMultipleField(choices=[(-1, 'No Tags')])
+    book_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
     book_link = StringField() #link
     book_file_urls = MultipleFileUploadField()
     save_book = SubmitField()
@@ -118,7 +119,7 @@ class BookForm(Form):
 
     def __init__(self, **kwargs):
         super(BookForm, self).__init__(**kwargs)
-        self.book_tags.choices = [(t.id, t.tag) for t in Tag.query.all()]
+        self.book_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
 
 class ArticleForm(Form):
     article_title = StringField(validators=[InputRequired()])
@@ -132,10 +133,15 @@ class ArticleForm(Form):
     ('November', 'November'), ('December', 'December')])
     article_publication_year = IntegerField(validators=[validators.optional()])
     article_description = TextAreaField()
+    article_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
     article_link = StringField()
     article_file_urls = MultipleFileUploadField()
     save_article = SubmitField()
     submit_article = SubmitField()
+
+    def __init__(self, **kwargs):
+        super(ArticleForm, self).__init__(**kwargs)
+        self.article_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
 
 class JournalArticleForm(Form):
     article_title = StringField(validators=[InputRequired()])
@@ -152,11 +158,15 @@ class JournalArticleForm(Form):
     ('November', 'November'), ('December', 'December')])
     article_publication_year = IntegerField(validators=[validators.optional()])
     article_description = TextAreaField()
+    article_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
     article_link = StringField()
     article_file_urls = MultipleFileUploadField()
     save_article = SubmitField()
     submit_article = SubmitField()
 
+    def __init__(self, **kwargs):
+        super(JournalArticleForm, self).__init__(**kwargs)
+        self.article_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
 
 class LawForm(Form):
     law_title = StringField(validators=[InputRequired()]) #title
@@ -174,10 +184,15 @@ class LawForm(Form):
     law_state = StringField() #state
     law_country = StringField()
     law_description = TextAreaField() #description
+    law_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
     law_link = StringField() #link
     law_file_urls = MultipleFileUploadField()
     save_law = SubmitField()
     submit_law = SubmitField()
+
+    def __init__(self, **kwargs):
+        super(LawForm, self).__init__(**kwargs)
+        self.law_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
 
 class VideoForm(Form):
     video_title = StringField(validators=[InputRequired()])
@@ -192,10 +207,15 @@ class VideoForm(Form):
     ('November', 'November'), ('December', 'December')])
     video_publication_year = IntegerField(validators=[validators.optional()])
     video_description = TextAreaField()
+    video_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
     video_link = StringField()
     video_file_urls = MultipleFileUploadField()
     save_video = SubmitField()
     submit_video = SubmitField()
+
+    def __init__(self, **kwargs):
+        super(VideoForm, self).__init__(**kwargs)
+        self.video_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
 
 class ReportForm(Form):
     report_title = StringField(validators=[InputRequired()])
@@ -209,10 +229,15 @@ class ReportForm(Form):
     ('November', 'November'), ('December', 'December')])
     report_publication_year = IntegerField(validators=[validators.optional()])
     report_description = TextAreaField()
+    report_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
     report_link = StringField()
     report_file_urls = MultipleFileUploadField()
     save_report = SubmitField()
     submit_report = SubmitField()
+
+    def __init__(self, **kwargs):
+        super(ReportForm, self).__init__(**kwargs)
+        self.law_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
 
 class OtherForm(Form):
     other_document_type = StringField(validators = [InputRequired()])
@@ -226,10 +251,15 @@ class OtherForm(Form):
     ('November', 'November'), ('December', 'December')])
     other_publication_year = IntegerField(validators=[validators.optional()])
     other_description = TextAreaField()
+    other_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
     other_link = StringField()
     other_file_urls = MultipleFileUploadField()
     save_other = SubmitField()
     submit_other = SubmitField()
+
+    def __init__(self, **kwargs):
+        super(OtherForm, self).__init__(**kwargs)
+        self.other_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
 
 class DownloadForm(Form):
     book = BooleanField()
