@@ -144,6 +144,9 @@
                {{ f.render_form_field(article_form.article_description) }}
                </div>
                <div class = "sixteen wide field">
+               {{ f.render_form_field(article_form.article_tags, name="Tags") }}
+               </div>
+               <div class = "sixteen wide field">
                {{ f.render_form_field(article_form.article_link) }}
                </div>
                <div class = "sixteen wide field">
@@ -216,6 +219,9 @@
              </div>
                <div class = "sixteen wide field">
                {{ f.render_form_field(journal_form.article_description) }}
+               </div>
+               <div class = "sixteen wide field">
+                  {{ f.render_form_field(journal_form.article_tags, name="Tags") }}
                </div>
                <div class = "sixteen wide field">
                {{ f.render_form_field(journal_form.article_link) }}
@@ -298,6 +304,9 @@
                   {{ f.render_form_field(law_form.law_description) }}
                   </div>
                   <div class = "sixteen wide field">
+                  {{ f.render_form_field(law_form.law_tags, name="Tags") }}
+                  </div>
+                  <div class = "sixteen wide field">
                   {{ f.render_form_field(law_form.law_link) }}
                   </div>
                   <div class = "sixteen wide field">
@@ -357,6 +366,9 @@
             </div>
                <div class = "sixteen wide field">
                {{ f.render_form_field(video_form.video_description) }}
+               </div>
+               <div class = "sixteen wide field">
+                  {{ f.render_form_field(video_form.video_tags, name="Tags") }}
                </div>
                <div class = "sixteen wide field">
                {{ f.render_form_field(video_form.video_link) }}
@@ -420,6 +432,9 @@
                    {{ f.render_form_field(report_form.report_description) }}
                    </div>
                    <div class = "sixteen wide field">
+                   {{ f.render_form_field(report_form.report_tags, name="Tags") }}
+                   </div>
+                   <div class = "sixteen wide field">
                    {{ f.render_form_field(report_form.report_link) }}
                    </div>
                    <div class = "sixteen wide field">
@@ -479,6 +494,9 @@
       	        </div>
                   <div class = "sixteen wide field">
                   {{ f.render_form_field(other_form.other_description) }}
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(other_form.other_tags, name="Tags") }}
                   </div>
                   <div class = "sixteen wide field">
                   {{ f.render_form_field(other_form.other_link) }}

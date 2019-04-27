@@ -237,7 +237,7 @@ class ReportForm(Form):
 
     def __init__(self, **kwargs):
         super(ReportForm, self).__init__(**kwargs)
-        self.law_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
+        self.report_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
 
 class OtherForm(Form):
     other_document_type = StringField(validators = [InputRequired()])
