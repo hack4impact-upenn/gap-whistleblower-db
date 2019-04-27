@@ -8,7 +8,8 @@ from wtforms.fields import (
     TextAreaField,
     SelectField,
     IntegerField,
-    BooleanField
+    BooleanField,
+    SelectMultipleField
 )
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import (
@@ -90,6 +91,8 @@ class DraftEntryForm(Form):
 class MultipleFileUploadField(StringField):
     pass
 
+from sys import stderr
+
 class BookForm(Form):
     book_title = StringField(validators=[InputRequired()]) #title
     book_volume = StringField() #volme
@@ -107,10 +110,15 @@ class BookForm(Form):
     ('November', 'November'), ('December', 'December')]) #month
     book_publication_year = IntegerField(validators=[validators.optional()]) #year
     book_description = TextAreaField() #description
+    book_tags = SelectMultipleField(choices=[(-1, 'No Tags')])
     book_link = StringField() #link
     book_file_urls = MultipleFileUploadField()
     save_book = SubmitField()
     submit_book = SubmitField()
+
+    def __init__(self, **kwargs):
+        super(BookForm, self).__init__(**kwargs)
+        self.book_tags.choices = [(t.id, t.tag) for t in Tag.query.all()]
 
 class ArticleForm(Form):
     article_title = StringField(validators=[InputRequired()])
