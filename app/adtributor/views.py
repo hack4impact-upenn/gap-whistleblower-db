@@ -23,7 +23,7 @@ from app.adtributor.forms import (
     DownloadForm
 )
 from app.decorators import contributor_required, admin_required
-from app.models import EditableHTML, Role, User, Tag, Suggestion, Document
+from app.models import EditableHTML, Role, User, Tag, Suggestion, Document, Tagged
 
 from .. import csrf
 
@@ -1271,8 +1271,17 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             tf=Counter(article_form.article_description.data))
         if entry == None:
             db.Session.add(article)
-        else:
-            entry = article
+        entry = article
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in article_form.article_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
+
         db.session.commit()
         flash(
             'Article \"{}\" successfully submitted'.format(
@@ -1300,8 +1309,17 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             tf=Counter(book_form.book_description.data))
         if entry == None:
             db.session.add(book)
-        else:
-            entry = book
+        entry = book
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in book_form.book_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
+
         db.session.commit()
         flash(
             'Book \"{}\" successfully saved'.format(
@@ -1328,6 +1346,16 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             tf=Counter(journal_form.article_description.data))
         if new == True:
             db.session.add(article)
+        entry = article
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in journal_form.article_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
         db.session.commit()
         flash(
             'Article \"{}\" successfully saved'.format(
@@ -1355,6 +1383,17 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             tf=Counter(law_form.law_description.data))
         if new == True:
             db.session.add(law)
+        entry = law
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in law_form.law_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
+
         db.session.commit()
         flash(
             'Law \"{}\" successfully saved'.format(
@@ -1379,6 +1418,16 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             tf=Counter(video_form.video_description.data))
         if new == True:
             db.session.add(video)
+        entry = video
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in video_form.video_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
         db.session.commit()
         flash(
             'Video \"{}\" successfully saved'.format(
@@ -1402,6 +1451,16 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             tf=(report_form.report_description.data))
         if new == True:
             db.session.add(report)
+        entry = report
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in report_form.book_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
         db.session.commit()
         flash(
             'Report \"{}\" successfully saved'.format(
@@ -1426,6 +1485,16 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             tf=Counter(other_form.other_description.data))
         if new == True:
             db.session.add(other)
+        entry = other
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in other_form.other_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
         db.session.commit()
         flash(
             'Other \"{}\" successfully saved'.format(

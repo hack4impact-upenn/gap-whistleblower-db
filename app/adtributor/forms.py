@@ -92,7 +92,6 @@ class DraftEntryForm(Form):
 class MultipleFileUploadField(StringField):
     pass
 
-from sys import stderr
 
 class BookForm(Form):
     book_title = StringField(validators=[InputRequired()]) #title
@@ -111,7 +110,7 @@ class BookForm(Form):
     ('November', 'November'), ('December', 'December')]) #month
     book_publication_year = IntegerField(validators=[validators.optional()]) #year
     book_description = TextAreaField() #description
-    book_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
+    book_tags = SelectMultipleField(choices=[('', '')])
     book_link = StringField() #link
     book_file_urls = MultipleFileUploadField()
     save_book = SubmitField()
@@ -133,7 +132,7 @@ class ArticleForm(Form):
     ('November', 'November'), ('December', 'December')])
     article_publication_year = IntegerField(validators=[validators.optional()])
     article_description = TextAreaField()
-    article_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
+    article_tags = SelectMultipleField(choices=[('', '')])
     article_link = StringField()
     article_file_urls = MultipleFileUploadField()
     save_article = SubmitField()
@@ -158,7 +157,7 @@ class JournalArticleForm(Form):
     ('November', 'November'), ('December', 'December')])
     article_publication_year = IntegerField(validators=[validators.optional()])
     article_description = TextAreaField()
-    article_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
+    article_tags = SelectMultipleField(choices=[('', '')])
     article_link = StringField()
     article_file_urls = MultipleFileUploadField()
     save_article = SubmitField()
@@ -184,7 +183,7 @@ class LawForm(Form):
     law_state = StringField() #state
     law_country = StringField()
     law_description = TextAreaField() #description
-    law_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
+    law_tags = SelectMultipleField(choices=[('', '')])
     law_link = StringField() #link
     law_file_urls = MultipleFileUploadField()
     save_law = SubmitField()
@@ -207,7 +206,7 @@ class VideoForm(Form):
     ('November', 'November'), ('December', 'December')])
     video_publication_year = IntegerField(validators=[validators.optional()])
     video_description = TextAreaField()
-    video_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
+    video_tags = SelectMultipleField(choices=[('', '')])
     video_link = StringField()
     video_file_urls = MultipleFileUploadField()
     save_video = SubmitField()
@@ -229,7 +228,7 @@ class ReportForm(Form):
     ('November', 'November'), ('December', 'December')])
     report_publication_year = IntegerField(validators=[validators.optional()])
     report_description = TextAreaField()
-    report_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
+    report_tags = SelectMultipleField(choices=[('', '')])
     report_link = StringField()
     report_file_urls = MultipleFileUploadField()
     save_report = SubmitField()
@@ -251,7 +250,7 @@ class OtherForm(Form):
     ('November', 'November'), ('December', 'December')])
     other_publication_year = IntegerField(validators=[validators.optional()])
     other_description = TextAreaField()
-    other_tags = CustomSelectField(choices=[('', '')], multiple=True, allow_custom=False)
+    other_tags = SelectMultipleField(choices=[('', '')])
     other_link = StringField()
     other_file_urls = MultipleFileUploadField()
     save_other = SubmitField()
