@@ -66,13 +66,15 @@ def index():
         # end_day = end_date[1][:-1]
         # # end_year = end_date[2]
         # end = datetime.date(2010, 1, 1)
-        the_tags = [t.id for t in tags] 
 
-        if form.tags.data != "[]":
+        results =  Document.query.filter(Document.document_status=='published',
+        Document.doc_type.in_(selected_types), Document.id.in_(docs)).all()
+
+        if form.tags.data != '':
             the_tags = form.tags.data.split(',')
+            results = Document.query.filter(Document.document_status=='published',
+            Document.doc_type.in_(selected_types), Document.id.in_(docs), Document.tags.any(Tag.tag.in_(the_tags))).all()
 
-        results = Document.query.filter(Document.document_status=='published',
-        Document.doc_type.in_(selected_types), Document.id.in_(docs), Document.tags.any(Tag.tag.in_(the_tags))).all()
 
         idf = {}
         num_docs = len(Document.query.all())

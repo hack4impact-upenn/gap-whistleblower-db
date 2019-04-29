@@ -28,4 +28,6 @@ class Tag(db.Model):
         return tags
 
     def __repr__(self):
-        return '<Tag: Name = {}>'.format(self.tag)
+        s = '<Id: {} \n'.format(self.id)
+        s += 'Tag: {}>'.format(self.tag)
+        return s

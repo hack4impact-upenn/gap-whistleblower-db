@@ -40,5 +40,6 @@ class CustomSelectField(Field):
         if valuelist:
             self.data = valuelist[0]
             self.raw_data = [valuelist[0]]
+            print(valuelist)
         else:
             self.data = ''
