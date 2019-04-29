@@ -38,7 +38,7 @@ class CustomSelectField(Field):
 
     def process_formdata(self, valuelist):
         if valuelist:
-            self.data = valuelist[1]
-            self.raw_data = [valuelist[1]]
+            self.data = valuelist[0]
+            self.raw_data = [valuelist[0]]
         else:
             self.data = ''

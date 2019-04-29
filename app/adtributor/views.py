@@ -345,7 +345,7 @@ def publish_contribution(id):
 @login_required
 @admin_required
 def review_contributions():
-    contributions = Document.query.filter(Document.document_status != 'draft').filter(Document.document_status != 'published').order_by(Document.id.desc()).all()
+    contributions = Document.query.filter(Document.document_status != 'draft', Document.document_status != 'published').order_by(Document.id.desc()).all()
     return render_template('admin/review_contributions.html', contributions=contributions)
 
 

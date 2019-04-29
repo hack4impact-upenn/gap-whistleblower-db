@@ -149,17 +149,6 @@
         </div>
     {% elif field.type == 'SubmitField' %}
         {{ field(class='ui button') }}
-    {% elif field.type == 'SelectMultipleField' %}
-      <div id="{{field.name}}" class="ui fluid multiple search selection dropdown">
-          {{ field }}
-          <i class="dropdown icon"></i>
-          <div class="default text">{{name}}</div>
-          <div class="menu">
-              {% for choice in field.choices %}
-                  <div class="item">{{choice[1]}}</div>
-              {% endfor %}
-          </div>
-      </div>
     {% elif field.type == 'FormField' %}
         {{ render_form(field) }}
     {% elif field.type == 'CustomSelectField' %}

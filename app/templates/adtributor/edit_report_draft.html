@@ -43,10 +43,10 @@
                </div>
             </div>
                <div class = "sixteen wide field">
-               {{ f.render_form_field(report_form.report_description) }}
+               {{ f.render_form_field(report_form.report_description, name="Description") }}
                </div>
                <div class = "sixteen wide field">
-               {{ f.render_form_field(report_form.report_link) }}
+               {{ f.render_form_field(report_form.report_link, name="Link") }}
                </div>
                <div class = "sixteen wide field">
                {{ f.render_form_input(report_form.report_file_urls) }}
