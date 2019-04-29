@@ -12,69 +12,70 @@
                    {% set article_flashes = {
                       'success': get_flashed_messages(category_filter=['form-success'])
                   } %}
-            {{ f.begin_form(journal_form, article_flashes) }}
-             <input type="hidden" name="form-name" value="journal_form">
-             <div class = "sixteen wide field">
-             {{ f.form_message(article_flashes['success'], header='Success!', class='success') }}
-             </div>
-             <div class = "sixteen wide field">
-             {{ f.render_form_field(journal_form.article_title) }}
-             </div>
-             <div class="fields">
-               <div class = "eight wide field">
-               {{ f.render_form_field(journal_form.article_author_first_name) }}
-               </div>
-               <div class = "eight wide field">
-               {{ f.render_form_field(journal_form.article_author_last_name) }}
-               </div>
-             </div>
-             <div class = "sixteen wide field">
-             {{ f.render_form_field(journal_form.publisher_name) }}
-             </div>
-             <div class = "sixteen wide field">
-             <div class = "three fields">
-             <div class = "field">
-             {{ f.render_form_field(journal_form.volume) }}
-             </div>
-             <div class = "field">
-             {{ f.render_form_field(journal_form.start_page) }}
-             </div>
-             <div class = "field">
-             {{ f.render_form_field(journal_form.end_page) }}
-             </div>
-             </div>
-             </div>
-             <div class = "three fields">
-               <div class = "field">
-               {{ f.render_form_field(journal_form.article_publication_day) }}
-               </div>
-               <div class = "field">
-               {{ f.render_form_field(journal_form.article_publication_month) }}
-               </div>
-               <div class = "field">
-               {{ f.render_form_field(journal_form.article_publication_year) }}
-               </div>
-             </div>
-               <div class = "sixteen wide field">
-               {{ f.render_form_field(journal_form.article_description) }}
-               </div>
-               <div class = "sixteen wide field">
-               {{ f.render_form_field(journal_form.article_link) }}
-               </div>
-               <div class = "sixteen wide field">
-               {{ f.render_form_input(journal_form.article_file_urls) }}
-               </div>
-               <div class = "sixteen wide field">
-               {{ upload.file_upload('file_urls') }}
-               </div>
-               <div class = "fields">
-                  <div class = "three wide field">
-                  {{ f.render_form_field(journal_form.save_article) }}
+                  {{ f.begin_form(journal_form, article_flashes) }}
+                  <input type="hidden" name="form-name" value="journal_form">
+                  <div class = "sixteen wide field">
+                  {{ f.form_message(article_flashes['success'], header='Success!', class='success') }}
                   </div>
-                  <div class = "three wide field">
-                  {{ f.render_form_field(journal_form.submit_article) }}
-
-              </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(journal_form.article_title, name='Title') }}
+                  </div>
+                  <div class="fields">
+                    <div class = "eight wide field">
+                    {{ f.render_form_field(journal_form.article_author_first_name, name='First Name') }}
+                    </div>
+                    <div class = "eight wide field">
+                    {{ f.render_form_field(journal_form.article_author_last_name, name='Last Name') }}
+                    </div>
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(journal_form.publisher_name, name='Publication') }}
+                  </div>
+                  <div class = "sixteen wide field">
+                  <div class = "three fields">
+                  <div class = "field">
+                  {{ f.render_form_field(journal_form.volume) }}
+                  </div>
+                  <div class = "field">
+                  {{ f.render_form_field(journal_form.start_page) }}
+                  </div>
+                  <div class = "field">
+                  {{ f.render_form_field(journal_form.end_page) }}
+                  </div>
+                  </div>
+                  </div>
+                  <div class = "three fields">
+                    <div class = "field">
+                    {{ f.render_form_field(journal_form.article_publication_day, name='Publication Day') }}
+                    </div>
+                    <div class = "field">
+                    {{ f.render_form_field(journal_form.article_publication_month, name='Publication Month') }}
+                    </div>
+                    <div class = "field">
+                    {{ f.render_form_field(journal_form.article_publication_year, name='Publication Year') }}
+                    </div>
+                  </div>
+                    <div class = "sixteen wide field">
+                    {{ f.render_form_field(journal_form.article_description, name='Description') }}
+                    </div>
+                    <div class = "sixteen wide field">
+                    {{ f.render_form_field(journal_form.article_link, name='Link') }}
+                    </div>
+                    <div class = "sixteen wide field">
+                    {{ f.render_form_input(journal_form.article_file_urls) }}
+                    </div>
+                    <div class = "sixteen wide field">
+                    {{ upload.file_upload('file_urls') }}
+                    </div>
+                    <div class = "fields">
+                       <div class = "three wide field">
+                       {{ f.render_form_field(journal_form.save_article) }}
+                       </div>
+                       <div class = "three wide field">
+                       {{ f.render_form_field(journal_form.submit_article) }}
+                       </div>
+                    </div>
+                  {{ f.end_form(journal_form) }}
           </div>
         </div>
     </div>

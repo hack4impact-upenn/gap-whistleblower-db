@@ -35,6 +35,8 @@
                     Whistleblower Database
                     <div class="sub header">Curated by Government Accountability Project</div>
                 </h1>
+                <p>{{ date }}
+                </p>
                 <p>
                     Government Accountability Project is the international leader in whistleblower protection. <br/>
                     This database is a curated, searchable list of scholarly materials related to whistleblowing. <br/>
@@ -65,11 +67,12 @@
                         {{ f.render_form_field(form.journal_article) }}
                         {{ f.render_form_field(form.law) }}
                         {{ f.render_form_field(form.video) }}
+                        {{ f.render_form_field(form.report) }}
                         {{ f.render_form_field(form.other) }}
                       </div>
                     </div>
                   <div class="item">
-                    <div class="ui header small">Date Posted</div>
+                    <div class="ui header small">Date Published</div>
                       <div class="ui calendar">
                         {{ form.start_date.label }}
                         <div class="ui input left icon" id="start_date">
@@ -104,7 +107,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for c in search_results.items %}
+                    {% for c in search_results[:100] %}
                         <tr>
                             <td>{{ c.title }}</td>
                             <td>{% if c.author_last_name or c.author_first_name %}
@@ -126,14 +129,14 @@
                     </tbody>
                 </table>
                 <div class="ui buttons" style="width: 100%; align-items: center; justify-content: center;">
-                  <a class="ui {% if not search_results.has_prev %}disabled {% endif %} labeled icon button" type='button' {% if search_results.has_prev %} href="{{url_for('main.index', page=search_results.prev_num)}}"{% endif %}>
+                  <a class="ui button left labeled icon button" type='button' href="#">
                     <i class="left chevron icon"></i>
                     Back
                   </a>
                   <a class="ui basic button"  type='button'>
-                    Page {{ page }}
+                    Page 1
                   </a>
-                  <a class="ui button {% if not search_results.has_next %}disabled {% endif %}right labeled icon button" type='button' {% if search_results.has_next %} href="{{url_for('main.index', page=search_results.next_num)}}"{% endif %}>
+                  <a class="ui button right labeled icon button" type='button' href="#">
                     Next
                     <i class="right chevron icon"></i>
                   </a>
