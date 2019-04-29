@@ -9,13 +9,15 @@ from app.models import EditableHTML, Document, Saved, User, Suggestion, Tag, Idf
 from flask_login import current_user, login_required
 from app.main.forms import SaveForm, UnsaveForm, SuggestionForm, SearchForm
 from app import db
-from flask_paginate import Pagination
+import datetime
 
 import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
 import requests
 import validators
 import math
+
+from sqlalchemy import or_, Date, cast
 
 import os
 import nltk
@@ -25,16 +27,14 @@ from nltk.tokenize import word_tokenize
 
 main = Blueprint('main', __name__)
 
+selected_tags = []
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    form = SearchForm()
     tags = Tag.query.all()
     idf = Idf.query.all()
-    choices = []
-    for t in tags:
-        choices.append((t.tag, t.tag))
-    form.tags.choices = choices
+
+    form = SearchForm()
 
     results = Document.query.filter_by(document_status="published").all()
 
@@ -42,18 +42,37 @@ def index():
         query = form.query.data
         types = ['book', 'news_article', 'journal_article', 'law', 'video', 'report', 'other']
         selected_types = []
-        filters = ["document_status is \'published\'"]
-        if len(types) > 0:
-            for t in types:
-                if form.data[str(t)] == True:
-                    selected_types.append(t)
+        for t in types:
+            if form.data[str(t)] == True:
+                selected_types.append(t)
 
         stop_words = set(stopwords.words('english'))
         word_tokens = word_tokenize(query)
         filtered_query = [w for w in word_tokens if not w in stop_words]
         docs = get_docs(filtered_query)
 
-        results = Document.query.filter(Document.document_status=='published', Document.doc_type.in_(selected_types), Document.id.in_(docs)).all()
+        month_dict = {'January': 1, 'February': 2, 'March': 3, 'April': 4,
+        'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
+        'October': 10, 'November': 11, 'December': 12}
+
+        # start_date = form.start_date.data.split(' ')
+        # start_month = month_dict.get(start_date[0])
+        # start_day = start_date[1][:-1]
+        # start_year = start_date[2]
+        # start = datetime.date(2000, 1, 1)
+
+        # end_date = form.end_date.data.split(' ')
+        # end_month = month_dict.get(end_date[0])
+        # end_day = end_date[1][:-1]
+        # # end_year = end_date[2]
+        # end = datetime.date(2010, 1, 1)
+        the_tags = [t.id for t in tags] 
+
+        if form.tags.data != "[]":
+            the_tags = form.tags.data.split(',')
+
+        results = Document.query.filter(Document.document_status=='published',
+        Document.doc_type.in_(selected_types), Document.id.in_(docs), Document.tags.any(Tag.tag.in_(the_tags))).all()
 
         idf = {}
         num_docs = len(Document.query.all())

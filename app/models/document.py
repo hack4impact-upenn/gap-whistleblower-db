@@ -1,8 +1,8 @@
 from .. import db, login_manager
-from . import User, Idf
+from . import User, Idf, MutableDict
 import random
 from faker import Faker
-from sqlalchemy import Column, Integer, DateTime, PickleType
+from sqlalchemy import Column, Integer, DateTime, PickleType, String, ForeignKey
 import datetime
 from collections import Counter
 import os
@@ -10,6 +10,7 @@ import nltk
 nltk.data.path.append(os.environ.get('NLTK_DATA'))
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+from sqlalchemy.dialects.postgresql import ARRAY
 
 class Document(db.Model):
     __tablename__ = 'document'
@@ -60,13 +61,12 @@ class Document(db.Model):
     #Specific to video
     post_source = db.Column(db.String(1000))
 
-    tf = db.Column(db.PickleType())
+    tf = db.Column(MutableDict.as_mutable(PickleType))
 
     broken_link = db.Column(db.Boolean)
 
-
     @staticmethod
-    def generate_fake(count=10, **kwargs):
+    def generate_fake(count=1000, **kwargs):
         fake = Faker()
         for i in range(count):
             name = fake.name()
@@ -105,7 +105,7 @@ class Document(db.Model):
                     db.session.add(idf)
                 else:
                     entry.docs.append(document.id)
-
+        print('one')
         for i in range(count):
             name = fake.name()
             text = fake.text(max_nb_chars=100)
@@ -140,7 +140,7 @@ class Document(db.Model):
                     db.session.add(idf)
                 else:
                     entry.docs.append(article.id)
-
+        print('two')
         for i in range(count):
             name = fake.name()
             text = fake.text(max_nb_chars=100)
@@ -178,7 +178,7 @@ class Document(db.Model):
                     db.session.add(idf)
                 else:
                     entry.docs.append(journal.id)
-
+        print('three')
         for i in range(count):
             name = fake.name()
             doc_type = random.choice(["film", "audio", "photograph"])
@@ -214,7 +214,7 @@ class Document(db.Model):
                     db.session.add(idf)
                 else:
                     entry.docs.append(other.id)
-
+        print('four')
         for i in range(count):
             name = fake.name()
             body = random.choice(["105th Congress", "106th Congress", "107th Congress"])
@@ -254,7 +254,7 @@ class Document(db.Model):
                     db.session.add(idf)
                 else:
                     entry.docs.append(law.id)
-
+        print('five')
         for i in range(count):
             name = fake.name()
             text = fake.text(max_nb_chars=100)
