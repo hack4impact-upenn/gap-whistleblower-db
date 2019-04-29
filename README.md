@@ -117,7 +117,7 @@ $ python manage.py add_fake_data
 ## Running the app
 
 ```
-$ source env/bin/activate
+$ pipenv shell
 $ honcho start -f Local
 ```
 

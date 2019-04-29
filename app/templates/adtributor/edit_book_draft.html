@@ -35,7 +35,15 @@
                       {{ f.render_form_field(book_form.book_author_last_name, name="Last Name") }}
                       </div>
                   </div>
-                  <div class = "three fields" id='beforeMe'>
+                   <div class = "fields" id="beforeMe">
+                      <div class = "eight wide field">
+                      {{ f.render_form_field(book_form.book_editor_first_name, name="Editor First Name") }}
+                      </div>
+                      <div class = "eight wide field">
+                      {{ f.render_form_field(book_form.book_editor_last_name, name="Editor Last Name") }}
+                      </div>
+                  </div>
+                  <div class = "three fields">
                       <div class = "field">
                       {{ f.render_form_field(book_form.book_volume, name="Volume") }}
                       </div>

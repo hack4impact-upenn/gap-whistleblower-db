@@ -7,7 +7,8 @@ from wtforms.fields import (
     SubmitField,
     TextAreaField,
     SelectField,
-    IntegerField
+    IntegerField,
+    BooleanField
 )
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import (
@@ -96,6 +97,8 @@ class BookForm(Form):
     book_series = StringField() #series
     book_author_first_name = StringField() #author_first_name
     book_author_last_name = StringField() #author_last_name
+    book_editor_first_name = StringField()
+    book_editor_last_name = StringField()
     book_publisher_name = StringField() #name
     book_publication_day = IntegerField(validators=[validators.optional()]) #day
     book_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
@@ -219,3 +222,13 @@ class OtherForm(Form):
     other_file_urls = MultipleFileUploadField()
     save_other = SubmitField()
     submit_other = SubmitField()
+
+class DownloadForm(Form):
+    book = BooleanField()
+    news_article = BooleanField()
+    journal_article = BooleanField()
+    law = BooleanField()
+    video = BooleanField()
+    report = BooleanField()
+    other = BooleanField()
+    download = SubmitField()

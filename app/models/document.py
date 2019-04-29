@@ -36,9 +36,12 @@ class Document(db.Model):
     edition = db.Column(db.String(10))
     series = db.Column(db.String(500))
 
+    editor_first_name = db.Column(db.String(10000))
+    editor_last_name = db.Column(db.String(10000))
+
     #Specific to Book/Article
-    author_first_name = db.Column(db.String(100))
-    author_last_name = db.Column(db.String(100))
+    author_first_name = db.Column(db.String(10000))
+    author_last_name = db.Column(db.String(10000))
 
     #Specific to Journal Article
     page_start = db.Column(db.Integer())
@@ -89,6 +92,8 @@ class Document(db.Model):
                 series = fake.text(max_nb_chars=50),
                 author_first_name = fake.first_name(),
                 author_last_name = fake.last_name(),
+                editor_first_name = fake.first_name(),
+                editor_last_name = fake.last_name(), 
                 name = fake.company(),
                 document_status = random.choice(["draft", "published"]),
                 tf = Counter(filtered_query))

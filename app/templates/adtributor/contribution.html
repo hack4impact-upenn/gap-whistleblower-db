@@ -119,6 +119,18 @@
                      <td>{{ contribution.author_last_name }}</td>
                    </tr>
                    {% endif %}
+                   {% if contribution.editor_first_name %}
+                   <tr>
+                     <td>Editor First Name</td>
+                     <td>{{ contribution.editor_first_name }}</td>
+                   </tr>
+                   {% endif %}
+                   {% if contribution.editor_last_name %}
+                   <tr>
+                     <td>Editor Last Name</td>
+                     <td>{{ contribution.editor_last_name }}</td>
+                   </tr>
+                   {% endif %}
                    {% if contribution.name %}
                    <tr>
                      <td>Name</td>

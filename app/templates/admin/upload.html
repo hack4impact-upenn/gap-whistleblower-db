@@ -1,0 +1,80 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+
+{% block content %}
+<div class="ui stackable grid centered container" style="margin-top:12px; margin-bottom:64px">
+   <div class="twelve wide column">
+      <div class="row">
+         <h2 class="ui header">
+            Upload and Download 
+            <div class="sub header">
+               Upload and Download a CSV of each type of database entry
+            </div>
+         </h2>
+         
+        
+         <h4 class="ui header">Upload CSV File</h4>
+         <p>Notes:
+         <br/>Every field, including blank fields, in uploaded file must be enclosed in double quotes(e.g. "data here"). 
+         </br/> File Names: book.csv, news_article.csv, journal_article.csv, law.csv, video.csv, report.csv, other.csv
+         </p>
+         <form class="ui form" method="POST" enctype="multipart/form-data">
+            <label id="book-file-label" for="book-file" class="ui icon button">
+               <i class="upload icon"></i>
+               Upload File</label>
+            <input type="file" accept=".csv" id="book-file" name="book-file" style="display:none"> <input class="ui submit primary button" type="submit"/>
+         </form>
+          <h4 class="ui header">Download CSV File</h4>
+          <p>Notes:
+          downloads into a file in specified path 
+          <br/>file name corresponds to type book.csv, journal_article.csv, news_article.csv, law.csv, report.csv, video.csv, other.csv
+          {% set flashes = {
+                'success': get_flashed_messages(category_filter=['form-success'])
+            } %}
+            {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+            {{ f.begin_form(form, flashes) }}
+            <div class = "field">
+            {{ f.render_form_field(form.book) }} 
+            </div>
+            <div class = "field">
+            {{ f.render_form_field(form.news_article) }} 
+            </div>
+            <div class = "field">
+            {{ f.render_form_field(form.journal_article) }} 
+            </div>
+            <div class = "field">
+            {{ f.render_form_field(form.law) }} 
+            </div>
+            <div class = "field">
+            {{ f.render_form_field(form.video) }} 
+            </div>
+            <div class = "field">
+            {{ f.render_form_field(form.report) }} 
+            </div>
+            <div class = "field">
+            {{ f.render_form_field(form.other) }} 
+            </div>
+            {{ f.render_form_field(form.download) }} 
+            {{ f.end_form(form) }}
+
+      </div>
+   </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+   $('#book-file').on('change', function(e) {
+      var filename;
+      var $label = $('#book-file-label');
+      if (e.target.value) {
+         filename = e.target.value.split('\\').pop();
+      }
+      if (filename) {
+         $label.html('<i class="file icon"></i>&nbsp' + filename);
+      } else {
+         $label.html();
+      }
+   });
+});
+</script>
+
+{% endblock %}
