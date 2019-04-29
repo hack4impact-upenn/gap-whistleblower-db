@@ -119,6 +119,7 @@ class BookForm(Form):
     def __init__(self, **kwargs):
         super(BookForm, self).__init__(**kwargs)
         self.book_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
+        self.book_tags.default = kwargs.get('book_tags')
 
 class ArticleForm(Form):
     article_title = StringField(validators=[InputRequired()])
@@ -141,6 +142,7 @@ class ArticleForm(Form):
     def __init__(self, **kwargs):
         super(ArticleForm, self).__init__(**kwargs)
         self.article_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
+        self.article_tags.default = kwargs.get('article_tags')
 
 class JournalArticleForm(Form):
     article_title = StringField(validators=[InputRequired()])
@@ -166,6 +168,7 @@ class JournalArticleForm(Form):
     def __init__(self, **kwargs):
         super(JournalArticleForm, self).__init__(**kwargs)
         self.article_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
+        self.article_tags.default = kwargs.get('article_tags')
 
 class LawForm(Form):
     law_title = StringField(validators=[InputRequired()]) #title
@@ -192,6 +195,7 @@ class LawForm(Form):
     def __init__(self, **kwargs):
         super(LawForm, self).__init__(**kwargs)
         self.law_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
+        self.law_tags.default = kwargs.get('law_tags')
 
 class VideoForm(Form):
     video_title = StringField(validators=[InputRequired()])
@@ -215,6 +219,7 @@ class VideoForm(Form):
     def __init__(self, **kwargs):
         super(VideoForm, self).__init__(**kwargs)
         self.video_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
+        self.video_tags.default = kwargs.get('video_tags')
 
 class ReportForm(Form):
     report_title = StringField(validators=[InputRequired()])
@@ -237,6 +242,7 @@ class ReportForm(Form):
     def __init__(self, **kwargs):
         super(ReportForm, self).__init__(**kwargs)
         self.report_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
+        self.report_tags.default = kwargs.get('report_tags')
 
 class OtherForm(Form):
     other_document_type = StringField(validators = [InputRequired()])
@@ -259,6 +265,7 @@ class OtherForm(Form):
     def __init__(self, **kwargs):
         super(OtherForm, self).__init__(**kwargs)
         self.other_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
+        self.other_tags.default = kwargs.get('other_tags')
 
 class DownloadForm(Form):
     book = BooleanField()

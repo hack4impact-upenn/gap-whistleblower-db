@@ -390,6 +390,7 @@ def view_book_draft(id):
         book_publication_month = book_entry.month,
         book_publication_year = book_entry.year,
         book_description = book_entry.description,
+        book_tags = [str(t.tag_id) for t in book_entry.tags],
         book_link = book_entry.link)
 
     if request.method == 'POST':
@@ -424,6 +425,7 @@ def view_article_draft(id):
                     article_publication_month = article_entry.month,
                     article_publication_year = article_entry.year,
                     article_description = article_entry.description,
+                    article_tags=[str(t.tag_id) for t in article_entry.tags],
                     article_link = article_entry.link,
                     document_status = "draft")
 
@@ -467,6 +469,7 @@ def view_journal_draft(id):
                     article_publication_month = journal_entry.month,
                     article_publication_year = journal_entry.year,
                     article_description = journal_entry.description,
+                    article_tags=[str(t.tag_id) for t in journal_entry.tags],
                     article_link = journal_entry.link,
                     document_status = "draft")
 
@@ -513,6 +516,7 @@ def view_law_draft(id):
         law_state = law_entry.state,
         law_country = law_entry.country,
         law_description = law_entry.description,
+        law_tags=[str(t.tag_id) for t in law_entry.tags],
         law_link = law_entry.link,
         document_status = "draft")
 
@@ -549,6 +553,7 @@ def view_video_draft(id):
                     video_publication_month = video_entry.month,
                     video_publication_year = video_entry.year,
                     video_description = video_entry.description,
+                    video_tags=[str(t.tag_id) for t in video_entry.tags],
                     video_link = video_entry.link,
                     document_status = "draft")
 
@@ -578,12 +583,13 @@ def view_report_draft(id):
         report_title = report_entry.title,
         report_author_first_name = report_entry.author_first_name,
         report_author_last_name = report_entry.author_last_name,
-        book_publisher_name = report_entry.name,
-        book_publication_day= report_entry.day,
-        book_publication_month = report_entry.month,
-        book_publication_year = report_entry.year,
-        book_description = report_entry.description,
-        book_link = report_entry.link)
+        report_publisher_name = report_entry.name,
+        report_publication_day= report_entry.day,
+        report_publication_month = report_entry.month,
+        report_publication_year = report_entry.year,
+        report_description = report_entry.description,
+        report_tags=[str(t.tag_id) for t in report_entry.tags],
+        report_link = report_entry.link)
     if request.method == 'POST':
         if report_form.validate_on_submit():
             if "Save Book" in request.form.values():
@@ -615,6 +621,7 @@ def view_other_draft(id):
                     other_publication_month = other_entry.month,
                     other_publication_year = other_entry.year,
                     other_description = other_entry.description,
+                    other_tags=[str(t.tag_id) for t in other_entry.tags],
                     other_link = other_entry.link,
                     document_status = "draft")
 
@@ -779,6 +786,7 @@ def contribution_book(id):
         book_publication_month = book_entry.month,
         book_publication_year = book_entry.year,
         book_description = book_entry.description,
+        book_tags=[str(t.tag_id) for t in book_entry.tags],
         book_link = book_entry.link)
     if request.method == 'POST':
         if book_form.validate_on_submit():
@@ -809,6 +817,7 @@ def contribution_article(id):
                     article_publication_month = article_entry.month,
                     article_publication_year = article_entry.year,
                     article_description = article_entry.description,
+                    article_tags=[str(t.tag_id) for t in article_entry.tags],
                     article_link = article_entry.link,
                     document_status = "draft")
 
@@ -845,6 +854,7 @@ def contribution_journal(id):
                     article_publication_month = journal_entry.month,
                     article_publication_year = journal_entry.year,
                     article_description = journal_entry.description,
+                    article_tags=[str(t.tag_id) for t in journal_entry.tags],
                     article_link = journal_entry.link,
                     document_status = "draft")
 
@@ -884,6 +894,7 @@ def contribution_law(id):
         law_state = law_entry.state,
         law_country = law_entry.country,
         law_description = law_entry.description,
+        law_tags=[str(t.tag_id) for t in law_entry.tags],
         law_link = law_entry.link,
         document_status = "draft")
 
@@ -917,6 +928,7 @@ def contribution_video(id):
                     video_publication_month = video_entry.month,
                     video_publication_year = video_entry.year,
                     video_description = video_entry.description,
+                    video_tags=[str(t.tag_id) for t in video_entry.tags],
                     video_link = video_entry.link,
                     document_status = "draft")
 
@@ -949,6 +961,7 @@ def contribution_report(id):
                     report_publication_month = report_entry.month,
                     report_publication_year = report_entry.year,
                     report_description = report_entry.description,
+                    report_tags=[str(t.tag_id) for t in report_entry.tags],
                     report_link = report_entry.link,
                     document_status = 'draft')
 
@@ -981,7 +994,8 @@ def contribution_other(id):
                     other_publication_month = other_entry.month,
                     other_publication_year = other_entry.year,
                     other_description = other_entry.description,
-                    other_link = other_entry.link,
+                    other_tags=[str(t.tag_id) for t in other_entry.tags],
+                    other_link=other_entry.link,
                     document_status = "draft")
 
     if request.method == 'POST':
