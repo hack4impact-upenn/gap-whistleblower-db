@@ -384,8 +384,8 @@ def view_book_draft(id):
         book_editor_first_name = book_entry.editor_first_name,
         book_editor_last_name = book_entry.editor_last_name,
         book_series = book_entry.series,
-        book_author_first_name = book_entry.author_first_name,
-        book_author_last_name = book_entry.author_last_name,
+        book_author_first_name = book_entry.author_first_name.split(','),
+        book_author_last_name = book_entry.author_last_name.split(','),
         book_publisher_name = book_entry.name,
         book_publication_month = book_entry.month,
         book_publication_year = book_entry.year,
@@ -395,6 +395,7 @@ def view_book_draft(id):
 
     if request.method == 'POST':
         if book_form.validate_on_submit():
+            print(book_form.book_author_first_name.data, file=stderr)
             if "Save Book" in request.form.values():
                 save_or_submit_doc(book_form, doc_type='book', submit='draft', new = False, entry = book_entry)
 
@@ -1302,14 +1303,15 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
                 article_form.article_title.data), 'form-success')
     elif doc_type == 'book':
         book_form = form
+        print(','.join(book_form.book_author_first_name.data), file=stderr)
         book = Document(
             doc_type="book",
             title=book_form.book_title.data,
             volume=book_form.book_volume.data,
             edition=book_form.book_edition.data,
             series=book_form.book_series.data,
-            author_first_name=book_form.book_author_first_name.data,
-            author_last_name=book_form.book_author_last_name.data,
+            author_first_name=','.join(book_form.book_author_first_name.data),
+            author_last_name=','.join(book_form.book_author_last_name.data),
             editor_first_name = book_form.book_editor_first_name.data,
             editor_last_name = book_form.book_editor_last_name.data,
             posted_by=current_user.first_name + " " + current_user.last_name,

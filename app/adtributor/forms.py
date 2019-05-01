@@ -9,7 +9,8 @@ from wtforms.fields import (
     SelectField,
     IntegerField,
     BooleanField,
-    SelectMultipleField
+    SelectMultipleField,
+    FieldList,
 )
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import (
@@ -98,8 +99,8 @@ class BookForm(Form):
     book_volume = StringField() #volme
     book_edition = StringField() #edition
     book_series = StringField() #series
-    book_author_first_name = StringField() #author_first_name
-    book_author_last_name = StringField() #author_last_name
+    book_author_first_name = FieldList(StringField(), min_entries=1) #author_first_name
+    book_author_last_name = FieldList(StringField(), min_entries=1) #author_last_name
     book_editor_first_name = StringField()
     book_editor_last_name = StringField()
     book_publisher_name = StringField() #name
@@ -123,8 +124,8 @@ class BookForm(Form):
 
 class ArticleForm(Form):
     article_title = StringField(validators=[InputRequired()])
-    article_author_first_name = StringField()
-    article_author_last_name = StringField()
+    article_author_first_name = FieldList(StringField(), min_entries=1)
+    article_author_last_name = FieldList(StringField(), min_entries=1)
     article_publication = StringField()
     article_publication_day = IntegerField(validators=[validators.optional()])
     article_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
@@ -146,8 +147,8 @@ class ArticleForm(Form):
 
 class JournalArticleForm(Form):
     article_title = StringField(validators=[InputRequired()])
-    article_author_first_name = StringField()
-    article_author_last_name = StringField()
+    article_author_first_name = FieldList(StringField(), min_entries=1)
+    article_author_last_name = FieldList(StringField(), min_entries=1)
     publisher_name = StringField()
     volume = StringField()
     start_page = IntegerField()
@@ -223,8 +224,8 @@ class VideoForm(Form):
 
 class ReportForm(Form):
     report_title = StringField(validators=[InputRequired()])
-    report_author_first_name = StringField()
-    report_author_last_name = StringField()
+    report_author_first_name = FieldList(StringField(), min_entries=1)
+    report_author_last_name = FieldList(StringField(), min_entries=1)
     report_publisher = StringField()
     report_publication_day = IntegerField(validators=[validators.optional()])
     report_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
@@ -247,8 +248,8 @@ class ReportForm(Form):
 class OtherForm(Form):
     other_document_type = StringField(validators = [InputRequired()])
     other_title = StringField(validators=[InputRequired()])
-    other_author_first_name = StringField()
-    other_author_last_name = StringField()
+    other_author_first_name = FieldList(StringField(), min_entries=1)
+    other_author_last_name = FieldList(StringField(), min_entries=1)
     other_publication_day = IntegerField(validators=[validators.optional()])
     other_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
     ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
