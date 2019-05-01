@@ -200,8 +200,8 @@ class LawForm(Form):
 
 class VideoForm(Form):
     video_title = StringField(validators=[InputRequired()])
-    director_first_name = StringField()
-    director_last_name = StringField()
+    director_first_name = FieldList(StringField(), min_entries=1)
+    director_last_name = FieldList(StringField(), min_entries=1)
     video_post_source = StringField()
     video_publisher = StringField()
     video_publication_day = IntegerField(validators=[validators.optional()]) #day
