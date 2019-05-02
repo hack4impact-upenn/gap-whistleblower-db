@@ -7,8 +7,9 @@ class Tagged(db.Model):
     __tablename__ = 'tagged'
     tag_id = db.Column(db.Integer, ForeignKey('tag.id'), primary_key=True)
     document_id = db.Column(db.Integer, ForeignKey('document.id'), primary_key=True)
-    document = db.relationship("Tag", backref="documents")
-    tag = db.relationship("Document", backref="tags")
+    tag_name = db.Column(db.String(1000))
+    tag = db.relationship("Tag", backref="documents")
+    document = db.relationship("Document", backref="tags")
 
     @staticmethod
     def generate_fake(**kwargs):
@@ -27,6 +28,7 @@ class Tagged(db.Model):
                     item = Tagged(
                         tag_id=tag.id,
                         document_id=document.id,
+                        tag_name=tag.tag
                     )
                     tagged_resources.append(item)
                     db.session.add(item)

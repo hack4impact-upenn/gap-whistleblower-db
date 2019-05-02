@@ -3,6 +3,7 @@ from . import User, Idf, MutableDict
 import random
 from faker import Faker
 from sqlalchemy import Column, Integer, DateTime, PickleType, String, ForeignKey
+from sqlalchemy.orm import composite
 import datetime
 from collections import Counter
 import os
@@ -11,6 +12,8 @@ nltk.data.path.append(os.environ.get('NLTK_DATA'))
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.ext.hybrid import hybrid_property
+from nltk.stem.snowball import SnowballStemmer
 
 class Document(db.Model):
     __tablename__ = 'document'
@@ -48,10 +51,10 @@ class Document(db.Model):
     page_end = db.Column(db.Integer())
 
     #Specific to Book
-    name = db.Column(db.String(1000)) #Publisher or court name
-    city = db.Column(db.String(500)) #Publisher or court city
-    state = db.Column(db.String(500)) #Publisher or court state
-    country = db.Column(db.String(500)) #Publisher or court country
+    name = db.Column(db.String(1000))
+    city = db.Column(db.String(500))
+    state = db.Column(db.String(500))
+    country = db.Column(db.String(500))
 
     #Specific to Law
     govt_body = db.Column(db.String(1000))
@@ -68,15 +71,26 @@ class Document(db.Model):
 
     broken_link = db.Column(db.Boolean)
 
+    @hybrid_property
+    def corpus(self):
+        corpus = []
+        fields = self.__dict__
+        for key, value in fields.items():
+            if key not in ['tf', 'page_start', 'id', 'day', 'posted_date',
+            'last_edited_date', 'posted_by', 'last_edited_by', 'edition',
+            'broken_link', 'volume', 'file', 'document_status', '_sa_instance_state', 'link'] and value != None:
+                corpus.append(str(value))
+        return ' '.join(corpus)
+
+
     @staticmethod
     def generate_fake(count=1000, **kwargs):
+        stemmer = SnowballStemmer("english", ignore_stopwords=True)
+        stop_words = set(stopwords.words('english'))
         fake = Faker()
         for i in range(count):
             name = fake.name()
             text = fake.text(max_nb_chars=100)
-            stop_words = set(stopwords.words('english'))
-            word_tokens = word_tokenize(text)
-            filtered_query = [w for w in word_tokens if not w in stop_words]
             document = Document(
                 doc_type = "book",
                 day =  random.randint(1, 28),
@@ -93,12 +107,13 @@ class Document(db.Model):
                 author_first_name = fake.first_name(),
                 author_last_name = fake.last_name(),
                 editor_first_name = fake.first_name(),
-                editor_last_name = fake.last_name(), 
+                editor_last_name = fake.last_name(),
                 name = fake.company(),
-                document_status = random.choice(["draft", "published"]),
-                tf = Counter(filtered_query))
-
+                document_status = random.choice(["draft", "published"]))
             db.session.add(document)
+            word_tokens = word_tokenize(document.corpus)
+            filtered_query = [stemmer.stem(w).lower() for w in word_tokens if not w in stop_words]
+            document.tf = Counter(filtered_query)
 
             for key in Counter(filtered_query):
                 entry = Idf.query.get(key)
@@ -114,9 +129,6 @@ class Document(db.Model):
         for i in range(count):
             name = fake.name()
             text = fake.text(max_nb_chars=100)
-            stop_words = set(stopwords.words('english'))
-            word_tokens = word_tokenize(text)
-            filtered_query = [w for w in word_tokens if not w in stop_words]
             article = Document(
                 doc_type = "news_article",
                 day =  random.randint(1, 28),
@@ -130,10 +142,12 @@ class Document(db.Model):
                 link = 'http://' + fake.domain_name(),
                 author_first_name = fake.first_name(),
                 author_last_name = fake.last_name(),
-                document_status = random.choice(["draft", "published"]),
-                tf = Counter(filtered_query))
+                document_status = random.choice(["draft", "published"]))
 
             db.session.add(article)
+            word_tokens = word_tokenize(article.corpus)
+            filtered_query = [stemmer.stem(w).lower() for w in word_tokens if not w in stop_words]
+            article.tf = Counter(filtered_query)
 
             for key in Counter(filtered_query):
                 entry = Idf.query.get(key)
@@ -149,9 +163,6 @@ class Document(db.Model):
         for i in range(count):
             name = fake.name()
             text = fake.text(max_nb_chars=100)
-            stop_words = set(stopwords.words('english'))
-            word_tokens = word_tokenize(text)
-            filtered_query = [w for w in word_tokens if not w in stop_words]
             journal = Document(
                 doc_type = "journal_article",
                 day =  random.randint(1, 28),
@@ -168,10 +179,12 @@ class Document(db.Model):
                 link = 'http://' + fake.domain_name(),
                 author_first_name = fake.first_name(),
                 author_last_name = fake.last_name(),
-                document_status = random.choice(["draft", "published"]),
-                tf = Counter(filtered_query))
+                document_status = random.choice(["draft", "published"]))
 
             db.session.add(journal)
+            word_tokens = word_tokenize(journal.corpus)
+            filtered_query = [stemmer.stem(w).lower() for w in word_tokens if not w in stop_words]
+            journal.tf = Counter(filtered_query)
 
             for key in Counter(filtered_query):
                 entry = Idf.query.get(key)
@@ -188,9 +201,6 @@ class Document(db.Model):
             name = fake.name()
             doc_type = random.choice(["film", "audio", "photograph"])
             text = fake.text(max_nb_chars=100)
-            stop_words = set(stopwords.words('english'))
-            word_tokens = word_tokenize(text)
-            filtered_query = [w for w in word_tokens if not w in stop_words]
             other = Document(
                 doc_type = "other",
                 day =  random.randint(1, 28),
@@ -204,10 +214,12 @@ class Document(db.Model):
                 author_first_name = fake.first_name(),
                 author_last_name = fake.last_name(),
                 other_type= doc_type,
-                document_status = random.choice(["draft", "published"]),
-                tf = Counter(filtered_query))
+                document_status = random.choice(["draft", "published"]))
 
             db.session.add(other)
+            word_tokens = word_tokenize(other.corpus)
+            filtered_query = [stemmer.stem(w).lower() for w in word_tokens if not w in stop_words]
+            other.tf = Counter(filtered_query)
 
             for key in Counter(filtered_query):
                 entry = Idf.query.get(key)
@@ -224,9 +236,6 @@ class Document(db.Model):
             name = fake.name()
             body = random.choice(["105th Congress", "106th Congress", "107th Congress"])
             text = fake.text(max_nb_chars=100)
-            stop_words = set(stopwords.words('english'))
-            word_tokens = word_tokenize(text)
-            filtered_query = [w for w in word_tokens if not w in stop_words]
             law = Document(
                 doc_type = "law",
                 day =  random.randint(1, 28),
@@ -248,6 +257,9 @@ class Document(db.Model):
                 tf = Counter(filtered_query))
 
             db.session.add(law)
+            word_tokens = word_tokenize(law.corpus)
+            filtered_query = [stemmer.stem(w).lower() for w in word_tokens if not w in stop_words]
+            law.tf = Counter(filtered_query)
 
             for key in Counter(filtered_query):
                 entry = Idf.query.get(key)
@@ -263,9 +275,6 @@ class Document(db.Model):
         for i in range(count):
             name = fake.name()
             text = fake.text(max_nb_chars=100)
-            stop_words = set(stopwords.words('english'))
-            word_tokens = word_tokenize(text)
-            filtered_query = [w for w in word_tokens if not w in stop_words]
             video = Document(
                 doc_type = "video",
                 day =  random.randint(1, 28),
@@ -280,10 +289,12 @@ class Document(db.Model):
                 link = 'http://' + fake.domain_name(),
                 author_first_name = fake.first_name(),
                 author_last_name = fake.last_name(),
-                document_status = random.choice(["draft", "published"]),
-                tf = Counter(filtered_query))
+                document_status = random.choice(["draft", "published"]))
 
             db.session.add(video)
+            word_tokens = word_tokenize(video.corpus)
+            filtered_query = [stemmer.stem(w).lower() for w in word_tokens if not w in stop_words]
+            video.tf = Counter(filtered_query)
 
             for key in Counter(filtered_query):
                 entry = Idf.query.get(key)
@@ -316,7 +327,6 @@ class Document(db.Model):
                 f'Volume: {self.volume}\n>'
                 f'Edition: {self.edition}\n>'
                 f'Series: {self.series}\n>'
-                f'ISBN: {self.ISBN}\n>'
                 f'Author First Name: {self.author_first_name}\n>'
                 f'Author Last Name: {self.author_last_name}\n>'
                 f'Name: {self.name}\n>'

@@ -5,7 +5,7 @@ from flask import Blueprint, request, render_template, redirect, url_for
 from flask.json import jsonify
 from random import randint
 from time import sleep
-from app.models import EditableHTML, Document, Saved, User, Suggestion, Tag, Idf
+from app.models import EditableHTML, Document, Saved, User, Suggestion, Tag, Idf, Tagged
 from flask_login import current_user, login_required
 from app.main.forms import SaveForm, UnsaveForm, SuggestionForm, SearchForm
 from app import db
@@ -17,7 +17,9 @@ import requests
 import validators
 import math
 
-from sqlalchemy import or_, Date, cast
+from nltk.stem.snowball import SnowballStemmer
+
+from sqlalchemy import or_, and_, Date, cast
 
 import os
 import nltk
@@ -36,20 +38,38 @@ def index():
 
     form = SearchForm()
 
+    stemmer = SnowballStemmer("english", ignore_stopwords=True)
+
     results = Document.query.filter_by(document_status="published").all()
 
     if form.validate_on_submit():
-        query = form.query.data
+        conditions = []
+        conditions.append(Document.document_status=='published')
+
         types = ['book', 'news_article', 'journal_article', 'law', 'video', 'report', 'other']
         selected_types = []
         for t in types:
             if form.data[str(t)] == True:
                 selected_types.append(t)
 
-        stop_words = set(stopwords.words('english'))
-        word_tokens = word_tokenize(query)
-        filtered_query = [w for w in word_tokens if not w in stop_words]
-        docs = get_docs(filtered_query)
+        if len(selected_types) > 0:
+            conditions.append(Document.doc_type.in_(selected_types))
+
+        if form.tags.data != '':
+            or_conditions = []
+            the_tags = form.tags.data.split(',')
+            for tag in the_tags:
+                or_conditions.append(Document.tags.any(Tagged.tag_name == tag))
+            or_condition = or_(*or_conditions)
+            conditions.append(or_condition)
+
+        query = form.query.data.lower()
+        if len(query) > 0:
+            stop_words = set(stopwords.words('english'))
+            word_tokens = word_tokenize(query)
+            filtered_query = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            docs = get_docs(filtered_query)
+            conditions.append(Document.id.in_(docs))
 
         month_dict = {'January': 1, 'February': 2, 'March': 3, 'April': 4,
         'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
@@ -67,30 +87,24 @@ def index():
         # # end_year = end_date[2]
         # end = datetime.date(2010, 1, 1)
 
-        results =  Document.query.filter(Document.document_status=='published',
-        Document.doc_type.in_(selected_types), Document.id.in_(docs)).all()
+        results =  Document.query.filter(and_(*conditions)).all()
 
-        if form.tags.data != '':
-            the_tags = form.tags.data.split(',')
-            results = Document.query.filter(Document.document_status=='published',
-            Document.doc_type.in_(selected_types), Document.id.in_(docs), Document.tags.any(Tag.tag.in_(the_tags))).all()
-
-
-        idf = {}
-        num_docs = len(Document.query.all())
-        for w in filtered_query:
-            idf_score = Idf.query.get(w)
-            if idf_score is not None:
-                idf[w] = math.log(num_docs/(1+len(Idf.query.get(w).docs)))
-
-        for r in results:
-            r.score = 0;
+        if len(query) > 0:
+            idf = {}
+            num_docs = len(Document.query.all())
             for w in filtered_query:
-                tf = r.tf.get(w)
-                if tf is not None:
-                    r.score += tf * idf.get(w)
+                idf_score = Idf.query.get(w)
+                if idf_score is not None:
+                    idf[w] = math.log(num_docs/(1+len(Idf.query.get(w).docs)))
 
-        results.sort(key=lambda x: x.score, reverse=True)
+            for r in results:
+                r.score = 0;
+                for w in filtered_query:
+                    tf = r.tf.get(w)
+                    if tf is not None:
+                        r.score += tf * idf.get(w)
+
+            results.sort(key=lambda x: x.score, reverse=True)
 
         return render_template('main/index.html', search_results=results, form=form, idf=idf)
 
@@ -111,8 +125,10 @@ def suggestion():
 
     if form.validate_on_submit():
         suggestion = Suggestion(
-            title=form.title.data, link=form.link.data,
-            doc_type = form.type.data, description=form.description.data)
+            title=form.title.data,
+            link=form.link.data,
+            doc_type = form.type.data,
+            description=form.description.data)
         db.session.add(suggestion)
         db.session.commit()
         flash(
@@ -198,7 +214,7 @@ def get_docs(query):
 
 
 # scheduler = BackgroundScheduler()
-# scheduler.add_job(func=check_dead_links, trigger="interval", seconds=60)
+# scheduler.add_job(func=check_dead_links, trigger="interval", seconds=3600)
 # scheduler.start()
 # Shut down the scheduler when exiting the app
 # atexit.register(lambda: scheduler.shutdown())
