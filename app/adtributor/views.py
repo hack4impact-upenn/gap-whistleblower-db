@@ -395,7 +395,6 @@ def view_book_draft(id):
 
     if request.method == 'POST':
         if book_form.validate_on_submit():
-            print(book_form.book_author_first_name.data, file=stderr)
             if "Save Book" in request.form.values():
                 save_or_submit_doc(book_form, doc_type='book', submit='draft', new = False, entry = book_entry)
 
@@ -1334,6 +1333,7 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
                 document_id=entry.id
             )
             db.session.add(tagged)
+        print(book.author_first_name, file=stderr)
 
         db.session.commit()
         flash(

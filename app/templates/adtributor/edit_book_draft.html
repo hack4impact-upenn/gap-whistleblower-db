@@ -96,6 +96,26 @@
 </div>
 <script>
   $('.menu .item').tab();
+  $(document).ready(function() {
+      {% for i in range(book_form.book_author_first_name | length) %}
+          {% if i != 0 %}
+            $( "#beforeMe" ).before(`<div class = "author fields" id="author-{{ i }}">\
+              <div class="four wide field">\
+                <label>Remove Author</label>\
+                <a class="ui labeled icon button fluid" id="author-{{ i }}" href="javascript:delAuthor({{ i }})">\
+                  <i class="close icon"></i>Remove Author</a>\
+              </div>\
+              <div class = "six wide field">\
+                {{ f.render_form_field(book_form.book_author_first_name[i], name="First Name") }}
+              </div>\
+              <div class = "six wide field">\
+                {{ f.render_form_field(book_form.book_author_last_name[i], name="Last Name") }}
+              </div>\
+          </div>`); //bit hacky but ok
+
+          {% endif %}
+      {% endfor %}
+  });
   function addAuthor() {
       let index = $(".author").length;
       $( "#beforeMe" ).before(`<div class = "author fields" id="author-${index}">\
