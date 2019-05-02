@@ -121,8 +121,10 @@ def suggestion():
 
     if form.validate_on_submit():
         suggestion = Suggestion(
-            title=form.title.data, link=form.link.data,
-            doc_type = form.type.data, description=form.description.data)
+            title=form.title.data,
+            link=form.link.data,
+            doc_type = form.type.data,
+            description=form.description.data)
         db.session.add(suggestion)
         db.session.commit()
         flash(
@@ -208,7 +210,7 @@ def get_docs(query):
 
 
 # scheduler = BackgroundScheduler()
-# scheduler.add_job(func=check_dead_links, trigger="interval", seconds=60)
+# scheduler.add_job(func=check_dead_links, trigger="interval", seconds=3600)
 # scheduler.start()
 # Shut down the scheduler when exiting the app
 # atexit.register(lambda: scheduler.shutdown())

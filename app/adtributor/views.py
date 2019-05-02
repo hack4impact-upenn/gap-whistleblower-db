@@ -325,7 +325,7 @@ def delete_suggestion(id):
 def view_all_drafts():
     user_name = current_user.first_name + " " + current_user.last_name
     contributions = Document.query.filter(Document.posted_by == user_name).order_by(Document.id.desc()).all()
-    return render_template('adtributor/draft_contributions.html', contributions=contributions, user_type='contributor')
+    return render_template('adtributor/draft_contributions.html', contributions=contributions, user_type=role())
 
 
 @admin.route('/publish/<int:id>', methods=['GET', 'POST'])
@@ -365,7 +365,7 @@ def other_contribution(id):
 @login_required
 def contribution(id):
     contribution = Document.query.get(id)
-    return render_template('adtributor/contribution.html', contribution=contribution, user_type='contributor')
+    return render_template('adtributor/contribution.html', contribution=contribution, user_type=role())
 
 
 @admin.route('/draft/book/<int:id>', methods=['GET', 'POST'])
@@ -411,7 +411,7 @@ def view_book_draft(id):
 @contributor.route('/draft/article/<int:id>', methods=['GET', 'POST'])
 @contributor_required
 @login_required
-def view_article_draft(id):
+def view_news_article_draft(id):
     contribution = Document.query.get(id)
     article_entry = Document.query.filter_by(id=id).first()
     article_form = ArticleForm(
@@ -430,19 +430,19 @@ def view_article_draft(id):
     if request.method == 'POST':
         if article_form.validate_on_submit():
             if "Save Article" in request.form.values():
-                save_or_submit_doc(article_form, doc_type='article', submit='draft', new = False)
+                save_or_submit_doc(article_form, doc_type='article', submit='draft', new = False, entry=article_entry)
 
             if "Submit Article" in request.form.values():
-                save_or_submit_doc(article_form, doc_type='article', submit=dest_from_role(), new = False)
+                save_or_submit_doc(article_form, doc_type='article', submit=dest_from_role(), new = False, entry=article_entry)
 
             return view_all_drafts()
 
-    return render_template('adtributor/edit_article_draft.html', article_form=article_form, c=contribution)
+    return render_template('adtributor/edit_news_article_draft.html', article_form=article_form, c=contribution)
 
 
     """Contribution Review page."""
     contribution = Document.query.get(id)
-    return render_template('adtributor/edit_article_draft.html', contribution=contribution)
+    return render_template('adtributor/edit_news_article_draft.html', contribution=contribution)
 
 
 @admin.route('/draft/journal/<int:id>', methods=['GET', 'POST'])
@@ -450,7 +450,7 @@ def view_article_draft(id):
 @contributor.route('/draft/journal/<int:id>', methods=['GET', 'POST'])
 @contributor_required
 @login_required
-def view_journal_draft(id):
+def view_journal_article_draft(id):
     contribution = Document.query.get(id)
     journal_entry = Document.query.filter_by(id=id).first()
     journal_form = JournalArticleForm(
@@ -481,12 +481,12 @@ def view_journal_draft(id):
 
             return view_all_drafts()
 
-    return render_template('adtributor/edit_journal_draft.html', journal_form=journal_form, c=contribution)
+    return render_template('adtributor/edit_journal_article_draft.html', journal_form=journal_form, c=contribution)
 
 
     """Contribution Review page."""
     contribution = Document.query.get(id)
-    return render_template('adtributor/edit_article_draft.html', contribution=contribution)
+    return render_template('adtributor/edit_news_article_draft.html', contribution=contribution)
 
 
 @admin.route('/draft/law/<int:id>', methods=['GET', 'POST'])
@@ -662,7 +662,7 @@ def submit():
                 return view_all_drafts()
 
             return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form=video_form, active="book", user_type='contributor')
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form=video_form, active="book", user_type=role())
 
         if form_name == 'article_form':
 
@@ -677,7 +677,7 @@ def submit():
                 return view_all_drafts()
 
             return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="article", user_type='contributor')
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="article", user_type=role())
 
         if form_name == 'journal_form':
 
@@ -692,7 +692,7 @@ def submit():
                 return view_all_drafts()
 
             return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="journal", user_type='contributor')
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="journal", user_type=role())
 
         if form_name == 'law_form':
 
@@ -707,7 +707,7 @@ def submit():
                 return view_all_drafts()
 
             return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="law", user_type='contributor')
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="law", user_type=role())
 
         if form_name == 'video_form':
 
@@ -722,7 +722,7 @@ def submit():
                 return view_all_drafts()
 
             return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="video", user_type='contributor')
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="video", user_type=role())
 
         if form_name == 'report_form':
 
@@ -737,7 +737,7 @@ def submit():
                 return view_all_drafts()
 
             return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="report", user_type='contributor')
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form = journal_form, video_form = video_form, active="report", user_type=role())
 
         if form_name == 'other_form':
 
@@ -752,10 +752,10 @@ def submit():
                 return view_all_drafts()
 
             return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
-            article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="other", user_type='contributor')
+            article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="other", user_type=role())
 
     return render_template('adtributor/submit.html', book_form=book_form, report_form=report_form,
-    article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="book", user_type='contributor')
+    article_form=article_form, law_form=law_form, other_form=other_form, journal_form=journal_form, video_form=video_form, active="book", user_type=role())
 
 
 @admin.route('/contribution/book/<int:id>', methods=['GET', 'POST'])
@@ -821,7 +821,7 @@ def contribution_article(id):
 
             return view_all_drafts()
 
-    return render_template('adtributor/edit_article_draft.html', article_form=article_form, c=contribution)
+    return render_template('adtributor/edit_news_article_draft.html', article_form=article_form, c=contribution)
 
 
 @admin.route('/contribution/journal/<int:id>', methods=['GET', 'POST'])
@@ -858,7 +858,7 @@ def contribution_journal(id):
             return view_all_drafts()
 
 
-    return render_template('adtributor/edit_journal_draft.html', journal_form=journal_form, c=contribution)
+    return render_template('adtributor/edit_journal_article_draft.html', journal_form=journal_form, c=contribution)
 
 
 @admin.route('/contribution/law/<int:id>', methods=['GET', 'POST'])
@@ -1024,7 +1024,7 @@ def suggestion_book_draft(id):
 @admin.route('/from_suggestion/article/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def suggestion_article_draft(id):
+def suggestion_news_article_draft(id):
     article_entry = Suggestion.query.get(id)
     article_form = ArticleForm(
         doc_type="article",
@@ -1043,13 +1043,13 @@ def suggestion_article_draft(id):
 
             return review_suggestions()
 
-    return render_template('adtributor/edit_article_draft.html', article_form=article_form, c=article_entry)
+    return render_template('adtributor/edit_news_article_draft.html', article_form=article_form, c=article_entry)
 
 
 @admin.route('/from_suggestion/journal/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def suggestion_journal_draft(id):
+def suggestion_journal_article_draft(id):
     journal_entry = Suggestion.query.get(id)
     journal_form = JournalArticleForm(
         doc_type="journal",
@@ -1068,7 +1068,7 @@ def suggestion_journal_draft(id):
 
             return review_suggestions()
 
-    return render_template('adtributor/edit_journal_draft.html', journal_form=journal_form, c=journal_entry)
+    return render_template('adtributor/edit_journal_article_draft.html', journal_form=journal_form, c=journal_entry)
 
 
 @admin.route('/from_suggestion/law/<int:id>', methods=['GET', 'POST'])
@@ -1253,25 +1253,37 @@ def view_broken_links():
 def save_or_submit_doc(form, doc_type, submit, new, entry=None):
     if doc_type == 'article':
         article_form = form
-        article = Document(
-            doc_type="article",
-            title=article_form.article_title.data,
-            author_first_name=article_form.article_author_first_name.data,
-            author_last_name=article_form.article_author_last_name.data,
-            posted_by=current_user.first_name + " " + current_user.last_name,
-            last_edited_by=current_user.first_name + " " + current_user.last_name,
-            name=article_form.article_publication.data,
-            day=article_form.article_publication_day.data,
-            month=article_form.article_publication_month.data,
-            year=article_form.article_publication_year.data,
-            description=article_form.article_description.data,
-            link=article_form.article_link.data,
-            document_status=submit,
-            tf=Counter(article_form.article_description.data))
-        if entry == None:
-            db.Session.add(article)
+        if new:
+            article = Document(
+                doc_type="news_article",
+                title=article_form.article_title.data,
+                author_first_name=article_form.article_author_first_name.data,
+                author_last_name=article_form.article_author_last_name.data,
+                posted_by=current_user.first_name + " " + current_user.last_name,
+                last_edited_by=current_user.first_name + " " + current_user.last_name,
+                name=article_form.article_publication.data,
+                day=article_form.article_publication_day.data,
+                month=article_form.article_publication_month.data,
+                year=article_form.article_publication_year.data,
+                description=article_form.article_description.data,
+                link=article_form.article_link.data,
+                document_status=submit,
+                tf=Counter(article_form.article_description.data))
+            db.session.add(article)
         else:
-            entry = article
+            entry.doc_type = "news_article"
+            entry.title = article_form.article_title.data
+            entry.author_first_name = article_form.article_author_first_name.data
+            entry.author_last_name = article_form.article_author_last_name.data
+            entry.posted_by=current_user.first_name + " " + current_user.last_name,
+            entry.last_edited_by=current_user.first_name + " " + current_user.last_name,
+            entry.name = article_form.article_publication.data
+            entry.day = article_form.article_publication_day.data
+            entry.month = article_form.article_publication_month.data
+            entry.year = article_form.article_publication_year.data
+            entry.description = article_form.article_description.data
+            entry.link = article_form.article_link.data
+            entry.document_status = submit
         db.session.commit()
         flash(
             'Article \"{}\" successfully submitted'.format(
@@ -1297,10 +1309,7 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             link=book_form.book_link.data,
             document_status=submit,
             tf=Counter(book_form.book_description.data))
-        if entry == None:
-            db.session.add(book)
-        else:
-            entry = book
+        db.session.add(book)
         db.session.commit()
         flash(
             'Book \"{}\" successfully saved'.format(
@@ -1308,7 +1317,7 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
     elif doc_type == 'journal':
         journal_form = form
         article = Document(
-            doc_type="journal",
+            doc_type="journal_article",
             title=journal_form.article_title.data,
             author_first_name=journal_form.article_author_first_name.data,
             author_last_name=journal_form.article_author_last_name.data,
