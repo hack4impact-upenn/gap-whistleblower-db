@@ -17,6 +17,8 @@ import requests
 import validators
 import math
 
+from nltk.stem.snowball import SnowballStemmer
+
 from sqlalchemy import or_, and_, Date, cast
 
 import os
@@ -35,6 +37,8 @@ def index():
     idf = Idf.query.all()
 
     form = SearchForm()
+
+    stemmer = SnowballStemmer("english", ignore_stopwords=True)
 
     results = Document.query.filter_by(document_status="published").all()
 
@@ -59,11 +63,11 @@ def index():
             or_condition = or_(*or_conditions)
             conditions.append(or_condition)
 
-        query = form.query.data
+        query = form.query.data.lower()
         if len(query) > 0:
             stop_words = set(stopwords.words('english'))
             word_tokens = word_tokenize(query)
-            filtered_query = [w for w in word_tokens if not w in stop_words]
+            filtered_query = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
             docs = get_docs(filtered_query)
             conditions.append(Document.id.in_(docs))
 
