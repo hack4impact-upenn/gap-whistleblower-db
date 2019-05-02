@@ -93,7 +93,7 @@ class Document(db.Model):
                 author_first_name = fake.first_name(),
                 author_last_name = fake.last_name(),
                 editor_first_name = fake.first_name(),
-                editor_last_name = fake.last_name(), 
+                editor_last_name = fake.last_name(),
                 name = fake.company(),
                 document_status = random.choice(["draft", "published"]),
                 tf = Counter(filtered_query))
@@ -316,7 +316,6 @@ class Document(db.Model):
                 f'Volume: {self.volume}\n>'
                 f'Edition: {self.edition}\n>'
                 f'Series: {self.series}\n>'
-                f'ISBN: {self.ISBN}\n>'
                 f'Author First Name: {self.author_first_name}\n>'
                 f'Author Last Name: {self.author_last_name}\n>'
                 f'Name: {self.name}\n>'

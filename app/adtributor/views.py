@@ -1385,7 +1385,7 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
 
     elif doc_type == 'report':
         report_form = form
-        report = Document(
+        entry = Document(
             doc_type="report",
             title=report_form.report_title.data,
             author_first_name=report_form.report_author_first_name.data,
@@ -1397,10 +1397,9 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             year=report_form.report_publication_year.data,
             description=report_form.report_description.data,
             link=report_form.report_link.data,
-            document_status=submit,
-            tf=(report_form.report_description.data))
+            document_status=submit)
         if new == True:
-            db.session.add(report)
+            db.session.add(entry)
         db.session.commit()
         flash(
             'Report \"{}\" successfully saved'.format(
@@ -1446,197 +1445,197 @@ def upload_and_download():
             if download_form.book.data == True:
                 with io.open(file_path + 'book.csv', 'w', newline='') as csvfile:
 
-                    csv_writer = csv.writer(csvfile) 
+                    csv_writer = csv.writer(csvfile)
 
-                    csv_writer.writerow(['Title', 'Author First Name', 'Author Last Name', 'Editor First Name', 
+                    csv_writer.writerow(['Title', 'Author First Name', 'Author Last Name', 'Editor First Name',
                         'Editor Last Name', 'Volume', 'Edition', 'Series', 'Publisher Name',
-                        'Publication Month', 'Publication Year', 'Description', 'Link', 'Posted Date', 
+                        'Publication Month', 'Publication Year', 'Description', 'Link', 'Posted Date',
                         'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
                     for d in documents:
                         if d.doc_type == "book":
                             csv_writer.writerow([
-                                '"' + d.title + '"', 
-                                '"' + d.author_first_name + '"', 
-                                '"' + d.author_last_name + '"', 
+                                '"' + d.title + '"',
+                                '"' + d.author_first_name + '"',
+                                '"' + d.author_last_name + '"',
                                 '"' + d.editor_first_name + '"',
                                 '"' + d.editor_last_name + '"',
-                                '"' + d.volume + '"', 
-                                '"' + d.edition + '"', 
-                                '"' + d.series + '"', 
+                                '"' + d.volume + '"',
+                                '"' + d.edition + '"',
+                                '"' + d.series + '"',
                                 '"' + d.name + '"',
-                                '"' + d.month + '"', 
-                                '"' + str(d.year) + '"', 
-                                '"' + d.description + '"', 
-                                '"' + d.link + '"', 
-                                '"' + str(d.posted_date) + '"', 
-                                '"' + str(d.last_edited_date) + '"', 
-                                '"' + d.posted_by + '"', 
-                                '"' + d.last_edited_by + '"', 
+                                '"' + d.month + '"',
+                                '"' + str(d.year) + '"',
+                                '"' + d.description + '"',
+                                '"' + d.link + '"',
+                                '"' + str(d.posted_date) + '"',
+                                '"' + str(d.last_edited_date) + '"',
+                                '"' + d.posted_by + '"',
+                                '"' + d.last_edited_by + '"',
                                 '"' + d.document_status + '"'])
 
             if download_form.news_article.data == True:
                 with io.open(file_path + 'news_article.csv', 'w', newline='') as csvfile:
-                    csv_writer = csv.writer(csvfile) 
+                    csv_writer = csv.writer(csvfile)
 
                     csv_writer.writerow(['Title', 'Author First Name', 'Author Last Name', 'Publication',
-                        'Publication Day', 'Publication Month', 'Publication Year', 'Description', 'Link', 'Posted Date', 
+                        'Publication Day', 'Publication Month', 'Publication Year', 'Description', 'Link', 'Posted Date',
                         'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
                     for d in documents:
                         if d.doc_type == "article":
                             csv_writer.writerow([
                                 '"' + d.title + '"',
-                                '"' + d.author_first_name + '"', 
-                                '"' + d.author_last_name + '"', 
-                                '"' + d.name + '"', 
-                                '"' + str(d.day) + '"', 
-                                '"' + d.month + '"', 
-                                '"' + str(d.year) + '"', 
-                                '"' + d.description + '"', 
-                                '"' + d.link + '"', 
-                                '"' + str(d.posted_date) + '"', 
-                                '"' + str(d.last_edited_date) + '"', 
-                                '"' + d.posted_by + '"', 
-                                '"' + d.last_edited_by + '"', 
+                                '"' + d.author_first_name + '"',
+                                '"' + d.author_last_name + '"',
+                                '"' + d.name + '"',
+                                '"' + str(d.day) + '"',
+                                '"' + d.month + '"',
+                                '"' + str(d.year) + '"',
+                                '"' + d.description + '"',
+                                '"' + d.link + '"',
+                                '"' + str(d.posted_date) + '"',
+                                '"' + str(d.last_edited_date) + '"',
+                                '"' + d.posted_by + '"',
+                                '"' + d.last_edited_by + '"',
                                 '"' + d.document_status + '"'])
 
             if download_form.journal_article.data == True:
                 with io.open(file_path + 'journal_article.csv', 'w', newline='') as csvfile:
-                    csv_writer = csv.writer(csvfile) 
+                    csv_writer = csv.writer(csvfile)
 
                     csv_writer.writerow(['Title', 'Author First Name', 'Author Last Name', 'Publication',
-                        'Volume', 'Start Page', 'End Page', 'Publication Day', 'Publication Month', 'Publication Year', 'Description', 
+                        'Volume', 'Start Page', 'End Page', 'Publication Day', 'Publication Month', 'Publication Year', 'Description',
                         'Link', 'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
                     for d in documents:
                         if d.doc_type == "journal":
                             csv_writer.writerow([
-                                '"' + d.title + '"', 
-                                '"' + d.author_first_name + '"', 
-                                '"' + d.author_last_name + '"', 
-                                '"' + d.name + '"', 
-                                '"' + d.volume + '"', 
-                                '"' + str(d.page_start) + '"', 
-                                '"' + str(d.page_end) + '"', 
-                                '"' + str(d.day) + '"', 
-                                '"' + d.month + '"', 
-                                '"' + str(d.year) + '"', 
-                                '"' + d.description + '"', 
-                                '"' + d.link + '"', 
-                                '"' + str(d.posted_date) + '"', 
-                                '"' + str(d.last_edited_date) + '"', 
-                                '"' + d.posted_by + '"', 
-                                '"' + d.last_edited_by + '"', 
+                                '"' + d.title + '"',
+                                '"' + d.author_first_name + '"',
+                                '"' + d.author_last_name + '"',
+                                '"' + d.name + '"',
+                                '"' + d.volume + '"',
+                                '"' + str(d.page_start) + '"',
+                                '"' + str(d.page_end) + '"',
+                                '"' + str(d.day) + '"',
+                                '"' + d.month + '"',
+                                '"' + str(d.year) + '"',
+                                '"' + d.description + '"',
+                                '"' + d.link + '"',
+                                '"' + str(d.posted_date) + '"',
+                                '"' + str(d.last_edited_date) + '"',
+                                '"' + d.posted_by + '"',
+                                '"' + d.last_edited_by + '"',
                                 '"' + d.document_status + '"'])
 
             if download_form.law.data == True:
                 with io.open(file_path + 'law.csv', 'w', newline='') as csvfile:
-                    csv_writer = csv.writer(csvfile) 
+                    csv_writer = csv.writer(csvfile)
 
-                    csv_writer.writerow(['Title', 'Citation', 'Government Body', 'Section', 
-                        'Region', 'City', 'State', 'Country', 'Enactment Day', 
+                    csv_writer.writerow(['Title', 'Citation', 'Government Body', 'Section',
+                        'Region', 'City', 'State', 'Country', 'Enactment Day',
                         'Enactment Month', 'Enactment Year', 'Description', 'Link',
                         'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
                     for d in documents:
                         if d.doc_type == "law":
                             csv_writer.writerow([
-                                '"' + d.title + '"', 
-                                '"' + d.citation + '"', 
-                                '"' + d.govt_body + '"', 
-                                '"' + d.section + '"', 
-                                '"' + d.region + '"', 
-                                '"' + d.city + '"', 
-                                '"' + d.state + '"', 
-                                '"' + d.country + '"', 
-                                '"' + str(d.day) + '"', 
-                                '"' + d.month + '"', 
-                                '"' + str(d.year) + '"', 
-                                '"' + d.description + '"', 
+                                '"' + d.title + '"',
+                                '"' + d.citation + '"',
+                                '"' + d.govt_body + '"',
+                                '"' + d.section + '"',
+                                '"' + d.region + '"',
+                                '"' + d.city + '"',
+                                '"' + d.state + '"',
+                                '"' + d.country + '"',
+                                '"' + str(d.day) + '"',
+                                '"' + d.month + '"',
+                                '"' + str(d.year) + '"',
+                                '"' + d.description + '"',
                                 '"' + d.link + '"',
-                                '"' + str(d.posted_date) + '"', 
-                                '"' + str(d.last_edited_date) + '"', 
-                                '"' + d.posted_by + '"', 
-                                '"' + d.last_edited_by + '"', 
+                                '"' + str(d.posted_date) + '"',
+                                '"' + str(d.last_edited_date) + '"',
+                                '"' + d.posted_by + '"',
+                                '"' + d.last_edited_by + '"',
                                 '"' + d.document_status + '"'])
 
             if download_form.video.data == True:
                 with io.open(file_path + 'video.csv', 'w', newline='') as csvfile:
-                    csv_writer = csv.writer(csvfile) 
+                    csv_writer = csv.writer(csvfile)
 
-                    csv_writer.writerow(['Title', 'First Name', 'Last Name', 'Source', 
+                    csv_writer.writerow(['Title', 'First Name', 'Last Name', 'Source',
                         'Day', 'Month', 'Year', 'Description', 'Link',
                         'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
                     for d in documents:
                         if d.doc_type == "video":
                             csv_writer.writerow([
-                                '"' + d.title + '"', 
-                                '"' + d.author_first_name + '"', 
+                                '"' + d.title + '"',
+                                '"' + d.author_first_name + '"',
                                 '"' + d.author_last_name + '"',
-                                '"' + d.post_source + '"', 
-                                '"' + str(d.day) + '"', 
-                                '"' + d.month + '"', 
-                                '"' + str(d.year) + '"', 
-                                '"' + d.description + '"', 
+                                '"' + d.post_source + '"',
+                                '"' + str(d.day) + '"',
+                                '"' + d.month + '"',
+                                '"' + str(d.year) + '"',
+                                '"' + d.description + '"',
                                 '"' + d.link + '"',
-                                '"' + str(d.posted_date) + '"', 
-                                '"' + str(d.last_edited_date) + '"', 
-                                '"' + d.posted_by + '"', 
-                                '"' + d.last_edited_by + '"', 
+                                '"' + str(d.posted_date) + '"',
+                                '"' + str(d.last_edited_date) + '"',
+                                '"' + d.posted_by + '"',
+                                '"' + d.last_edited_by + '"',
                                 '"' + d.document_status + '"'])
 
             if download_form.report.data == True:
                 with io.open(file_path + 'report.csv', 'w', newline='') as csvfile:
-                    csv_writer = csv.writer(csvfile) 
+                    csv_writer = csv.writer(csvfile)
 
-                    csv_writer.writerow(['Title', 'First Name', 'Last Name', 'Publisher', 
+                    csv_writer.writerow(['Title', 'First Name', 'Last Name', 'Publisher',
                         'Day', 'Month', 'Year', 'Description', 'Link',
                         'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
                     for d in documents:
                         if d.doc_type == "report":
                             csv_writer.writerow([
-                                '"' + d.title + '"', 
-                                '"' + d.author_first_name + '"', 
-                                '"' + d.author_last_name + '"', 
+                                '"' + d.title + '"',
+                                '"' + d.author_first_name + '"',
+                                '"' + d.author_last_name + '"',
                                 '"' + d.name + '"',
-                                '"' + str(d.day) + '"', 
-                                '"' + d.month + '"', 
-                                '"' + str(d.year) + '"', 
-                                '"' + d.description + '"', 
+                                '"' + str(d.day) + '"',
+                                '"' + d.month + '"',
+                                '"' + str(d.year) + '"',
+                                '"' + d.description + '"',
                                 '"' + d.link + '"',
-                                '"' + str(d.posted_date) + '"', 
-                                '"' + str(d.last_edited_date) + '"', 
-                                '"' + d.posted_by + '"', 
-                                '"' + d.last_edited_by + '"', 
+                                '"' + str(d.posted_date) + '"',
+                                '"' + str(d.last_edited_date) + '"',
+                                '"' + d.posted_by + '"',
+                                '"' + d.last_edited_by + '"',
                                 '"' + d.document_status + '"'])
 
             if download_form.other.data == True:
                 with io.open(file_path + 'other.csv', 'w', newline='') as csvfile:
-                    csv_writer = csv.writer(csvfile) 
+                    csv_writer = csv.writer(csvfile)
 
                     csv_writer.writerow(['Title', 'Author First Name', 'Author Last Name', 'Other Document Type',
-                        'Publication Day', 'Publication Month', 'Publication Year', 'Description', 'Link', 
+                        'Publication Day', 'Publication Month', 'Publication Year', 'Description', 'Link',
                         'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
 
                     for d in documents:
                         if d.doc_type == "other":
                             csv_writer.writerow([
-                                '"' + d.title + '"', 
-                                '"' + d.author_first_name + '"', 
-                                '"' + d.author_last_name + '"', 
+                                '"' + d.title + '"',
+                                '"' + d.author_first_name + '"',
+                                '"' + d.author_last_name + '"',
                                 '"' + d.other_type + '"',
-                                '"' + str(d.day) + '"', 
-                                '"' + d.month + '"', 
-                                '"' + str(d.year) + '"', 
-                                '"' + d.description + '"', 
-                                '"' + d.link + '"', 
-                                '"' + str(d.posted_date) + '"', 
-                                '"' + str(d.last_edited_date) + '"', 
-                                '"' + d.posted_by + '"', 
-                                '"' + d.last_edited_by + '"', 
+                                '"' + str(d.day) + '"',
+                                '"' + d.month + '"',
+                                '"' + str(d.year) + '"',
+                                '"' + d.description + '"',
+                                '"' + d.link + '"',
+                                '"' + str(d.posted_date) + '"',
+                                '"' + str(d.last_edited_date) + '"',
+                                '"' + d.posted_by + '"',
+                                '"' + d.last_edited_by + '"',
                                 '"' + d.document_status + '"'])
 
             flash(
@@ -1690,7 +1689,7 @@ def upload_and_download():
                         link = row[12].replace("\"", ""),
                         posted_date = pd, #13 = posted date, 14 = last edited date
                         posted_by = pb,
-                        last_edited_by = current_user.id, #16 = last edited by 
+                        last_edited_by = current_user.id, #16 = last edited by
                         document_status = ds) #17 = document status
 
                     db.session.add(book)
@@ -1723,11 +1722,11 @@ def upload_and_download():
                         year = row[6].replace("\"", ""),
                         description = row[7].replace("\"", ""),
                         link = row[8].replace("\"", ""),
-                        posted_date = pd, 
+                        posted_date = pd,
                         posted_by = pb,
-                        last_edited_by = current_user.id, 
+                        last_edited_by = current_user.id,
                         document_status = ds)
-                    
+
                     db.session.add(article)
 
                 if name == "journal_article.csv" and row[0].replace("\"", "") != "Example":
@@ -1760,11 +1759,11 @@ def upload_and_download():
                         year = row[9].replace("\"", ""),
                         description = row[10].replace("\"", ""),
                         link = row[11].replace("\"", ""),
-                        posted_date = pd, 
+                        posted_date = pd,
                         posted_by = pb,
-                        last_edited_by = current_user.id, 
+                        last_edited_by = current_user.id,
                         document_status = ds)
-                    
+
                     db.session.add(journal)
 
                 if name == "law.csv" and row[0].replace("\"", "") != "Example":
@@ -1798,11 +1797,11 @@ def upload_and_download():
                         year = row[10].replace("\"", ""),
                         description = row[11].replace("\"", ""),
                         link = row[12].replace("\"", ""),
-                        posted_date = pd, 
+                        posted_date = pd,
                         posted_by = pb,
-                        last_edited_by = current_user.id, 
+                        last_edited_by = current_user.id,
                         document_status = ds)
-                    
+
                     db.session.add(law)
 
                 if name == "video.csv" and row[0].replace("\"", "") != "Example":
@@ -1832,11 +1831,11 @@ def upload_and_download():
                         year = row[6].replace("\"", ""),
                         description = row[7].replace("\"", ""),
                         link = row[8].replace("\"", ""),
-                        posted_date = pd, 
+                        posted_date = pd,
                         posted_by = pb,
-                        last_edited_by = current_user.id, 
+                        last_edited_by = current_user.id,
                         document_status = ds)
-                    
+
                     db.session.add(video)
 
                 if name == "report.csv" and row[0].replace("\"", "") != "Example":
@@ -1866,11 +1865,11 @@ def upload_and_download():
                         year = row[6].replace("\"", ""),
                         description = row[7].replace("\"", ""),
                         link = row[8].replace("\"", ""),
-                        posted_date = pd, 
+                        posted_date = pd,
                         posted_by = pb,
-                        last_edited_by = current_user.id, 
+                        last_edited_by = current_user.id,
                         document_status = ds)
-                    
+
                     db.session.add(video)
 
                 if name == "other.csv" and row[0].replace("\"", "") != "Example":
@@ -1900,11 +1899,11 @@ def upload_and_download():
                         year = row[6].replace("\"", ""),
                         description = row[7].replace("\"", ""),
                         link = row[8].replace("\"", ""),
-                        posted_date = pd, 
+                        posted_date = pd,
                         posted_by = pb,
-                        last_edited_by = current_user.id, 
+                        last_edited_by = current_user.id,
                         document_status = ds)
-                    
+
                     db.session.add(other)
 
             db.session.commit()

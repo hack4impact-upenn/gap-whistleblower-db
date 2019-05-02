@@ -32,7 +32,7 @@ class SearchForm(Form):
     def __init__(self, **kwargs):
         super(SearchForm, self).__init__(**kwargs)
         self.tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
-    query = StringField(validators=[InputRequired()])
+    query = StringField()
     book = BooleanField(default='true')
     news_article = BooleanField(default='true')
     journal_article = BooleanField(default='true')
