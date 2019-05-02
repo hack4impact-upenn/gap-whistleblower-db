@@ -3,6 +3,7 @@ from . import User, Idf, MutableDict
 import random
 from faker import Faker
 from sqlalchemy import Column, Integer, DateTime, PickleType, String, ForeignKey
+from sqlalchemy.orm import composite
 import datetime
 from collections import Counter
 import os
@@ -11,6 +12,7 @@ nltk.data.path.append(os.environ.get('NLTK_DATA'))
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.ext.hybrid import hybrid_property
 
 class Document(db.Model):
     __tablename__ = 'document'
@@ -48,10 +50,10 @@ class Document(db.Model):
     page_end = db.Column(db.Integer())
 
     #Specific to Book
-    name = db.Column(db.String(1000)) #Publisher or court name
-    city = db.Column(db.String(500)) #Publisher or court city
-    state = db.Column(db.String(500)) #Publisher or court state
-    country = db.Column(db.String(500)) #Publisher or court country
+    name = db.Column(db.String(1000))
+    city = db.Column(db.String(500))
+    state = db.Column(db.String(500))
+    country = db.Column(db.String(500))
 
     #Specific to Law
     govt_body = db.Column(db.String(1000))
@@ -67,6 +69,18 @@ class Document(db.Model):
     tf = db.Column(MutableDict.as_mutable(PickleType))
 
     broken_link = db.Column(db.Boolean)
+
+    @hybrid_property
+    def corpus(self):
+        corpus = []
+        fields = self.__dict__
+        for key, value in fields.items():
+            if key not in ['tf', 'page_start', 'id', 'day', 'posted_date',
+            'last_edited_date', 'posted_by', 'last_edited_by', 'edition',
+            'broken_link', 'volume', 'file', 'document_status', '_sa_instance_state'] and value != None:
+                corpus.append(str(value))
+        return ' '.join(corpus)
+
 
     @staticmethod
     def generate_fake(count=1000, **kwargs):

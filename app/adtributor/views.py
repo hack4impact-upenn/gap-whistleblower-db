@@ -23,7 +23,7 @@ from app.adtributor.forms import (
     DownloadForm
 )
 from app.decorators import contributor_required, admin_required
-from app.models import EditableHTML, Role, User, Tag, Suggestion, Document
+from app.models import EditableHTML, Role, User, Tag, Suggestion, Document, Idf
 
 from .. import csrf
 
@@ -41,8 +41,14 @@ from collections import Counter
 from app.email import send_email
 import csv
 import io
-import os
 import datetime
+
+import os
+import nltk
+nltk.data.path.append(os.environ.get('NLTK_DATA'))
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem.snowball import SnowballStemmer
 
 admin = Blueprint('admin', __name__)
 contributor = Blueprint('contributor', __name__)
@@ -1225,6 +1231,8 @@ def view_broken_links():
 
 
 def save_or_submit_doc(form, doc_type, submit, new, entry=None):
+    stemmer = SnowballStemmer("english", ignore_stopwords=True)
+    stop_words = set(stopwords.words('english'))
     if doc_type == 'article':
         article_form = form
         if new:
@@ -1241,9 +1249,15 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
                 year=article_form.article_publication_year.data,
                 description=article_form.article_description.data,
                 link=article_form.article_link.data,
-                document_status=submit,
-                tf=Counter(article_form.article_description.data))
+                document_status=submit)
             db.session.add(article)
+            corpus = article.corpus
+            db.session.commit()
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            article.tf = Counter(filtered_corpus)
+            if submit=='published':
+                update_idf(post_tf=article.tf, post_status='published', doc_id=article.id)
         else:
             entry.title = article_form.article_title.data
             entry.author_first_name = article_form.article_author_first_name.data
@@ -1256,6 +1270,11 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             entry.year = article_form.article_publication_year.data
             entry.description = article_form.article_description.data
             entry.link = article_form.article_link.data
+            corpus = entry.corpus
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
+            entry.tf = Counter(filtered_corpus)
             entry.document_status = submit
         db.session.commit()
         flash(
@@ -1284,6 +1303,13 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
                 document_status=submit,
                 tf=Counter(book_form.book_description.data))
             db.session.add(book)
+            corpus = book.corpus
+            db.session.commit()
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            book.tf = Counter(filtered_corpus)
+            if submit=='published':
+                update_idf(post_tf=book.tf, post_status='published', doc_id=book.id)
         else:
             entry.title = book_form.book_title.data
             entry.volume = book_form.book_volume.data
@@ -1300,6 +1326,11 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             entry.year = book_form.book_publication_year.data
             entry.description = book_form.book_description.data
             entry.link = book_form.book_link.data
+            corpus = entry.corpus
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
+            entry.tf = Counter(filtered_corpus)
             entry.document_status = submit
         db.session.commit()
         flash(
@@ -1327,6 +1358,13 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
                 document_status=submit,
                 tf=Counter(journal_form.article_description.data))
             db.session.add(article)
+            corpus = article.corpus
+            db.session.commit()
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            article.tf = Counter(filtered_corpus)
+            if submit=='published':
+                update_idf(post_tf=article.tf, post_status='published', doc_id=article.id)
         else:
             entry.title=journal_form.article_title.data
             entry.author_first_name=journal_form.article_author_first_name.data
@@ -1341,7 +1379,12 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             entry.year=journal_form.article_publication_year.data
             entry.description=journal_form.article_description.data
             entry.link=journal_form.article_link.data
-            entry.document_status=submit
+            corpus = entry.corpus
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
+            entry.tf = Counter(filtered_corpus)
+            entry.document_status = submit
         db.session.commit()
         flash(
             'Article \"{}\" successfully saved'.format(
@@ -1369,6 +1412,13 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
                 document_status=submit,
                 tf=Counter(law_form.law_description.data))
             db.session.add(law)
+            corpus = law.corpus
+            db.session.commit()
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            law.tf = Counter(filtered_corpus)
+            if submit=='published':
+                update_idf(post_tf=law.tf, post_status='published', doc_id=law.id)
         else:
             entry.day=law_form.law_enactment_day.data
             entry.month=law_form.law_enactment_month.data
@@ -1384,7 +1434,12 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             entry.link=law_form.law_link.data
             entry.govt_body=law_form.law_government_body.data
             entry.section=law_form.law_section.data
-            entry.document_status=submit
+            corpus = entry.corpus
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
+            entry.tf = Counter(filtered_corpus)
+            entry.document_status = submit
         db.session.commit()
         flash(
             'Law \"{}\" successfully saved'.format(
@@ -1409,6 +1464,13 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
                 document_status=submit,
                 tf=Counter(video_form.video_description.data))
             db.session.add(video)
+            corpus = video.corpus
+            db.session.commit()
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            video.tf = Counter(filtered_corpus)
+            if submit=='published':
+                update_idf(post_tf=video.tf, post_status='published', doc_id=video.id)
         else:
             entry.title=video_form.video_title.data
             entry.author_first_name=video_form.director_first_name.data
@@ -1421,7 +1483,12 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             entry.year=video_form.video_publication_year.data
             entry.description=video_form.video_description.data
             entry.link=video_form.video_link.data
-            entry.document_status=submit
+            corpus = entry.corpus
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
+            entry.tf = Counter(filtered_corpus)
+            entry.document_status = submit
         db.session.commit()
         flash(
             'Video \"{}\" successfully saved'.format(
@@ -1444,6 +1511,13 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
                 link=report_form.report_link.data,
                 document_status=submit)
             db.session.add(report)
+            corpus = report.corpus
+            db.session.commit()
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            report.tf = Counter(filtered_corpus)
+            if submit=='published':
+                update_idf(post_tf=report.tf, post_status='published', doc_id=report.id)
         else:
             entry.title=report_form.report_title.data
             entry.author_first_name=report_form.report_author_first_name.data
@@ -1454,7 +1528,12 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             entry.year=report_form.report_publication_year.data
             entry.description=report_form.report_description.data
             entry.link=report_form.report_link.data
-            entry.document_status=submit
+            corpus = entry.corpus
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
+            entry.tf = Counter(filtered_corpus)
+            entry.document_status = submit
         db.session.commit()
         flash(
             'Report \"{}\" successfully saved'.format(
@@ -1476,9 +1555,15 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
                 description=other_form.other_description.data,
                 link=other_form.other_link.data,
                 other_type=other_form.other_document_type.data,
-                document_status=submit,
-                tf=Counter(other_form.other_description.data))
+                document_status=submit)
             db.session.add(other)
+            corpus = other.corpus
+            db.session.commit()
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            other.tf = Counter(filtered_corpus)
+            if submit=='published':
+                update_idf(post_tf=other.tf, post_status='published', doc_id=other.id)
         else:
             entry.title=other_form.other_title.data
             entry.author_first_name=other_form.other_author_first_name.data
@@ -1490,11 +1575,53 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
             entry.description=other_form.other_description.data
             entry.link=other_form.other_link.data
             entry.other_type=other_form.other_document_type.data
-            entry.document_status=submit
+            corpus = entry.corpus
+            word_tokens = word_tokenize(corpus)
+            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
+            entry.tf = Counter(filtered_corpus)
+            entry.document_status = submit
         db.session.commit()
         flash(
             'Other \"{}\" successfully saved'.format(
                 other_form.other_title.data), 'form-success')
+
+def update_idf(doc_id, pre_tf={}, pre_status="", post_tf={}, post_status=""):
+    pre_set = set(pre_tf.keys())
+    post_set = set(post_tf.keys())
+    remove_set = pre_set.difference(post_set)
+    add_set = post_set.difference(pre_set)
+    if pre_status == 'published' and post_status != 'published':
+        for i in pre_set:
+            term = Idf.query.get(i)
+            if term != None:
+                term.docs.remove(doc_id)
+    elif pre_status != 'published' and post_status == 'published':
+        for i in post_set:
+            term = Idf.query.get(i)
+            if term != None:
+                term.docs.append(doc_id)
+            else:
+                term = Idf(
+                    term = i,
+                    docs = [doc_id]
+                )
+                db.session.add(term)
+    elif pre_status == 'published' and post_status == 'published':
+        for i in remove_set:
+            term = Idf.query.get(i)
+            if term != None:
+                doc.docs.remove(doc_id)
+        for i in add_set:
+            term = Idf.query.get(i)
+            if term != None:
+                term.docs.append(doc_id)
+            else:
+                term = Idf(
+                    term = i,
+                    docs = [doc_id]
+                )
+                db.session.add(term)
 
 @admin.route('/upload_and_download', methods=['GET', 'POST'])
 @csrf.exempt
