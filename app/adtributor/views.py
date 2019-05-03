@@ -1614,125 +1614,6 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
             'Other \"{}\" successfully saved'.format(
                 other_form.other_title.data), 'form-success')
 
-<<<<<<< HEAD
-@admin.route('/download', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def download():
-    file_path = '/Users/saraines/Desktop/'
-    documents = Document.query.order_by(Document.id.desc()).all()
-
-    #BOOK
-    with io.open(file_path + 'book.csv', 'w', newline='') as csvfile:
-
-        csv_writer = csv.writer(csvfile)
-
-        csv_writer.writerow(['Title', 'Author First Name', 'Author Last Name', 'Volume', 'Edition', 'Series', 'Publisher',
-            'Publication Month', 'Publication Year', 'Description', 'Link', 'Posted Date',
-            'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
-
-        for d in documents:
-            if d.doc_type == "book":
-                csv_writer.writerow([d.title, d.author_first_name, d.author_last_name, d.volume, d.edition, d.series, d.name,
-                    d.month, d.year, d.description, d.link, d.posted_date,
-                    d.last_edited_date, d.posted_by, d.last_edited_by, d.document_status])
-
-    #NEWS ARTICLE
-    with io.open(file_path + 'news_article.csv', 'w', newline='') as csvfile:
-
-        csv_writer = csv.writer(csvfile)
-
-        csv_writer.writerow(['Title', 'Author First Name', 'Author Last Name', 'Publication',
-            'Publication Day', 'Publication Month', 'Publication Year', 'Description', 'Link', 'Posted Date',
-            'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
-
-        for d in documents:
-            if d.doc_type == "article":
-                csv_writer.writerow([d.title, d.author_first_name, d.author_last_name, d.name,
-                    d.day, d.month, d.year, d.description, d.link, d.posted_date,
-                    d.last_edited_date, d.posted_by, d.last_edited_by, d.document_status])
-
-    #JOURNAL ARTICLE
-    with io.open(file_path + 'journal_article.csv', 'w', newline='') as csvfile:
-
-        csv_writer = csv.writer(csvfile)
-
-        csv_writer.writerow(['Title', 'Author First Name', 'Author Last Name', 'Publication',
-            'Volume', 'Start Page', 'End Page', 'Publication Day', 'Publication Month', 'Publication Year', 'Description',
-            'Link', 'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
-
-        for d in documents:
-            if d.doc_type == "journal":
-                csv_writer.writerow([d.title, d.author_first_name, d.author_last_name, d.name,
-                    d.volume, d.page_start, d.page_end, d.day, d.month, d.year, d.description,
-                    d.link, d.posted_date, d.last_edited_date, d.posted_by, d.last_edited_by, d.document_status])
-
-    #LAW
-    with io.open(file_path + 'law.csv', 'w', newline='') as csvfile:
-
-        csv_writer = csv.writer(csvfile)
-
-        csv_writer.writerow(['Title', 'Citation', 'Government Body', 'Section',
-            'Region', 'City', 'State', 'Country', 'Enactment Day',
-            'Enactment Month', 'Enactment Year', 'Description', 'Link',
-            'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
-
-        for d in documents:
-            if d.doc_type == "law":
-                csv_writer.writerow([d.title, d.citation, d.govt_body, d.section,
-                    d.region, d.city, d.state, d.country, d.day,
-                    d.month, d.year, d.description, d.link,
-                    d.posted_date, d.last_edited_date, d.posted_by, d.last_edited_by, d.document_status])
-
-    #VIDEO
-    with io.open(file_path + 'video.csv', 'w', newline='') as csvfile:
-
-        csv_writer = csv.writer(csvfile)
-
-        csv_writer.writerow(['Title', 'First Name', 'Last Name', 'Source',
-            'Day', 'Month', 'Year', 'Description', 'Link',
-            'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
-
-        for d in documents:
-            if d.doc_type == "video":
-                csv_writer.writerow([d.title, d.author_first_name, d.author_last_name,
-                    d.post_source, d.day, d.month, d.year, d.description, d.link,
-                    d.posted_date, d.last_edited_date, d.posted_by, d.last_edited_by, d.document_status])
-
-    #REPORT
-    with io.open(file_path + 'report.csv', 'w', newline='') as csvfile:
-
-        csv_writer = csv.writer(csvfile)
-
-        csv_writer.writerow(['Title', 'First Name', 'Last Name', 'Publisher',
-            'Day', 'Month', 'Year', 'Description', 'Link',
-            'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
-
-        for d in documents:
-            if d.doc_type == "report":
-                csv_writer.writerow([d.title, d.author_first_name, d.author_last_name, d.name,
-                    d.day, d.month, d.year, d.description, d.link,
-                    d.posted_date, d.last_edited_date, d.posted_by, d.last_edited_by, d.document_status])
-
-    #OTHER
-    with io.open(file_path + 'other.csv', 'w', newline='') as csvfile:
-
-        csv_writer = csv.writer(csvfile)
-
-        csv_writer.writerow(['Title', 'Author First Name', 'Author Last Name', 'Other Document Type',
-            'Publication Day', 'Publication Month', 'Publication Year', 'Description', 'Link',
-            'Posted Date', 'Last Edited Date', 'Posted By', 'Last Edited By', 'Status'])
-
-        for d in documents:
-            if d.doc_type == "other":
-                csv_writer.writerow([d.title, d.author_first_name, d.author_last_name, d.other_type,
-                    d.day, d.month, d.year, d.description, d.link,
-                    d.posted_date, d.last_edited_date, d.posted_by, d.last_edited_by, d.document_status])
-
-    return redirect(url_for('admin.index'))
-
-@admin.route('/upload', methods=['GET', 'POST'])
-=======
 def update_idf(doc_id, pre_tf={}, pre_status="", post_tf={}, post_status=""):
     pre_set = set(pre_tf.keys())
     post_set = set(post_tf.keys())
@@ -1771,7 +1652,6 @@ def update_idf(doc_id, pre_tf={}, pre_status="", post_tf={}, post_status=""):
                 db.session.add(term)
 
 @admin.route('/upload_and_download', methods=['GET', 'POST'])
->>>>>>> 1e7e7fb373ca760ecc967f3db1508ecf32a9ee15
 @csrf.exempt
 @login_required
 @admin_required
@@ -1984,9 +1864,6 @@ def upload_and_download():
             'Download Successful', 'form-success')
             return render_template('admin/upload.html', form = download_form)
 
-<<<<<<< HEAD
-    return render_template('admin/upload.html')
-=======
         else:
             f = request.files['book-file']
             name = f.filename
@@ -2256,4 +2133,3 @@ def upload_and_download():
         return render_template('admin/upload.html', form = download_form)
 
     return render_template('admin/upload.html', form = download_form)
->>>>>>> 1e7e7fb373ca760ecc967f3db1508ecf32a9ee15

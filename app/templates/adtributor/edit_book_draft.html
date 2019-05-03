@@ -35,27 +35,15 @@
                       {{ f.render_form_field(book_form.book_author_last_name[0], name="Last Name") }}
                       </div>
                   </div>
-<<<<<<< HEAD
-                   <div class = "fields author" id='author-1'>
-                     <div class = "four wide field">
-                       <label for="">Add another editor</label>
-                       <a class="ui fluid labeled icon button" href="javascript:addAuthor();">
-                         <i class="icon plus"></i>
-                         Add editor
-                      </a>
-                     </div>
-                      <div class = "six wide field">
-=======
                    <div class = "fields" id="beforeMe">
                       <div class = "eight wide field">
->>>>>>> 1e7e7fb373ca760ecc967f3db1508ecf32a9ee15
                       {{ f.render_form_field(book_form.book_editor_first_name, name="Editor First Name") }}
                       </div>
-                      <div class = "six wide field">
+                      <div class = "eight wide field">
                       {{ f.render_form_field(book_form.book_editor_last_name, name="Editor Last Name") }}
                       </div>
                   </div>
-                  <div class = "three fields" id='beforeMe'>
+                  <div class = "three fields">
                       <div class = "field">
                       {{ f.render_form_field(book_form.book_volume, name="Volume") }}
                       </div>
@@ -108,28 +96,6 @@
 </div>
 <script>
   $('.menu .item').tab();
-<<<<<<< HEAD
-  function addAuthor() {
-    var numItems = $('.author').length
-    $("#beforeMe").before('<div class = "fields author" id="author-' + (numItems + 1) + '">\
-      <div class = "four wide field">\
-        <label for="">Remove this editor</label>\
-        <a class="ui fluid labeled icon button" href="javascript:deleteAuthor(' + (numItems + 1) + ')";><i class="icon close"></i>Remove editor</a>\
-      </div>\
-      <div class="six wide field">\
-        <label for="lname">Author First Name</label>\
-       <input id="lname" type="text" placeholder="Author First Name">\
-      </div>\
-      <div class="six wide field">\
-        <label for="fname">Author Last Name</label>\
-        <input id="fname"  type="text" placeholder="Author Last Name">\
-      </div>\
-   </div>')
-  }
-  function deleteAuthor(author_id) {
-      ( "#author-" + author_id ).remove();
-  }
-=======
   $(document).ready(function() {
       {% for i in range(book_form.book_author_first_name | length) %}
           {% if i != 0 %}
@@ -172,7 +138,6 @@
       $(id).remove();
   }
 
->>>>>>> 1e7e7fb373ca760ecc967f3db1508ecf32a9ee15
 </script>
 
 {% endblock %}
