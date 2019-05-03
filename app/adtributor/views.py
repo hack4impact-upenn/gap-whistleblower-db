@@ -23,7 +23,7 @@ from app.adtributor.forms import (
     DownloadForm
 )
 from app.decorators import contributor_required, admin_required
-from app.models import EditableHTML, Role, User, Tag, Suggestion, Document, Idf
+from app.models import EditableHTML, Role, User, Tag, Suggestion, Document, Tagged, Idf
 
 from .. import csrf
 
@@ -389,21 +389,22 @@ def view_book_draft(id):
         book_editor_first_name = book_entry.editor_first_name,
         book_editor_last_name = book_entry.editor_last_name,
         book_series = book_entry.series,
-        book_author_first_name = book_entry.author_first_name,
-        book_author_last_name = book_entry.author_last_name,
+        book_author_first_name = book_entry.author_first_name.split(','),
+        book_author_last_name = book_entry.author_last_name.split(','),
         book_publisher_name = book_entry.name,
         book_publication_month = book_entry.month,
         book_publication_year = book_entry.year,
         book_description = book_entry.description,
+        book_tags = [str(t.tag_id) for t in book_entry.tags],
         book_link = book_entry.link)
 
     if request.method == 'POST':
         if book_form.validate_on_submit():
             if "Save Book" in request.form.values():
-                save_or_submit_doc(book_form, doc_type='book', submit='draft', new = False, entry = book_entry)
+                save_or_submit_doc(book_form, doc_type='book', submit='draft', entry = book_entry)
 
             if "Submit Book" in request.form.values():
-                save_or_submit_doc(book_form, doc_type='book', submit=dest_from_role(), new = False, entry = book_entry)
+                save_or_submit_doc(book_form, doc_type='book', submit=dest_from_role(), entry = book_entry)
 
             return view_all_drafts()
 
@@ -421,23 +422,24 @@ def view_news_article_draft(id):
     article_form = ArticleForm(
                     doc_type = "article",
                     article_title = article_entry.title,
-                    article_author_first_name = article_entry.author_first_name,
-                    article_author_last_name = article_entry.author_last_name,
+                    article_author_first_name = article_entry.author_first_name.split(','),
+                    article_author_last_name = article_entry.author_last_name.split(','),
                     article_publication = article_entry.name,
                     article_publication_day = article_entry.day,
                     article_publication_month = article_entry.month,
                     article_publication_year = article_entry.year,
                     article_description = article_entry.description,
+                    article_tags=[str(t.tag_id) for t in article_entry.tags],
                     article_link = article_entry.link,
                     document_status = "draft")
 
     if request.method == 'POST':
         if article_form.validate_on_submit():
             if "Save Article" in request.form.values():
-                save_or_submit_doc(article_form, doc_type='article', submit='draft', new = False, entry=article_entry)
+                save_or_submit_doc(article_form, doc_type='article', submit='draft',entry=article_entry)
 
             if "Submit Article" in request.form.values():
-                save_or_submit_doc(article_form, doc_type='article', submit=dest_from_role(), new = False, entry=article_entry)
+                save_or_submit_doc(article_form, doc_type='article', submit=dest_from_role(), entry=article_entry)
 
             return view_all_drafts()
 
@@ -454,8 +456,8 @@ def view_journal_article_draft(id):
     journal_form = JournalArticleForm(
                     doc_type = "journal",
                     article_title = journal_entry.title,
-                    article_author_first_name = journal_entry.author_first_name,
-                    article_author_last_name = journal_entry.author_last_name,
+                    article_author_first_name = journal_entry.author_first_name.split(','),
+                    article_author_last_name = journal_entry.author_last_name.split(','),
                     publisher_name = journal_entry.name,
                     volume = journal_entry.volume,
                     start_page = journal_entry.page_start,
@@ -465,6 +467,7 @@ def view_journal_article_draft(id):
                     article_publication_month = journal_entry.month,
                     article_publication_year = journal_entry.year,
                     article_description = journal_entry.description,
+                    article_tags=[str(t.tag_id) for t in journal_entry.tags],
                     article_link = journal_entry.link,
                     document_status = "draft")
 
@@ -472,10 +475,10 @@ def view_journal_article_draft(id):
         if journal_form.validate_on_submit():
 
             if "Save Article" in request.form.values():
-                save_or_submit_doc(journal_form, doc_type='journal', submit='draft', new = False, entry=journal_entry)
+                save_or_submit_doc(journal_form, doc_type='journal', submit='draft', entry=journal_entry)
 
             if "Submit Article" in request.form.values():
-                save_or_submit_doc(journal_form, doc_type='journal', submit=dest_from_role(), new = False, entry=journal_entry)
+                save_or_submit_doc(journal_form, doc_type='journal', submit=dest_from_role(), entry=journal_entry)
 
             return view_all_drafts()
 
@@ -503,16 +506,17 @@ def view_law_draft(id):
         law_state = law_entry.state,
         law_country = law_entry.country,
         law_description = law_entry.description,
+        law_tags=[str(t.tag_id) for t in law_entry.tags],
         law_link = law_entry.link,
         document_status = "draft")
 
     if request.method == 'POST':
         if law_form.validate_on_submit():
             if "Save Law" in request.form.values():
-                save_or_submit_doc(law_form, doc_type='law', submit='draft', new = False, entry=law_entry)
+                save_or_submit_doc(law_form, doc_type='law', submit='draft', entry=law_entry)
 
             if "Submit Law" in request.form.values():
-                save_or_submit_doc(law_form, doc_type='law', submit=dest_from_role(), new = False, entry=law_entry)
+                save_or_submit_doc(law_form, doc_type='law', submit=dest_from_role(), entry=law_entry)
 
             return view_all_drafts()
 
@@ -529,8 +533,8 @@ def view_video_draft(id):
     video_form = VideoForm(
                     doc_type = "video",
                     video_title = video_entry.title,
-                    director_first_name = video_entry.author_first_name,
-                    director_last_name = video_entry.author_last_name,
+                    director_first_name = video_entry.author_first_name.split(','),
+                    director_last_name = video_entry.author_last_name.split(','),
                     video_post_source = video_entry.post_source,
                     video_publisher = video_entry.name,
                     video_country = video_entry.country,
@@ -538,16 +542,17 @@ def view_video_draft(id):
                     video_publication_month = video_entry.month,
                     video_publication_year = video_entry.year,
                     video_description = video_entry.description,
+                    video_tags=[str(t.tag_id) for t in video_entry.tags],
                     video_link = video_entry.link,
                     document_status = "draft")
 
     if request.method == 'POST':
         if video_form.validate_on_submit():
             if "Save Video" in request.form.values():
-                save_or_submit_doc(video_form, doc_type='video', submit='draft', new = False, entry=video_entry)
+                save_or_submit_doc(video_form, doc_type='video', submit='draft', entry=video_entry)
 
             if "Submit Video" in request.form.values():
-                save_or_submit_doc(video_form, doc_type='video', submit=dest_from_role(), new = False, entry=video_entry)
+                save_or_submit_doc(video_form, doc_type='video', submit=dest_from_role(), entry=video_entry)
 
             return view_all_drafts()
 
@@ -564,21 +569,22 @@ def view_report_draft(id):
     report_form = ReportForm(
         doc_type = "report",
         report_title = report_entry.title,
-        report_author_first_name = report_entry.author_first_name,
-        report_author_last_name = report_entry.author_last_name,
+        report_author_first_name = report_entry.author_first_name.split(','),
+        report_author_last_name = report_entry.author_last_name.split(','),
         report_publisher_name = report_entry.name,
         report_publication_day= report_entry.day,
         report_publication_month = report_entry.month,
         report_publication_year = report_entry.year,
         report_description = report_entry.description,
+        report_tags=[str(t.tag_id) for t in report_entry.tags],
         report_link = report_entry.link)
     if request.method == 'POST':
         if report_form.validate_on_submit():
-            if "Save Report" in request.form.values():
-                save_or_submit_doc(report_form, doc_type='report', submit='draft', new = False, entry=report_entry)
+            if "Save Book" in request.form.values():
+                save_or_submit_doc(report_form, doc_type='report', submit='draft', entry=report_entry)
 
-            if "Submit Report" in request.form.values():
-                save_or_submit_doc(report_form, doc_type='report', submit=dest_from_role(), new = False, entry=report_entry)
+            if "Submit Book" in request.form.values():
+                save_or_submit_doc(report_form, doc_type='report', submit=dest_from_role(), entry=report_entry)
 
             return view_all_drafts()
 
@@ -596,22 +602,23 @@ def view_other_draft(id):
                     doc_type = "other",
                     other_document_type = other_entry.other_type,
                     other_title = other_entry.title,
-                    other_author_first_name = other_entry.author_first_name,
-                    other_author_last_name = other_entry.author_last_name,
+                    other_author_first_name = other_entry.author_first_name.split(','),
+                    other_author_last_name = other_entry.author_last_name.split(','),
                     other_publication_day = other_entry.day,
                     other_publication_month = other_entry.month,
                     other_publication_year = other_entry.year,
                     other_description = other_entry.description,
+                    other_tags=[str(t.tag_id) for t in other_entry.tags],
                     other_link = other_entry.link,
                     document_status = "draft")
 
     if request.method == 'POST':
         if other_form.validate_on_submit():
             if "Save Other" in request.form.values():
-                save_or_submit_doc(other_form, doc_type='other', submit='draft', new = False, entry=other_entry)
+                save_or_submit_doc(other_form, doc_type='other', submit='draft', entry=other_entry)
 
-            if "Submit Other" in request.form.values():
-                save_or_submit_doc(other_form, doc_type='other', submit=dest_from_role(), new = False, entry=other_entry)
+            if "Submit Law" in request.form.values():
+                save_or_submit_doc(other_form, doc_type='other', submit=dest_from_role(), entry=other_entry)
 
             return view_all_drafts()
 
@@ -641,10 +648,10 @@ def submit():
             if book_form.validate_on_submit():
 
                 if "Save Book" in request.form.values():
-                    save_or_submit_doc(book_form, doc_type='book', submit='draft', new = True)
+                    save_or_submit_doc(book_form, doc_type='book', submit='draft')
 
                 if "Submit Book" in request.form.values():
-                    save_or_submit_doc(book_form, doc_type='book', submit=dest_from_role(), new = True)
+                    save_or_submit_doc(book_form, doc_type='book', submit=dest_from_role())
 
                 return view_all_drafts()
 
@@ -656,10 +663,10 @@ def submit():
             if article_form.validate_on_submit():
 
                 if "Save Article" in request.form.values():
-                    save_or_submit_doc(article_form, doc_type='article', submit='draft', new = True)
+                    save_or_submit_doc(article_form, doc_type='article', submit='draft')
 
                 if "Submit Article" in request.form.values():
-                    save_or_submit_doc(article_form, doc_type='article', submit=dest_from_role(), new = True)
+                    save_or_submit_doc(article_form, doc_type='article', submit=dest_from_role())
 
                 return view_all_drafts()
 
@@ -671,10 +678,10 @@ def submit():
             if journal_form.validate_on_submit():
 
                 if "Save Article" in request.form.values():
-                    save_or_submit_doc(journal_form, doc_type='journal', submit='draft', new = True)
+                    save_or_submit_doc(journal_form, doc_type='journal', submit='draft')
 
                 if "Submit Article" in request.form.values():
-                    save_or_submit_doc(journal_form, doc_type='journal', submit=dest_from_role(), new = True)
+                    save_or_submit_doc(journal_form, doc_type='journal', submit=dest_from_role())
 
                 return view_all_drafts()
 
@@ -686,10 +693,10 @@ def submit():
             if law_form.validate_on_submit():
 
                 if "Save Law" in request.form.values():
-                    save_or_submit_doc(law_form, doc_type='law', submit='draft', new = True)
+                    save_or_submit_doc(law_form, doc_type='law', submit='draft')
 
                 if "Submit Law" in request.form.values():
-                    save_or_submit_doc(law_form, doc_type='law', submit=dest_from_role(), new = True)
+                    save_or_submit_doc(law_form, doc_type='law', submit=dest_from_role())
 
                 return view_all_drafts()
 
@@ -701,10 +708,10 @@ def submit():
             if video_form.validate_on_submit():
 
                 if "Save Video" in request.form.values():
-                    save_or_submit_doc(video_form, doc_type='video', submit='draft', new = True)
+                    save_or_submit_doc(video_form, doc_type='video', submit='draft')
 
                 if "Submit Video" in request.form.values():
-                    save_or_submit_doc(video_form, doc_type='video', submit=dest_from_role(), new = True)
+                    save_or_submit_doc(video_form, doc_type='video', submit=dest_from_role())
 
                 return view_all_drafts()
 
@@ -716,10 +723,10 @@ def submit():
             if report_form.validate_on_submit():
 
                 if "Save Report" in request.form.values():
-                    save_or_submit_doc(report_form, doc_type='report', submit='draft', new = True)
+                    save_or_submit_doc(report_form, doc_type='report', submit='draft')
 
                 if "Submit Report" in request.form.values():
-                    save_or_submit_doc(report_form, doc_type='report', submit=dest_from_role(), new = True)
+                    save_or_submit_doc(report_form, doc_type='report', submit=dest_from_role())
 
                 return view_all_drafts()
 
@@ -731,10 +738,10 @@ def submit():
             if other_form.validate_on_submit():
 
                 if "Save Other" in request.form.values():
-                    save_or_submit_doc(other_form, doc_type='other', submit='draft', new = True)
+                    save_or_submit_doc(other_form, doc_type='other', submit='draft')
 
                 if "Submit Other" in request.form.values():
-                    save_or_submit_doc(other_form, doc_type='other', submit=dest_from_role(), new = True)
+                    save_or_submit_doc(other_form, doc_type='other', submit=dest_from_role())
 
                 return view_all_drafts()
 
@@ -764,15 +771,16 @@ def contribution_book(id):
         book_publication_month = book_entry.month,
         book_publication_year = book_entry.year,
         book_description = book_entry.description,
+        book_tags=[str(t.tag_id) for t in book_entry.tags],
         book_link = book_entry.link)
 
     if request.method == 'POST':
         if book_form.validate_on_submit():
             if "Save Book" in request.form.values():
-                save_or_submit_doc(book_form, doc_type='book', submit="under review", new = False, entry=book_entry)
+                save_or_submit_doc(book_form, doc_type='book', submit="under review", entry=book_entry)
 
             if "Submit Book" in request.form.values():
-                save_or_submit_doc(book_form, doc_type='book', submit="published", new = False, entry=book_entry)
+                save_or_submit_doc(book_form, doc_type='book', submit="published", entry=book_entry)
 
             return view_all_drafts()
 
@@ -794,16 +802,17 @@ def contribution_article(id):
                     article_publication_month = article_entry.month,
                     article_publication_year = article_entry.year,
                     article_description = article_entry.description,
+                    article_tags=[str(t.tag_id) for t in article_entry.tags],
                     article_link = article_entry.link,
                     document_status = "draft")
 
     if request.method == 'POST':
         if article_form.validate_on_submit():
             if "Save Article" in request.form.values():
-                save_or_submit_doc(article_form, doc_type='article', submit="under review", new = False, entry=article_entry)
+                save_or_submit_doc(article_form, doc_type='article', submit="under review", entry=article_entry)
 
             if "Submit Article" in request.form.values():
-                save_or_submit_doc(article_form, doc_type='article', submit="published", new = False, entry=article_entry)
+                save_or_submit_doc(article_form, doc_type='article', submit="published", entry=article_entry)
 
             return view_all_drafts()
 
@@ -829,16 +838,17 @@ def contribution_journal(id):
                     article_publication_month = journal_entry.month,
                     article_publication_year = journal_entry.year,
                     article_description = journal_entry.description,
+                    article_tags=[str(t.tag_id) for t in journal_entry.tags],
                     article_link = journal_entry.link,
                     document_status = "draft")
 
     if request.method == 'POST':
         if journal_form.validate_on_submit():
             if "Save Article" in request.form.values():
-                save_or_submit_doc(journal_form, doc_type='journal', submit="under review", new = False, entry=journal_entry)
+                save_or_submit_doc(journal_form, doc_type='journal', submit="under review", entry=journal_entry)
 
             if "Submit Article" in request.form.values():
-                save_or_submit_doc(journal_form, doc_type='journal', submit="published", new = False, entry=journal_entry)
+                save_or_submit_doc(journal_form, doc_type='journal', submit="published", entry=journal_entry)
 
             return view_all_drafts()
 
@@ -865,16 +875,17 @@ def contribution_law(id):
         law_state = law_entry.state,
         law_country = law_entry.country,
         law_description = law_entry.description,
+        law_tags=[str(t.tag_id) for t in law_entry.tags],
         law_link = law_entry.link,
         document_status = "draft")
 
     if request.method == 'POST':
         if law_form.validate_on_submit():
             if "Save Law" in request.form.values():
-                save_or_submit_doc(law_form, doc_type='law', submit="under review", new = False, entry=law_entry)
+                save_or_submit_doc(law_form, doc_type='law', submit="under review", entry=law_entry)
 
             if "Submit Law" in request.form.values():
-                save_or_submit_doc(law_form, doc_type='law', submit="published", new = False, entry=law_entry)
+                save_or_submit_doc(law_form, doc_type='law', submit="published", entry=law_entry)
 
             return view_all_drafts()
 
@@ -897,16 +908,17 @@ def contribution_video(id):
                     video_publication_month = video_entry.month,
                     video_publication_year = video_entry.year,
                     video_description = video_entry.description,
+                    video_tags=[str(t.tag_id) for t in video_entry.tags],
                     video_link = video_entry.link,
                     document_status = "draft")
 
     if request.method == 'POST':
         if video_form.validate_on_submit():
             if "Save Video" in request.form.values():
-                save_or_submit_doc(video_form, doc_type='video', submit="under review", new = False, entry=video_entry)
+                save_or_submit_doc(video_form, doc_type='video', submit="under review", entry=video_entry)
 
             if "Submit Video" in request.form.values():
-                save_or_submit_doc(video_form, doc_type='video', submit="published", new = False, entry=video_entry)
+                save_or_submit_doc(video_form, doc_type='video', submit="published", entry=video_entry)
 
             return view_all_drafts()
 
@@ -928,16 +940,17 @@ def contribution_report(id):
                     report_publication_month = report_entry.month,
                     report_publication_year = report_entry.year,
                     report_description = report_entry.description,
+                    report_tags=[str(t.tag_id) for t in report_entry.tags],
                     report_link = report_entry.link,
                     document_status = 'draft')
 
     if request.method == 'POST':
         if report_form.validate_on_submit():
             if "Save Report" in request.form.values():
-                save_or_submit_doc(video_form, doc_type='report', submit="under review", new = False, entry=report_entry)
+                save_or_submit_doc(video_form, doc_type='report', submit="under review", entry=report_entry)
 
             if "Submit Report" in request.form.values():
-                save_or_submit_doc(video_form, doc_type='report', submit="published", new = False, entry=report_entry)
+                save_or_submit_doc(video_form, doc_type='report', submit="published", entry=report_entry)
 
             return view_all_drafts()
 
@@ -960,16 +973,17 @@ def contribution_other(id):
                     other_publication_month = other_entry.month,
                     other_publication_year = other_entry.year,
                     other_description = other_entry.description,
-                    other_link = other_entry.link,
+                    other_tags=[str(t.tag_id) for t in other_entry.tags],
+                    other_link=other_entry.link,
                     document_status = "draft")
 
     if request.method == 'POST':
         if other_form.validate_on_submit():
             if "Save Other" in request.form.values():
-                save_or_submit_doc(other_form, doc_type='other', submit="under review", new = False, entry=other_entry)
+                save_or_submit_doc(other_form, doc_type='other', submit="under review", entry=other_entry)
 
             if "Submit Other" in request.form.values():
-                save_or_submit_doc(other_form, doc_type='other', submit="published", new = False, entry=other_entry)
+                save_or_submit_doc(other_form, doc_type='other', submit="published", entry=other_entry)
 
             return view_all_drafts()
 
@@ -991,10 +1005,10 @@ def suggestion_book_draft(id):
     if request.method == 'POST':
         if book_form.validate_on_submit():
             if "Save Book" in request.form.values():
-                save_or_submit_doc(book_form, doc_type='book', submit='draft', new = True)
+                save_or_submit_doc(book_form, doc_type='book', submit='draft', entry=book_entry)
 
             if "Submit Book" in request.form.values():
-                save_or_submit_doc(book_form, doc_type='book', submit='published', new = True)
+                save_or_submit_doc(book_form, doc_type='book', submit='published', entry=book_entry)
 
             return review_suggestions()
 
@@ -1016,10 +1030,10 @@ def suggestion_news_article_draft(id):
     if request.method == 'POST':
         if article_form.validate_on_submit():
             if "Save Article" in request.form.values():
-                save_or_submit_doc(article_form, doc_type='article', submit='draft', new = True)
+                save_or_submit_doc(article_form, doc_type='article', submit='draft', entry=article_entry)
 
             if "Submit Article" in request.form.values():
-                save_or_submit_doc(article_form, doc_type='article', submit='published', new = True)
+                save_or_submit_doc(article_form, doc_type='article', submit='published', entry=article_entry)
 
             return review_suggestions()
 
@@ -1041,10 +1055,10 @@ def suggestion_journal_article_draft(id):
     if request.method == 'POST':
         if journal_form.validate_on_submit():
             if "Save Article" in request.form.values():
-                save_or_submit_doc(journal_form, doc_type='journal', submit='draft', new = True)
+                save_or_submit_doc(journal_form, doc_type='journal', submit='draft', entry=journal_entry)
 
             if "Submit Article" in request.form.values():
-                save_or_submit_doc(journal_form, doc_type='journal', submit='published', new = True)
+                save_or_submit_doc(journal_form, doc_type='journal', submit='published', entry=journal_entry)
 
             return review_suggestions()
 
@@ -1068,10 +1082,10 @@ def suggestion_law_draft(id):
     if request.method == 'POST':
         if law_form.validate_on_submit():
             if "Save Law" in request.form.values():
-                save_or_submit_doc(law_form, doc_type='law', submit='draft', new = True)
+                save_or_submit_doc(law_form, doc_type='law', submit='draft', entry=law_entry)
 
             if "Submit Law" in request.form.values():
-                save_or_submit_doc(law_form, doc_type='law', submit='published', new = True)
+                save_or_submit_doc(law_form, doc_type='law', submit='published', entry=law_entry)
 
             return review_suggestions()
 
@@ -1093,10 +1107,10 @@ def suggestion_video_draft(id):
     if request.method == 'POST':
         if video_form.validate_on_submit():
             if "Save Video" in request.form.values():
-                save_or_submit_doc(video_form, doc_type='video', submit='draft', new = True)
+                save_or_submit_doc(video_form, doc_type='video', submit='draft', entry=video_entry)
 
             if "Submit Video" in request.form.values():
-                save_or_submit_doc(video_form, doc_type='video', submit='published', new = True)
+                save_or_submit_doc(video_form, doc_type='video', submit='published', entry=video_entry)
 
             return review_suggestions()
 
@@ -1118,10 +1132,10 @@ def suggestion_report_draft(id):
     if request.method == 'POST':
         if report_form.validate_on_submit():
             if "Save Report" in request.form.values():
-                save_or_submit_doc(report_form, doc_type='report', submit='draft', new = True)
+                save_or_submit_doc(report_form, doc_type='report', submit='draft', entry=report_entry)
 
             if "Submit Report" in request.form.values():
-                save_or_submit_doc(report_form, doc_type='report', submit='published', new = True)
+                save_or_submit_doc(report_form, doc_type='report', submit='published', entry=report_entry)
 
             return review_suggestions()
 
@@ -1143,10 +1157,10 @@ def suggestion_other_draft(id):
     if request.method == 'POST':
         if other_form.validate_on_submit():
             if "Save Other" in request.form.values():
-                save_or_submit_doc(other_form, doc_type='other', submit='draft', new = True)
+                save_or_submit_doc(other_form, doc_type='other', submit='draft', entry=other_entry)
 
             if "Submit Other" in request.form.values():
-                save_or_submit_doc(other_form, doc_type='other', submit='published', new = True)
+                save_or_submit_doc(other_form, doc_type='other', submit='published', entry=other_entry)
 
             return review_suggestions()
 
@@ -1229,266 +1243,273 @@ def view_broken_links():
     broken = Document.query.filter(Document.broken_link == True)
     return render_template('admin/review_broken.html', broken=broken)
 
-
-def save_or_submit_doc(form, doc_type, submit, new, entry=None):
+def save_or_submit_doc(form, doc_type, submit, entry=None):
     stemmer = SnowballStemmer("english", ignore_stopwords=True)
     stop_words = set(stopwords.words('english'))
+
+    def update_sql_object(object, kwargs):
+        for k, v in kwargs.items():
+            setattr(object, k, v)
+
     if doc_type == 'article':
         article_form = form
-        if new:
-            article = Document(
-                doc_type="news_article",
-                title=article_form.article_title.data,
-                author_first_name=article_form.article_author_first_name.data,
-                author_last_name=article_form.article_author_last_name.data,
-                posted_by=current_user.id,
-                last_edited_by=current_user.first_name + " " + current_user.last_name,
-                name=article_form.article_publication.data,
-                day=article_form.article_publication_day.data,
-                month=article_form.article_publication_month.data,
-                year=article_form.article_publication_year.data,
-                description=article_form.article_description.data,
-                link=article_form.article_link.data,
-                document_status=submit)
-            db.session.add(article)
-            corpus = article.corpus
-            db.session.commit()
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            article.tf = Counter(filtered_corpus)
-            if submit=='published':
-                update_idf(post_tf=article.tf, post_status='published', doc_id=article.id)
+
+        kwargs = {
+            'doc_type': "article",
+            'title': article_form.article_title.data,
+            'author_first_name': ','.join(article_form.article_author_first_name.data),
+            'author_last_name': ','.join(article_form.article_author_last_name.data),
+            'posted_by': current_user.id,
+            'last_edited_by': current_user.first_name + " " + current_user.last_name,
+            'name': article_form.article_publication.data,
+            'day': article_form.article_publication_day.data,
+            'month': article_form.article_publication_month.data,
+            'year': article_form.article_publication_year.data,
+            'description': article_form.article_description.data,
+            'link': article_form.article_link.data,
+            'document_status': submit,
+            'tf': Counter(article_form.book_description.data)
+        }
+        if entry:
+            pre_status = entry.document_status
+            update_sql_object(entry, kwargs)
         else:
-            entry.title = article_form.article_title.data
-            entry.author_first_name = article_form.article_author_first_name.data
-            entry.author_last_name = article_form.article_author_last_name.data
-            entry.posted_by=current_user.id,
-            entry.last_edited_by=current_user.first_name + " " + current_user.last_name,
-            entry.name = article_form.article_publication.data
-            entry.day = article_form.article_publication_day.data
-            entry.month = article_form.article_publication_month.data
-            entry.year = article_form.article_publication_year.data
-            entry.description = article_form.article_description.data
-            entry.link = article_form.article_link.data
-            corpus = entry.corpus
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
-            entry.tf = Counter(filtered_corpus)
-            entry.document_status = submit
+            article = Document(**kwargs)
+            db.session.add(article)
+            entry = article
+            pre_status = entry.document_status
+
+        corpus = entry.corpus
+        word_tokens = word_tokenize(corpus)
+        filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+
+        if not entry or submit=='published':
+            update_idf(pre_tf=entry.tf, pre_status=pre_status, post_tf=Counter(filtered_corpus),
+                   post_status=submit, doc_id=entry.id)
+        entry.tf = Counter(filtered_corpus)
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in article_form.article_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
+
         db.session.commit()
         flash(
             'Article \"{}\" successfully submitted'.format(
                 article_form.article_title.data), 'form-success')
     elif doc_type == 'book':
         book_form = form
-        if new:
-            book = Document(
-                doc_type="book",
-                title=book_form.book_title.data,
-                volume=book_form.book_volume.data,
-                edition=book_form.book_edition.data,
-                series=book_form.book_series.data,
-                author_first_name=book_form.book_author_first_name.data,
-                author_last_name=book_form.book_author_last_name.data,
-                editor_first_name = book_form.book_editor_first_name.data,
-                editor_last_name = book_form.book_editor_last_name.data,
-                posted_by=current_user.id,
-                last_edited_by=current_user.first_name + " " + current_user.last_name,
-                name=book_form.book_publisher_name.data,
-                month=book_form.book_publication_month.data,
-                year=book_form.book_publication_year.data,
-                description=book_form.book_description.data,
-                link=book_form.book_link.data,
-                document_status=submit,
-                tf=Counter(book_form.book_description.data))
-            db.session.add(book)
-            corpus = book.corpus
-            db.session.commit()
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            book.tf = Counter(filtered_corpus)
-            if submit=='published':
-                update_idf(post_tf=book.tf, post_status='published', doc_id=book.id)
+
+        kwargs = {
+            'doc_type': "book",
+            'title': book_form.book_title.data,
+            'volume': book_form.book_volume.data,
+            'edition': book_form.book_edition.data,
+            'series': book_form.book_series.data,
+            'author_first_name': ','.join(book_form.book_author_first_name.data),
+            'author_last_name': ','.join(book_form.book_author_last_name.data),
+            'editor_first_name': book_form.book_editor_first_name.data,
+            'editor_last_name': book_form.book_editor_last_name.data,
+            'posted_by': current_user.id,
+            'last_edited_by': current_user.first_name + " " + current_user.last_name,
+            'name': book_form.book_publisher_name.data,
+            'month': book_form.book_publication_month.data,
+            'year': book_form.book_publication_year.data,
+            'description': book_form.book_description.data,
+            'link': book_form.book_link.data,
+            'document_status': submit,
+            'tf': Counter(book_form.book_description.data)
+        }
+        if entry:
+            pre_status = entry.document_status
+            update_sql_object(entry, kwargs)
         else:
-            entry.title = book_form.book_title.data
-            entry.volume = book_form.book_volume.data
-            entry.edition = book_form.book_edition.data
-            entry.series = book_form.book_series.data
-            entry.editor_first_name = book_form.book_editor_first_name.data
-            entry.editor_last_name = book_form.book_editor_last_name.data
-            entry.author_first_name = book_form.book_author_first_name.data
-            entry.author_last_name = book_form.book_author_last_name.data
-            entry.last_edited_by = current_user.first_name + " " + current_user.last_name,
-            entry.name = book_form.book_publisher_name.data
-            entry.day = book_form.book_publication_day.data
-            entry.month = book_form.book_publication_month.data
-            entry.year = book_form.book_publication_year.data
-            entry.description = book_form.book_description.data
-            entry.link = book_form.book_link.data
-            corpus = entry.corpus
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
-            entry.tf = Counter(filtered_corpus)
-            entry.document_status = submit
+            article = Document(**kwargs)
+            db.session.add(article)
+            entry = article
+            pre_status = entry.document_status
+
+        corpus = entry.corpus
+        word_tokens = word_tokenize(corpus)
+        filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+
+        if not entry or submit=='published':
+            update_idf(pre_tf=entry.tf, pre_status=pre_status, post_tf=Counter(filtered_corpus),
+                   post_status=submit, doc_id=entry.id)
+        entry.tf = Counter(filtered_corpus)
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in book_form.book_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
+
         db.session.commit()
         flash(
             'Book \"{}\" successfully saved'.format(
                 book_form.book_title.data), 'form-success')
     elif doc_type == 'journal':
         journal_form = form
-        if new:
-            article = Document(
-                doc_type="journal_article",
-                title=journal_form.article_title.data,
-                author_first_name=journal_form.article_author_first_name.data,
-                author_last_name=journal_form.article_author_last_name.data,
-                posted_by=current_user.id,
-                last_edited_by=current_user.first_name + " " + current_user.last_name,
-                name=journal_form.publisher_name.data,
-                volume=journal_form.volume.data,
-                page_start=journal_form.start_page.data,
-                page_end=journal_form.end_page.data,
-                day=journal_form.article_publication_day.data,
-                month=journal_form.article_publication_month.data,
-                year=journal_form.article_publication_year.data,
-                description=journal_form.article_description.data,
-                link=journal_form.article_link.data,
-                document_status=submit,
-                tf=Counter(journal_form.article_description.data))
-            db.session.add(article)
-            corpus = article.corpus
-            db.session.commit()
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            article.tf = Counter(filtered_corpus)
-            if submit=='published':
-                update_idf(post_tf=article.tf, post_status='published', doc_id=article.id)
+        kwargs = {
+            'doc_type': "journal",
+            'title': journal_form.article_title.data,
+            'author_first_name': ','.join(journal_form.article_author_first_name.data),
+            'author_last_name': ','.join(journal_form.article_author_last_name.data),
+            'posted_by': current_user.id,
+            'last_edited_by': current_user.first_name + " " + current_user.last_name,
+            'name': journal_form.publisher_name.data,
+            'volume': journal_form.volume.data,
+            'page_start': journal_form.start_page.data,
+            'page_end': journal_form.end_page.data,
+            'day': journal_form.article_publication_day.data,
+            'month': journal_form.article_publication_month.data,
+            'year': journal_form.article_publication_year.data,
+            'description': journal_form.article_description.data,
+            'link': journal_form.article_link.data,
+            'document_status': submit,
+            'tf': Counter(journal_form.article_description.data)
+        }
+        if entry:
+            pre_status = entry.document_status
+            update_sql_object(entry, kwargs)
         else:
-            entry.title=journal_form.article_title.data
-            entry.author_first_name=journal_form.article_author_first_name.data
-            entry.author_last_name=journal_form.article_author_last_name.data
-            entry.last_edited_by=current_user.first_name + " " + current_user.last_name
-            entry.name=journal_form.publisher_name.data
-            entry.volume=journal_form.volume.data
-            entry.page_start=journal_form.start_page.data
-            entry.page_end=journal_form.end_page.data
-            entry.day=journal_form.article_publication_day.data
-            entry.month=journal_form.article_publication_month.data
-            entry.year=journal_form.article_publication_year.data
-            entry.description=journal_form.article_description.data
-            entry.link=journal_form.article_link.data
-            corpus = entry.corpus
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
-            entry.tf = Counter(filtered_corpus)
-            entry.document_status = submit
+            article = Document(**kwargs)
+            db.session.add(article)
+            entry = article
+            pre_status = entry.document_status
+
+        corpus = entry.corpus
+        word_tokens = word_tokenize(corpus)
+        filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+
+        if not entry or submit=='published':
+            update_idf(pre_tf=entry.tf, pre_status=pre_status, post_tf=Counter(filtered_corpus),
+                   post_status=submit, doc_id=entry.id)
+        entry.tf = Counter(filtered_corpus)
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in journal_form.journal_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
+
+        db.session.commit()
+
         db.session.commit()
         flash(
             'Article \"{}\" successfully saved'.format(
                 journal_form.article_title.data), 'form-success')
     elif doc_type == 'law':
         law_form = form
-        if new:
-            law = Document(
-                doc_type="law",
-                day=law_form.law_enactment_day.data,
-                month=law_form.law_enactment_month.data,
-                year=law_form.law_enactment_year.data,
-                citation=law_form.law_citation.data,
-                region=law_form.law_region.data,
-                posted_by=current_user.id,
-                last_edited_by=current_user. first_name + " " + current_user.last_name,
-                title=law_form.law_title.data,
-                description=law_form.law_description.data,
-                city=law_form.law_city.data,
-                state=law_form.law_state.data,
-                country=law_form.law_country.data,
-                link=law_form.law_link.data,
-                govt_body=law_form.law_government_body.data,
-                section=law_form.law_section.data,
-                document_status=submit,
-                tf=Counter(law_form.law_description.data))
-            db.session.add(law)
-            corpus = law.corpus
-            db.session.commit()
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            law.tf = Counter(filtered_corpus)
-            if submit=='published':
-                update_idf(post_tf=law.tf, post_status='published', doc_id=law.id)
+        kwargs = {
+            'doc_type': "law",
+            'day': law_form.law_enactment_day.data,
+            'month': law_form.law_enactment_month.data,
+            'year': law_form.law_enactment_year.data,
+            'citation': law_form.law_citation.data,
+            'region': law_form.law_region.data,
+            'posted_by': current_user.id,
+            'last_edited_by': current_user. first_name + " " + current_user.last_name,
+            'title': law_form.law_title.data,
+            'description': law_form.law_description.data,
+            'city': law_form.law_city.data,
+            'state': law_form.law_state.data,
+            'country': law_form.law_country.data,
+            'link': law_form.law_link.data,
+            'govt_body': law_form.law_government_body.data,
+            'section': law_form.law_section.data,
+            'document_status': submit,
+            'tf': Counter(law_form.law_description.data)
+        }
+
+        if entry:
+            pre_status = entry.document_status
+            update_sql_object(entry, kwargs)
         else:
-            entry.day=law_form.law_enactment_day.data
-            entry.month=law_form.law_enactment_month.data
-            entry.year=law_form.law_enactment_year.data
-            entry.citation=law_form.law_citation.data
-            entry.region=law_form.law_region.data
-            entry.last_edited_by=current_user. first_name + " " + current_user.last_name
-            entry.title=law_form.law_title.data
-            entry.description=law_form.law_description.data
-            entry.city=law_form.law_city.data
-            entry.state=law_form.law_state.data
-            entry.country=law_form.law_country.data
-            entry.link=law_form.law_link.data
-            entry.govt_body=law_form.law_government_body.data
-            entry.section=law_form.law_section.data
-            corpus = entry.corpus
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
-            entry.tf = Counter(filtered_corpus)
-            entry.document_status = submit
+            article = Document(**kwargs)
+            db.session.add(article)
+            entry = article
+            pre_status = entry.document_status
+
+        corpus = entry.corpus
+        word_tokens = word_tokenize(corpus)
+        filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+
+        if not entry or submit=='published':
+            update_idf(pre_tf=entry.tf, pre_status=pre_status, post_tf=Counter(filtered_corpus),
+                   post_status=submit, doc_id=entry.id)
+        entry.tf = Counter(filtered_corpus)
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in law_form.law_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
+
         db.session.commit()
         flash(
             'Law \"{}\" successfully saved'.format(
                 law_form.law_title.data), 'form-success')
     elif doc_type == 'video':
         video_form = form
-        if new:
-            video = Document(
-                doc_type="video",
-                title=video_form.video_title.data,
-                author_first_name=video_form.director_first_name.data,
-                author_last_name=video_form.director_last_name.data,
-                post_source=video_form.video_post_source.data,
-                posted_by=current_user.id,
-                last_edited_by=current_user.first_name + " " + current_user.last_name,
-                name=video_form.video_publisher.data,
-                day=video_form.video_publication_day.data,
-                month=video_form.video_publication_month,
-                year=video_form.video_publication_year.data,
-                description=video_form.video_description.data,
-                link=video_form.video_link.data,
-                document_status=submit,
-                tf=Counter(video_form.video_description.data))
-            db.session.add(video)
-            corpus = video.corpus
-            db.session.commit()
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            video.tf = Counter(filtered_corpus)
-            if submit=='published':
-                update_idf(post_tf=video.tf, post_status='published', doc_id=video.id)
+        kwargs = {
+            'doc_type': "video",
+            'title': video_form.video_title.data,
+            'author_first_name': ','.join(video_form.director_first_name.data),
+            'author_last_name': ','.join(video_form.director_last_name.data),
+            'post_source': video_form.video_post_source.data,
+            'posted_by': current_user.id,
+            'last_edited_by': current_user.first_name + " " + current_user.last_name,
+            'name': video_form.video_publisher.data,
+            'day': video_form.video_publication_day.data,
+            'month': video_form.video_publication_month,
+            'year': video_form.video_publication_year.data,
+            'description': video_form.video_description.data,
+            'link': video_form.video_link.data,
+            'document_status': submit,
+            'tf': Counter(video_form.video_description.data)
+        }
+
+        if entry:
+            pre_status = entry.document_status
+            update_sql_object(entry, kwargs)
         else:
-            entry.title=video_form.video_title.data
-            entry.author_first_name=video_form.director_first_name.data
-            entry.author_last_name=video_form.director_last_name.data
-            entry.post_source=video_form.video_post_source.data
-            entry.last_edited_by=current_user.first_name + " " + current_user.last_name
-            entry.name=video_form.video_publisher.data
-            entry.day=video_form.video_publication_day.data
-            entry.month=video_form.video_publication_month
-            entry.year=video_form.video_publication_year.data
-            entry.description=video_form.video_description.data
-            entry.link=video_form.video_link.data
-            corpus = entry.corpus
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
-            entry.tf = Counter(filtered_corpus)
-            entry.document_status = submit
+            article = Document(**kwargs)
+            db.session.add(article)
+            entry = article
+            pre_status = entry.document_status
+
+        corpus = entry.corpus
+        word_tokens = word_tokenize(corpus)
+        filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+
+        if not entry or submit=='published':
+            update_idf(pre_tf=entry.tf, pre_status=pre_status, post_tf=Counter(filtered_corpus),
+                   post_status=submit, doc_id=entry.id)
+        entry.tf = Counter(filtered_corpus)
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in video_form.video_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
+
         db.session.commit()
         flash(
             'Video \"{}\" successfully saved'.format(
@@ -1496,44 +1517,48 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
 
     elif doc_type == 'report':
         report_form = form
-        if new:
-            report = Document(
-                doc_type="report",
-                title=report_form.report_title.data,
-                author_first_name=report_form.report_author_first_name.data,
-                author_last_name=report_form.report_author_last_name.data,
-                posted_by=current_user.id,
-                name=report_form.report_publisher.data,
-                day=report_form.report_publication_day.data,
-                month=report_form.report_publication_month.data,
-                year=report_form.report_publication_year.data,
-                description=report_form.report_description.data,
-                link=report_form.report_link.data,
-                document_status=submit)
-            db.session.add(report)
-            corpus = report.corpus
-            db.session.commit()
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            report.tf = Counter(filtered_corpus)
-            if submit=='published':
-                update_idf(post_tf=report.tf, post_status='published', doc_id=report.id)
+        kwargs = {
+            'doc_type': "report",
+            'title': report_form.report_title.data,
+            'author_first_name': ','.join(report_form.report_author_first_name.data),
+            'author_last_name': ','.join(report_form.report_author_last_name.data),
+            'posted_by': current_user.id,
+            'name': report_form.report_publisher.data,
+            'day': report_form.report_publication_day.data,
+            'month': report_form.report_publication_month.data,
+            'year': report_form.report_publication_year.data,
+            'description': report_form.report_description.data,
+            'link': report_form.report_link.data,
+            'document_status': submit,
+            'tf': (report_form.report_description.data)
+        }
+        if entry:
+            pre_status = entry.document_status
+            update_sql_object(entry, kwargs)
         else:
-            entry.title=report_form.report_title.data
-            entry.author_first_name=report_form.report_author_first_name.data
-            entry.author_last_name=report_form.report_author_last_name.data
-            entry.name=report_form.report_publisher.data
-            entry.day=report_form.report_publication_day.data
-            entry.month=report_form.report_publication_month.data
-            entry.year=report_form.report_publication_year.data
-            entry.description=report_form.report_description.data
-            entry.link=report_form.report_link.data
-            corpus = entry.corpus
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
-            entry.tf = Counter(filtered_corpus)
-            entry.document_status = submit
+            article = Document(**kwargs)
+            db.session.add(article)
+            entry = article
+            pre_status = entry.document_status
+
+        corpus = entry.corpus
+        word_tokens = word_tokenize(corpus)
+        filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+
+        if not entry or submit=='published':
+            update_idf(pre_tf=entry.tf, pre_status=pre_status, post_tf=Counter(filtered_corpus),
+                   post_status=submit, doc_id=entry.id)
+        entry.tf = Counter(filtered_corpus)
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in report_form.report_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
+
         db.session.commit()
         flash(
             'Report \"{}\" successfully saved'.format(
@@ -1541,46 +1566,49 @@ def save_or_submit_doc(form, doc_type, submit, new, entry=None):
 
     elif doc_type == 'other':
         other_form = form
-        if new:
-            other = Document(
-                doc_type="other",
-                title=other_form.other_title.data,
-                author_first_name=other_form.other_author_first_name.data,
-                author_last_name=other_form.other_author_last_name.data,
-                posted_by=current_user.id,
-                last_edited_by=current_user.first_name + " " + current_user.last_name,
-                day=other_form.other_publication_day.data,
-                month=other_form.other_publication_month.data,
-                year=other_form.other_publication_year.data,
-                description=other_form.other_description.data,
-                link=other_form.other_link.data,
-                other_type=other_form.other_document_type.data,
-                document_status=submit)
-            db.session.add(other)
-            corpus = other.corpus
-            db.session.commit()
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            other.tf = Counter(filtered_corpus)
-            if submit=='published':
-                update_idf(post_tf=other.tf, post_status='published', doc_id=other.id)
+        kwargs = {
+            'doc_type': "other",
+            'title': other_form.other_title.data,
+            'author_first_name': ','.join(other_form.other_author_first_name.data),
+            'author_last_name': ','.join(other_form.other_author_last_name.data),
+            'posted_by': current_user.id,
+            'last_edited_by': current_user.first_name + " " + current_user.last_name,
+            'day': other_form.other_publication_day.data,
+            'month': other_form.other_publication_month.data,
+            'year': other_form.other_publication_year.data,
+            'description': other_form.other_description.data,
+            'link': other_form.other_link.data,
+            'other_type': other_form.other_document_type.data,
+            'document_status': submit,
+            'tf': Counter(other_form.other_description.data)
+        }
+        if entry:
+            pre_status = entry.document_status
+            update_sql_object(entry, kwargs)
         else:
-            entry.title=other_form.other_title.data
-            entry.author_first_name=other_form.other_author_first_name.data
-            entry.author_last_name=other_form.other_author_last_name.data
-            entry.last_edited_by=current_user.first_name + " " + current_user.last_name
-            entry.day=other_form.other_publication_day.data
-            entry.month=other_form.other_publication_month.data
-            entry.year=other_form.other_publication_year.data
-            entry.description=other_form.other_description.data
-            entry.link=other_form.other_link.data
-            entry.other_type=other_form.other_document_type.data
-            corpus = entry.corpus
-            word_tokens = word_tokenize(corpus)
-            filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
-            update_idf(pre_tf=entry.tf, pre_status=entry.document_status, post_tf=Counter(filtered_corpus), post_status=submit, doc_id=entry.id)
-            entry.tf = Counter(filtered_corpus)
-            entry.document_status = submit
+            article = Document(**kwargs)
+            db.session.add(article)
+            entry = article
+            pre_status = entry.document_status
+
+        corpus = entry.corpus
+        word_tokens = word_tokenize(corpus)
+        filtered_corpus = [stemmer.stem(w) for w in word_tokens if not w in stop_words]
+
+        if not entry or submit=='published':
+            update_idf(pre_tf=entry.tf, pre_status=pre_status, post_tf=Counter(filtered_corpus),
+                   post_status=submit, doc_id=entry.id)
+        entry.tf = Counter(filtered_corpus)
+
+        Tagged.query.filter_by(document_id=entry.id).delete()
+        tag_ids = [int(x) for x in other_form.article_tags.data]
+        for tag_id in tag_ids:
+            tagged = Tagged(
+                tag_id=tag_id,
+                document_id=entry.id
+            )
+            db.session.add(tagged)
+
         db.session.commit()
         flash(
             'Other \"{}\" successfully saved'.format(
