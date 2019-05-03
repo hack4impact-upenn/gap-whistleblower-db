@@ -14,7 +14,7 @@
             </a>
             <h2 class="ui header">
                 Add New User
-                <div class="sub header">Create a new user account</div>
+                <div class="sub header">Create a new user account.</div>
             </h2>
 
             {% set flashes = {
@@ -54,8 +54,8 @@
                 {% endfor %}
 
             {{ f.end_form() }}
-            {% if form.password %} 
-              {{ check.password_check('password', 0) }} 
+            {% if form.password %}
+              {{ check.password_check('password', 0) }}
             {% endif %}
         </div>
     </div>

@@ -33,18 +33,18 @@
                                     description='Create a new user account', icon='add user icon') }}
                 {{ dashboard_option('Invite New User', 'admin.invite_user',
                                     description='Invite a new user to create their own account', icon='envelope icon') }}
-                {{ dashboard_option('Manage Tags', 'admin.manage_tags',
-                                    description='Manage tags that can be applied to resources', icon='tag icon') }}
+                {{ dashboard_option('My Entries', 'admin.view_all_drafts',
+                                    description='Create and review my database entries', icon='edit icon') }}
                 {{ dashboard_option('Review Suggestions', 'admin.review_suggestions',
-                                    description='Review resources suggested by users', icon='lightbulb icon') }}
-                {{ dashboard_option('Review Contributor Entries', 'admin.review_contributions',
+                                    description='Review entries suggested by users', icon='lightbulb icon') }}
+                {{ dashboard_option('Review Contributions', 'admin.review_contributions',
                                     description='Review entries submitted by contributors', icon='tasks icon') }}
-                {{ dashboard_option('Draft Entries', 'admin.view_all_drafts',
-                                    description='Draft new database entries', icon='edit icon') }}
-                {{ dashboard_option('Update Entries', 'admin.view_broken_links',
-                                    description='Update flagged entries', icon='sync icon') }}
-                {{ dashboard_option('Upload and Download', 'admin.upload_and_download',
-                                    description='Mass upload and download of document entries', icon='download icon') }}
+                {{ dashboard_option('Manage Tags', 'admin.manage_tags',
+                                    description='Review and manage resource tags', icon='tag icon') }}
+                {{ dashboard_option('Update Broken Links', 'admin.view_broken_links',
+                                    description='Update entries that have broken links', icon='sync icon') }}
+                {{ dashboard_option('Upload and Download Entries', 'admin.upload_and_download',
+                                    description='Upload and download database entries from CSV', icon='download icon') }}
             </div>
         </div>
     </div>

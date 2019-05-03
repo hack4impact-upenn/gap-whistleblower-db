@@ -4,60 +4,98 @@
 {% block content %}
 <div class="ui stackable grid centered container" style="margin-top:12px; margin-bottom:64px">
    <div class="twelve wide column">
-      <div class="row">
+       <div class="row">
+        <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+            <i class="caret left icon"></i>
+            Back to dashboard
+        </a>
          <h2 class="ui header">
-            Upload and Download 
+            Upload and Download Entries
             <div class="sub header">
-               Upload and Download a CSV of each type of database entry
+               Upload and download a CSV of database entries.
             </div>
          </h2>
-         
-        
-         <h4 class="ui header">Upload CSV File</h4>
-         <p>Notes:
-         <br/>Every field, including blank fields, in uploaded file must be enclosed in double quotes(e.g. "data here"). 
-         </br/> File Names: book.csv, news_article.csv, journal_article.csv, law.csv, video.csv, report.csv, other.csv
-         </p>
-         <form class="ui form" method="POST" enctype="multipart/form-data">
-            <label id="book-file-label" for="book-file" class="ui icon button">
-               <i class="upload icon"></i>
-               Upload File</label>
-            <input type="file" accept=".csv" id="book-file" name="book-file" style="display:none"> <input class="ui submit primary button" type="submit"/>
-         </form>
-          <h4 class="ui header">Download CSV File</h4>
-          <p>Notes:
-          downloads into a file in specified path 
-          <br/>file name corresponds to type book.csv, journal_article.csv, news_article.csv, law.csv, report.csv, video.csv, other.csv
+        </div>
+        <br/>
+        <div class="ui top attached tabular menu">
+          <a class="active item" data-tab="first">Upload</a>
+          <a class="item" data-tab="second">Download</a>
+        </div>
+        <div class="ui bottom attached active tab segment" data-tab="first">
+          <h4>Instructions</h4>
+          <h4 class="ui dividing header" style="font-weight:normal;margin-top:0px;">
+            <div class="ui relaxed bulleted list">
+              <div class="item">Add resources to the given upload template.
+                <div class="ui relaxed list">
+                  <div class="item">If you need the template for a particular resource type, you can download it.</div>
+                  <div class="item">Every field in uploaded file, including blank fields, must be enclosed in double quotes (e.g. "data here").</div>
+                  <div class="item">Make sure to save the template as a CSV file.</div>
+                </div>
+              </div>
+              <div class="item">Use the correct naming scheme for your template based on resource type. <div class="ui label tooltip small" style="display: inline-block !important;"><i class="info icon" style="margin-right:0em;"></i></div></div>
+              <div class="ui flowing popup">
+                <h3 style="margin-bottom:0px;">Naming Scheme</h3>
+                <div class="ui relaxed bulleted list">
+                  <div class="item">Book: book.csv</div>
+                  <div class="item">News Article: news_article.csv</div>
+                  <div class="item">Journal Article: journal_article.csv</div>
+                  <div class="item">Law: law.csv</div>
+                  <div class="item">Video: video.csv</div>
+                  <div class="item">Report: report.csv</div>
+                  <div class="item">Other: other.csv</div>
+                </div>
+              </div>
+              <div class="item">Click "Upload File" to select the template from your computer.</div>
+              <div class="item">Click "Submit" to upload the resources into the database.</div>
+          <br/>
+          </h4>
+          <form class="ui form" method="POST" enctype="multipart/form-data">
+             <label id="book-file-label" for="book-file" class="ui icon button">
+                <i class="upload icon"></i>
+                Upload File</label>
+             <input type="file" accept=".csv" id="book-file" name="book-file" style="display:none"> <input class="ui submit primary button" type="submit"/>
+          </form>
+        </div>
+        <div class="ui bottom attached tab segment" data-tab="second">
+          <h4>Instructions</h4>
+          <h4 class="ui dividing header" style="font-weight:normal;margin-top:0px;">
+            <div class="ui relaxed bulleted list">
+              <div class="item">Select the types of resources you want to download.</div>
+              <div class="item">Click "Download" to download the resources.</div>
+              <div class="item">Find the resources in your "Downloads" folder.</div>
+          <br/>
+          </h4>
           {% set flashes = {
                 'success': get_flashed_messages(category_filter=['form-success'])
             } %}
             {{ f.form_message(flashes['success'], header='Success!', class='success') }}
             {{ f.begin_form(form, flashes) }}
             <div class = "field">
-            {{ f.render_form_field(form.book) }} 
+            {{ f.render_form_field(form.book) }}
             </div>
             <div class = "field">
-            {{ f.render_form_field(form.news_article) }} 
+            {{ f.render_form_field(form.news_article) }}
             </div>
             <div class = "field">
-            {{ f.render_form_field(form.journal_article) }} 
+            {{ f.render_form_field(form.journal_article) }}
             </div>
             <div class = "field">
-            {{ f.render_form_field(form.law) }} 
+            {{ f.render_form_field(form.law) }}
             </div>
             <div class = "field">
-            {{ f.render_form_field(form.video) }} 
+            {{ f.render_form_field(form.video) }}
             </div>
             <div class = "field">
-            {{ f.render_form_field(form.report) }} 
+            {{ f.render_form_field(form.report) }}
             </div>
             <div class = "field">
-            {{ f.render_form_field(form.other) }} 
+            {{ f.render_form_field(form.other) }}
             </div>
-            {{ f.render_form_field(form.download) }} 
+            <div class = "field">
+            {{ f.render_form_field(form.download) }}
+            </div>
             {{ f.end_form(form) }}
-
-      </div>
+          </div>
    </div>
 </div>
 <script type="text/javascript">
@@ -75,6 +113,16 @@ $(document).ready(function() {
       }
    });
 });
+$('.menu .item')
+  .tab()
+;
+$('.label.tooltip')
+  .popup({
+    popup : $('.popup'),
+    on    : 'hover',
+    position   : 'right center',
+  })
+;
 </script>
 
 {% endblock %}

@@ -58,6 +58,7 @@ def add_fake_data(number_users):
     User.generate_fake(count = number_users)
     Document.generate_fake(count = number_users)
     Suggestion.generate_fake(count = number_users)
+    Saved.generate_fake()
     Tag.generate_fake(count = number_users)
     Tagged.generate_fake()
 
