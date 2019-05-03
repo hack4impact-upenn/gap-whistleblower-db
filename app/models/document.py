@@ -12,7 +12,7 @@ nltk.data.path.append(os.environ.get('NLTK_DATA'))
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sqlalchemy.dialects.postgresql import ARRAY
-from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
 from nltk.stem.snowball import SnowballStemmer
 
 class Document(db.Model):
@@ -81,6 +81,32 @@ class Document(db.Model):
             'broken_link', 'volume', 'file', 'document_status', '_sa_instance_state', 'link'] and value != None:
                 corpus.append(str(value))
         return ' '.join(corpus)
+
+    @hybrid_property
+    def date(self):
+        if self.year != "":
+            if self.month != "":
+                if self.day != "":
+                    return self.month + " " + str(self.day) + ", " + str(self.year)
+                return self.month + " " + str(self.year)
+            return str(self.year)
+        return ""
+
+    @hybrid_method
+    def is_after(self, start_date):
+        month_dict = {'January': 1, 'February': 2, 'March': 3, 'April': 4,
+        'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
+        'October': 10, 'November': 11, 'December': 12}
+        now_tuple = (self.year, month_dict.get(self.month), self.day)
+        return now_tuple >= start_date
+
+    @hybrid_method
+    def is_before(self, end_date):
+        month_dict = {'January': 1, 'February': 2, 'March': 3, 'April': 4,
+        'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
+        'October': 10, 'November': 11, 'December': 12}
+        now_tuple = (self.year, month_dict.get(self.month), self.day)
+        return now_tuple <= end_date
 
 
     @staticmethod

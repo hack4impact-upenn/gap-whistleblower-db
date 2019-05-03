@@ -75,17 +75,21 @@ def index():
         'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
         'October': 10, 'November': 11, 'December': 12}
 
-        # start_date = form.start_date.data.split(' ')
-        # start_month = month_dict.get(start_date[0])
-        # start_day = start_date[1][:-1]
-        # start_year = start_date[2]
-        # start = datetime.date(2000, 1, 1)
+        if len(form.start_date.data) > 0:
+            start_date = form.start_date.data.split(' ')
+            start_month = month_dict.get(start_date[0])
+            start_day = start_date[1][:-1]
+            start_year = start_date[2]
+            start = (start_year, start_month, start_day)
+            conditions.append(Document.is_after(start))
 
-        # end_date = form.end_date.data.split(' ')
-        # end_month = month_dict.get(end_date[0])
-        # end_day = end_date[1][:-1]
-        # # end_year = end_date[2]
-        # end = datetime.date(2010, 1, 1)
+        if len(form.end_date.data) > 0:
+            end_date = form.end_date.data.split(' ')
+            end_month = month_dict.get(end_date[0])
+            end_day = end_date[1][:-1]
+            end_year = end_date[2]
+            end = (end_year, end_month, end_day)
+            conditions.append(Document.is_before(end))
 
         results =  Document.query.filter(and_(*conditions)).all()
 
