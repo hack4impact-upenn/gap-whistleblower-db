@@ -41,9 +41,37 @@
       {% set endpoints = [
         ('main.review_saved', 'Saved Resources', 'save'),
         ('account.manage', 'Your Account', 'settings'),
-        ('account.logout', 'Log Out', 'sign out'),
       ] %}
       {{ render_menu_items(endpoints) }}
+      <a class="item {% if request.endpoint == 'account.logout' %}active{% endif %} no-fastclick" href="javascript:logout()">
+          <i class="sign-out icon"></i>
+          {{ 'Log Out' | safe }}
+      </a>
+      <div class="ui mini modal logout">
+        <div class="ui icon header">
+          <i class="sign-out icon"></i>
+          Log Out
+        </div>
+        <div class="content">
+          <p style="font-size:1.2em"> Are you sure you want to log out?</p>
+        </div>
+        <div class="actions">
+          <a class="ui red cancel button">
+            <i class="remove icon"></i>
+           Cancel
+          </a>
+          <a class="ui green ok button" href="{{ url_for('account.logout') }}">
+            <i class="checkmark icon"></i>
+            Log Out
+          </a>
+        </div>
+      </div>
+      <script>
+        function logout() {
+          $('.ui.mini.modal.logout').modal('show')
+          ;
+        }
+      </script>
     {% else %}
       {% set endpoints = [
         ('account.register', 'Register', 'list layout'),
@@ -100,7 +128,7 @@
 
 {% macro render_nav(current_user, dropdown=[]) %}
     <nav class="ui navigation grid {% if endpoints %}has-submenu{% endif %}">
-        {{ mobile_nav(current_user, dropdown=dropdown) }}
+        <!-- {{ mobile_nav(current_user, dropdown=dropdown) }} -->
         {{ desktop_nav(current_user, dropdown=dropdown) }}
     </nav>
 {% endmacro %}

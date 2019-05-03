@@ -12,59 +12,62 @@
                    {% set law_flashes = {
                       'success': get_flashed_messages(category_filter=['form-success'])
                   } %}
-            {{ f.begin_form(law_form, law_flashes) }}
+                  {{ f.begin_form(law_form, law_flashes) }}
                   <input type="hidden" name="form-name" value="law_form">
                   <div class = "sixteen wide field">
                   {{ f.form_message(law_flashes['success'], header='Success!', class='success') }}
                   </div>
                   <div class = "fields">
                       <div class = "sixteen wide field">
-                      {{ f.render_form_field(law_form.law_title) }}
+                      {{ f.render_form_field(law_form.law_title, name='Title') }}
                       </div>
                   </div>
                   <div class = "fields">
                       <div class = "sixteen wide field">
-                      {{ f.render_form_field(law_form.law_citation) }}
+                      {{ f.render_form_field(law_form.law_citation, name='Citation') }}
                       </div>
                   </div>
                   <div class = "three fields">
                       <div class = "field">
-                      {{ f.render_form_field(law_form.law_government_body) }}
+                      {{ f.render_form_field(law_form.law_government_body, name='Government Body') }}
                       </div>
                       <div class = "field">
-                      {{ f.render_form_field(law_form.law_section) }}
+                      {{ f.render_form_field(law_form.law_section, name='Section') }}
                       </div>
                       <div class = "field">
-                      {{ f.render_form_field(law_form.law_region) }}
-                      </div>
-                  </div>
-                  <div class = "three fields">
-                      <div class = "field">
-                      {{ f.render_form_field(law_form.law_city) }}
-                      </div>
-                      <div class = "field">
-                      {{ f.render_form_field(law_form.law_state) }}
-                      </div>
-                      <div class = "field">
-                      {{ f.render_form_field(law_form.law_country) }}
+                      {{ f.render_form_field(law_form.law_region, name='Region') }}
                       </div>
                   </div>
                   <div class = "three fields">
                       <div class = "field">
-                      {{ f.render_form_field(law_form.law_enactment_day) }}
+                      {{ f.render_form_field(law_form.law_city, name='City') }}
                       </div>
                       <div class = "field">
-                      {{ f.render_form_field(law_form.law_enactment_month) }}
+                      {{ f.render_form_field(law_form.law_state, name='State') }}
                       </div>
                       <div class = "field">
-                      {{ f.render_form_field(law_form.law_enactment_year) }}
+                      {{ f.render_form_field(law_form.law_country, name='Country') }}
+                      </div>
+                  </div>
+                  <div class = "three fields">
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_enactment_day, name='Enactment Day') }}
+                      </div>
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_enactment_month, name='Enactment Month') }}
+                      </div>
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_enactment_year, name='Enactment Year') }}
                       </div>
                   </div>
                   <div class = "sixteen wide field">
-                  {{ f.render_form_field(law_form.law_description) }}
+                  {{ f.render_form_field(law_form.law_description, name='Description') }}
                   </div>
                   <div class = "sixteen wide field">
-                  {{ f.render_form_field(law_form.law_link) }}
+                  {{ f.render_form_field(law_form.law_tags, name="Tags") }}
+                  </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(law_form.law_link, name='Link') }}
                   </div>
                   <div class = "sixteen wide field">
                   {{ f.render_form_input(law_form.law_file_urls) }}

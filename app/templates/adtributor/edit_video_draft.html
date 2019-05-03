@@ -12,58 +12,68 @@
                    {% set video_flashes = {
                       'success': get_flashed_messages(category_filter=['form-success'])
                   } %}
-            {{ f.begin_form(video_form, video_flashes) }}
-             <input type="hidden" name="form-name" value="video_form">
-             <div class = "sixteen wide field">
-             {{ f.form_message(video_form['success'], header='Success!', class='success') }}
-             </div>
-             <div class = "sixteen wide field">
-             {{ f.render_form_field(video_form.video_title, name="Title") }}
-             </div>
-             <div class="fields">
-               <div class = "eight wide field">
-               {{ f.render_form_field(video_form.director_first_name, name="First Name") }}
-               </div>
-               <div class = "eight wide field">
-               {{ f.render_form_field(video_form.director_last_name, name="Last Name") }}
-               </div>
-             </div>
-             <div class = "sixteen wide field">
-             {{ f.render_form_field(video_form.video_post_source, name="Source") }}
-             </div>
-             <div class = "three fields">
-               <div class = "field">
-               {{ f.render_form_field(video_form.video_publication_day, name="Day") }}
-               </div>
-               <div class = "field">
-               {{ f.render_form_field(video_form.video_publication_month, name="Month") }}
-               </div>
-               <div class = "field">
-               {{ f.render_form_field(video_form.video_publication_year, name="Year") }}
-               </div>
-            </div>
-               <div class = "sixteen wide field">
-               {{ f.render_form_field(video_form.video_description) }}
-               </div>
-               <div class = "sixteen wide field">
-               {{ f.render_form_field(video_form.video_link) }}
-               </div>
-               <div class = "sixteen wide field">
-               {{ f.render_form_input(video_form.video_file_urls) }}
-               </div>
-               <div class = "sixteen wide field">
-               {{ upload.file_upload('file_urls') }}
-               </div>
-               <div class = "fields">
-                  <div class = "three wide field">
-                  {{ f.render_form_field(video_form.save_video) }}
+                  {{ f.begin_form(video_form, video_flashes) }}
+                  <input type="hidden" name="form-name" value="video_form">
+                  <div class = "sixteen wide field">
+                  {{ f.form_message(video_form['success'], header='Success!', class='success') }}
                   </div>
-                  <div class = "three wide field">
-                  {{ f.render_form_field(video_form.submit_video) }}
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(video_form.video_title, name="Title") }}
                   </div>
+                  <div class = "author fields" id="author-0">
+                      <div class='four wide field'>
+                        <label>Add Director</label>
+                        <a class="ui labeled icon button fluid" href="javascript:addAuthor()">
+                          <i class="plus icon"></i>
+                          Add Director
+                        </a>
+                      </div>
+                      <div class = "six wide field">
+                      {{ f.render_form_field(video_form.director_first_name[0], name="First Name") }}
+                      </div>
+                      <div class = "six wide field">
+                      {{ f.render_form_field(video_form.director_last_name[0], name="Last Name") }}
+                      </div>
                   </div>
-              </div>
-               {{ f.end_form(video_form) }}
+                  <div class = "sixteen wide field" id="beforeMe">
+                  {{ f.render_form_field(video_form.video_post_source, name="Source") }}
+                  </div>
+                  <div class = "three fields">
+                    <div class = "field">
+                    {{ f.render_form_field(video_form.video_publication_day, name="Release Day") }}
+                    </div>
+                    <div class = "field">
+                    {{ f.render_form_field(video_form.video_publication_month, name="Release Month") }}
+                    </div>
+                    <div class = "field">
+                    {{ f.render_form_field(video_form.video_publication_year, name="Release Year") }}
+                    </div>
+                 </div>
+                    <div class = "sixteen wide field">
+                    {{ f.render_form_field(video_form.video_description, name='Description') }}
+                    </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(video_form.video_tags, name="Tags") }}
+                  </div>
+                    <div class = "sixteen wide field">
+                    {{ f.render_form_field(video_form.video_link, name='Link') }}
+                    </div>
+                    <div class = "sixteen wide field">
+                    {{ f.render_form_input(video_form.video_file_urls) }}
+                    </div>
+                    <div class = "sixteen wide field">
+                    {{ upload.file_upload('file_urls') }}
+                    </div>
+                    <div class = "fields">
+                       <div class = "three wide field">
+                       {{ f.render_form_field(video_form.save_video) }}
+                       </div>
+                       <div class = "three wide field">
+                       {{ f.render_form_field(video_form.submit_video) }}
+                       </div>
+                       </div>
+                   </div>
+                    {{ f.end_form(video_form) }}
               </div>
           </div>
         </div>
@@ -71,6 +81,47 @@
 </div>
 <script>
   $('.menu .item').tab();
+  $(document).ready(function() {
+      {% for i in range(video_form.video_author_first_name | length) %}
+          {% if i != 0 %}
+              $("#beforeMe").before(`<div class = "author fields" id="author-{{ i }}">\
+              <div class="four wide field">\
+                <label>Remove Author</label>\
+                <a class="ui labeled icon button fluid" id="author-{{ i }}" href="javascript:delAuthor({{ i }})">\
+                  <i class="close icon"></i>Remove Author</a>\
+              </div>\
+              <div class = "six wide field">\
+                {{ f.render_form_field(video_form.video_author_first_name[i], name="First Name") }}
+              </div>\
+              <div class = "six wide field">\
+                {{ f.render_form_field(video_form.video_author_last_name[i], name="Last Name") }}
+              </div>\
+          </div>`); //bit hacky but ok
+
+          {% endif %}
+      {% endfor %}
+  });
+  function addAuthor() {
+      let index = $(".author").length;
+      $( "#beforeMe" ).before(`<div class = "author fields" id="author-${index}">\
+          <div class="four wide field">\
+            <label>Remove Director</label>\
+            <a class="ui labeled icon button fluid" id="author-${index}" href="javascript:delAuthor(${index})">\
+              <i class="close icon"></i>Remove Director</a>\
+          </div>\
+          <div class = "six wide field">\
+            {{ f.render_form_field(video_form.video_author_first_name[0], name="First Name") }}
+          </div>\
+          <div class = "six wide field">\
+            {{ f.render_form_field(video_form.video_author_last_name[0], name="Last Name") }}
+          </div>\
+      </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
+  }
+  function delAuthor(author_id) {
+    let id = "#author-" + author_id
+    console.log(author_id)
+      $(id).remove();
+  }
 </script>
 
 {% endblock %}

@@ -1,4 +1,8 @@
 from .. import db
+from app.models import Document
+from sqlalchemy import Table, Integer, ForeignKey
+from  sqlalchemy.sql.expression import func
+
 
 class Tag(db.Model):
     __tablename__ = 'tag'
@@ -14,9 +18,8 @@ class Tag(db.Model):
         tags = []
         for i in range(count):
             item = Tag(
-                tag=fake.word(),
+                tag=fake.word()
             )
-            tags.append(item)
             db.session.add(item)
         try:
             db.session.commit()
@@ -25,4 +28,6 @@ class Tag(db.Model):
         return tags
 
     def __repr__(self):
-        return '<Tag: Name = {}>'.format(self.tag)
+        s = '<Id: {} \n'.format(self.id)
+        s += 'Tag: {}>'.format(self.tag)
+        return s

@@ -9,7 +9,7 @@
         {# Any templates that extend this template can set custom_head_tags to add scripts to their page #}
         {% block custom_head_tags %}{% endblock %}
     </head>
-    <body onresize="resizeFilter()">
+    <body>
       <form method=post>
         <div class="ui inverted vertical masthead center aligned segment" style="background-color: #345073">
             <div class="ui container">
@@ -47,17 +47,17 @@
             </div>
         </div>
         <div class="ui container" style="padding: 100px 0 100px 0;">
-          <div class="ui two column grid">
-           <div class="row">
-            <div class="four wide column" id="myDiv">
-              <div class="ui vertical menu fluid">
+          <div class="ui segment">
+            <div class="ui left rail">
+              <div class="ui segment">
                 <div class="item">
                   <div class="ui basic segment fluid center aligned" style="padding: 0 0 0 0;">
                     <p style="font-size: 1.5em;">Filter Resources</p>
                   </div>
+                  <div class="ui divider"></div>
                 </div>
                 <div class="ui form">
-                  <div class="item">
+                  <div>
                     <div class="ui header small">Resource Type</div>
                       <div class="grouped fields">
                         {{ f.render_form_field(form.book) }}
@@ -65,14 +65,16 @@
                         {{ f.render_form_field(form.journal_article) }}
                         {{ f.render_form_field(form.law) }}
                         {{ f.render_form_field(form.video) }}
+                        {{ f.render_form_field(form.report) }}
                         {{ f.render_form_field(form.other) }}
                       </div>
                     </div>
-                  <div class="item">
-                    <div class="ui header small">Date Posted</div>
+                  <div class="ui divider"></div>
+                  <div>
+                    <div class="ui header small">Date Published</div>
                       <div class="ui calendar">
                         {{ form.start_date.label }}
-                        <div class="ui input left icon" id="start_date">
+                        <div class="ui input left icon fluid" id="start_date">
                           <i class="calendar icon"></i>
                           {{ form.start_date(class="ui calendar")}}
                         </div>
@@ -80,31 +82,35 @@
                       <br>
                       <div class="ui calendar">
                         {{ form.end_date.label }}
-                        <div class="ui input left icon" id="end_date">
+                        <div class="ui input left icon fluid" id="end_date">
                           <i class="calendar icon"></i>
                           {{ form.end_date(class="ui calendar")}}
                         </div>
                       </div>
                   </div>
-                  <div class="item">
+                  <div class="ui divider"></div>
+                  <div>
                     <div class="ui header small">Tags</div>
                     {{ f.render_form_field(form.tags) }}
                   </div>
-                </div>
               </div>
             </div>
-            <div class="twelve wide column" id="myDiv2">
+           </div>
+          <div class="ui grid">
+           <div class="row">
+            <div class="sixteen wide column">
                 <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
                     <thead>
                         <tr>
                             <th class="three wide">Title</th>
-                            <th class="three wide">Attribution</th>
+                            <th class="two wide">Attribution</th>
                             <th class="two wide">Resource Type</th>
                             <th>Description</th>
+                            <th class="three wide">tags</th>
                         </tr>
                     </thead>
                     <tbody>
-                    {% for c in search_results.items %}
+                    {% for c in search_results[:100] %}
                         <tr>
                             <td>{{ c.title }}</td>
                             <td>{% if c.author_last_name or c.author_first_name %}
@@ -116,27 +122,35 @@
                                 {% endif %}
                             </td>
                             <td>
-                              {{ c.doc_type }}
+                              {{ c.doc_type.split('_')|join(' ') }}
                             </td>
                             <td>
                               {{ c.description.split(' ')[:19]|join(' ') + '...'}}
+                            </td>
+                            <td>
+                              {% for tag in c.tags %}
+                              <div class="ui basic label" style="margin: 2px">
+                                {{ tag.tag.tag }}
+                              </div>
+                              {% endfor %}
                             </td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
                 <div class="ui buttons" style="width: 100%; align-items: center; justify-content: center;">
-                  <a class="ui {% if not search_results.has_prev %}disabled {% endif %} labeled icon button" type='button' {% if search_results.has_prev %} href="{{url_for('main.index', page=search_results.prev_num)}}"{% endif %}>
+                  <a class="ui button left labeled icon button" type='button' href="#">
                     <i class="left chevron icon"></i>
                     Back
                   </a>
                   <a class="ui basic button"  type='button'>
-                    Page {{ page }}
+                    Page 1
                   </a>
-                  <a class="ui button {% if not search_results.has_next %}disabled {% endif %}right labeled icon button" type='button' {% if search_results.has_next %} href="{{url_for('main.index', page=search_results.next_num)}}"{% endif %}>
+                  <a class="ui button right labeled icon button" type='button' href="#">
                     Next
                     <i class="right chevron icon"></i>
                   </a>
+                </div>
                 </div>
               </div>
             </div>
@@ -162,14 +176,6 @@
                 }
               });
           });
-          function resizeFilter() {
-            if($(window).width() < 800){
-              $("#myDiv").hide();
-            }
-            else {
-              $("#myDiv").show();
-            }
-          };
         </script>
     </body>
 </html>
