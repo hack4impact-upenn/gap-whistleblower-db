@@ -40,7 +40,7 @@ def index():
 
     stemmer = SnowballStemmer("english", ignore_stopwords=True)
 
-    results = Document.query.filter_by(document_status="published").all()
+    results = Document.query.filter_by(document_status="published").order_by(Document.last_edited_date.desc()).all()
 
     if form.validate_on_submit():
         conditions = []
@@ -91,7 +91,7 @@ def index():
             end = (end_year, end_month, end_day)
             conditions.append(Document.is_before(end))
 
-        results =  Document.query.filter(and_(*conditions)).all()
+        results =  Document.query.filter(and_(*conditions)).order_by(Document.last_edited_date.desc()).all()
 
         if len(query) > 0:
             idf = {}
@@ -190,7 +190,7 @@ def resource(id, from_saved=False):
 def review_saved():
     user_id = current_user.id
     user = User.query.get(user_id)
-    saved = user.saved
+    saved = user.saved.order_by(Document.last_edited_date)
     return render_template('main/review_saved.html', saved=saved)
 
 def check_dead_links():

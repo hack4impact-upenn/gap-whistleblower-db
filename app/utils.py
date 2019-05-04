@@ -38,7 +38,6 @@ class CustomSelectField(Field):
 
     def process_formdata(self, valuelist):
         from sys import stderr
-        print(valuelist, file=stderr)
         if len(valuelist) >= 2:
             self.data = valuelist[1]
             self.raw_data = [valuelist[1]]
