@@ -20,15 +20,22 @@
                   <div class = "sixteen wide field">
                   {{ f.render_form_field(journal_form.article_title, name='Title') }}
                   </div>
-                  <div class="fields">
-                    <div class = "eight wide field">
-                    {{ f.render_form_field(journal_form.article_author_first_name, name='First Name') }}
-                    </div>
-                    <div class = "eight wide field">
-                    {{ f.render_form_field(journal_form.article_author_last_name, name='Last Name') }}
-                    </div>
+                  <div class = "author fields" id="author-0">
+                      <div class='four wide field'>
+                        <label>Add Author</label>
+                        <a class="ui labeled icon button fluid" href="javascript:addAuthor()">
+                          <i class="plus icon"></i>
+                          Add Author
+                        </a>
+                      </div>
+                      <div class = "six wide field">
+                      {{ f.render_form_field(journal_form.article_author_first_name[0], name="First Name") }}
+                      </div>
+                      <div class = "six wide field">
+                      {{ f.render_form_field(journal_form.article_author_last_name[0], name="Last Name") }}
+                      </div>
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class = "sixteen wide field" id="beforeMe">
                   {{ f.render_form_field(journal_form.publisher_name, name='Publication') }}
                   </div>
                   <div class = "sixteen wide field">
@@ -58,6 +65,9 @@
                     <div class = "sixteen wide field">
                     {{ f.render_form_field(journal_form.article_description, name='Description') }}
                     </div>
+                  <div class = "sixteen wide field">
+                  {{ f.render_form_field(journal_form.article_tags, name="Tags") }}
+                  </div>
                     <div class = "sixteen wide field">
                     {{ f.render_form_field(journal_form.article_link, name='Link') }}
                     </div>
@@ -82,6 +92,47 @@
 </div>
 <script>
   $('.menu .item').tab();
+  $(document).ready(function() {
+      {% for i in range(journal_form.article_author_first_name | length) %}
+          {% if i != 0 %}
+              $("#beforeMe").before(`<div class = "author fields" id="author-{{ i }}">\
+              <div class="four wide field">\
+                <label>Remove Author</label>\
+                <a class="ui labeled icon button fluid" id="author-{{ i }}" href="javascript:delAuthor({{ i }})">\
+                  <i class="close icon"></i>Remove Author</a>\
+              </div>\
+              <div class = "six wide field">\
+                {{ f.render_form_field(journal_form.article_author_first_name[i], name="First Name") }}
+              </div>\
+              <div class = "six wide field">\
+                {{ f.render_form_field(journal_form.article_author_last_name[i], name="Last Name") }}
+              </div>\
+          </div>`); //bit hacky but ok
+
+          {% endif %}
+      {% endfor %}
+  });
+  function addAuthor() {
+      let index = $(".author").length;
+      $( "#beforeMe" ).before(`<div class = "author fields" id="author-${index}">\
+          <div class="four wide field">\
+            <label>Remove Author</label>\
+            <a class="ui labeled icon button fluid" id="author-${index}" href="javascript:delAuthor(${index})">\
+              <i class="close icon"></i>Remove Author</a>\
+          </div>\
+          <div class = "six wide field">\
+            {{ f.render_form_field(journal_form.article_author_first_name[0], name="First Name") }}
+          </div>\
+          <div class = "six wide field">\
+            {{ f.render_form_field(journal_form.article_author_last_name[0], name="Last Name") }}
+          </div>\
+      </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
+  }
+  function delAuthor(author_id) {
+    let id = "#author-" + author_id
+    console.log(author_id)
+      $(id).remove();
+  }
 </script>
 
 {% endblock %}

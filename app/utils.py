@@ -37,9 +37,13 @@ class CustomSelectField(Field):
         return text_type(self.data) if self.data is not None else ''
 
     def process_formdata(self, valuelist):
-        if valuelist:
+        from sys import stderr
+        print(valuelist, file=stderr)
+        if len(valuelist) >= 2:
+            self.data = valuelist[1]
+            self.raw_data = [valuelist[1]]
+        elif valuelist:
             self.data = valuelist[0]
             self.raw_data = [valuelist[0]]
-            print(valuelist)
         else:
             self.data = ''
