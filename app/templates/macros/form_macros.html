@@ -167,12 +167,3 @@
         {% endif %}
     {% endif %}
 {% endmacro %}
-
-{% macro render_form_field_tags(field) %}
-<div id="{{field.name}}">
-    {{ field() }}
-</div>
-  {% for choice in field.choices %}
-      <div class="item">{{choice[1]}}</div>
-  {% endfor %}
-{% endmacro %}

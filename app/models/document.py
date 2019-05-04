@@ -78,8 +78,13 @@ class Document(db.Model):
         for key, value in fields.items():
             if key not in ['tf', 'page_start', 'id', 'day', 'posted_date',
             'last_edited_date', 'posted_by', 'last_edited_by', 'edition',
-            'broken_link', 'volume', 'file', 'document_status', '_sa_instance_state', 'link'] and value != None:
+            'broken_link', 'volume', 'file', 'document_status', '_sa_instance_state',
+            'link', 'author_first_name', 'author_last_name'] and value != None:
                 corpus.append(str(value))
+            elif key in ['author_first_name', 'author_last_name'] and value != None:
+                authors = value.split(',')
+                for a in authors:
+                    corpus.append(a)
         return ' '.join(corpus)
 
     @hybrid_property

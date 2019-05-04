@@ -51,8 +51,9 @@
             <div class="ui pointing dropdown link item">Resource Type
               <i class="dropdown icon"></i>
               <div class="ui menu">
-                <div class="header">Categories</div>
-                <div class="ui form grouped fields header">
+                <div style="padding:10px">
+                <div class="ui header small">Categories</div>
+                <div class="ui form grouped fields">
                   {{ f.render_form_field(form.book) }}
                   {{ f.render_form_field(form.news_article) }}
                   {{ f.render_form_field(form.journal_article) }}
@@ -62,22 +63,24 @@
                   {{ f.render_form_field(form.other) }}
                 </div>
                 <div class="item" style="pointer-events: none; padding:0px!important;"></div>
+                </div>
               </div>
             </div>
 
             <div class="ui pointing dropdown link item">Publication Date
               <i class="dropdown icon"></i>
-              <div class="ui menu">
+              <div class="ui menu" style="width:200px;">
+                <div style="padding:10px">
                 <div class="ui header small">Date Published</div>
-                  <div class="ui center aligned calendar" style="width: 150px;">
+                  <div class="ui center aligned calendar fluid">
                     {{ form.start_date.label }}
-                    <div class="ui input left icon fluid" id="start_date">
+                    <div class="ui input left icon fluid" id="start_date" style="margin-right:0px">
                       <i class="calendar icon"></i>
                       {{ form.start_date(class="ui calendar")}}
                     </div>
                   </div>
                   <br>
-                  <div class="ui calendar" style="width: 150px;">
+                  <div class="ui center aligned calendar fluid">
                     {{ form.end_date.label }}
                     <div class="ui input left icon fluid" id="end_date">
                       <i class="calendar icon"></i>
@@ -86,23 +89,11 @@
                   </div>
                   <div class="item" style="pointer-events: none; padding:0px!important;"></div>
                 </div>
+                </div>
             </div>
-            <div class="ui multiple dropdown">
-              <i class="tags icon"></i>
-              <span class="text">Add Tags</span>
-              <i class="dropdown icon"></i>
-              <div class="menu">
-                <div class="ui icon search input">
-                  <i class="search icon"></i>
-                  <input type="text" placeholder="Search tags...">
-                </div>
-                <div class="divider"></div>
-                <div class="header">
-                  <i class="tags icon"></i>
-                  Tag Label
-                </div>
-                {{ f.render_form_field_tags(form.tags) }}
-              </div>
+            <div class="item" style="margin-top:auto; margin-bottom:auto; flex: initial!important">
+              <span>Tags</span>
+              <div style="min-width:14em!important; padding-left:20px;">{{ f.render_form_field(form.tags) }}</div>
             </div>
           </div>
           <div class="ui grid">
@@ -152,7 +143,7 @@
                     <i class="left chevron icon"></i>
                     Back
                   </a>
-                  <a class="ui basic button"  type='button'>
+                  <a class="ui basic button" type='button'>
                     Page 1
                   </a>
                   <a class="ui button right labeled icon button" type='button' href="#">
