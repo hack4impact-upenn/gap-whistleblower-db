@@ -20,10 +20,11 @@
                     <div class="menu">
                         <div class="item" data-value="">All resource types</div>
                         <div class="item" data-value="book">Books</div>
-                        <div class="item" data-value="article">News Articles</div>
-                        <div class="item" data-value="journal">Journal Articles</div>
+                        <div class="item" data-value="news article">News Articles</div>
+                        <div class="item" data-value="journal article">Journal Articles</div>
                         <div class="item" data-value="law">Laws</div>
                         <div class="item" data-value="video">Videos</div>
+                        <div class="item" data-value="report">Reports</div>
                         <div class="item" data-value="other">Other</div>
                     </div>
                 </div>
@@ -38,7 +39,7 @@
                <thead>
                    <tr>
                        <th>Title</th>
-                       <th>Type</th>
+                       <th>Resource Type</th>
                        <th class="one wide">Edit</th>
                    </tr>
                </thead>
@@ -46,7 +47,7 @@
                {% for b in broken %}
                    <tr>
                        <td onclick="window.location.href = '{{ url_for('admin.contribution', id=b.id) }}';">{{ b.title }}</td>
-                       <td class="suggestion type">{{ b.doc_type }}</td>
+                       <td class="suggestion type">{{ b.doc_type.split('_')|join(' ') }}</td>
                        <!--confirmation modal for deleting a checklist item-->
                        <td>
                          <div class="ui buttons">

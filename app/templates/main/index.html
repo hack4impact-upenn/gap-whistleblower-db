@@ -32,12 +32,20 @@
             </div>
             <div class="ui text container" style="padding: 100px 0 100px 0;">
                 <h1 class="ui huge inverted header">
-                    Whistleblower Database
-                    <div class="sub header">Curated by Government Accountability Project</div>
+                    Whistleography Database
+                    <div class="sub header">Curated by <a style="color:white;"
+                      href="http://www.whistleblower.org">
+                      <u>Government Accountability Project</u>
+                    </a></div>
                 </h1>
                 <p>
-                    Government Accountability Project is the international leader in whistleblower protection. <br/>
-                    This database is a curated, searchable list of scholarly materials related to whistleblowing. <br/>
+                  This database is a curated, searchable list of resources related
+                  to whistleblowing, including books, academic articles, reports,
+                  videos, and other substantive materials.
+                  <br/><br/>
+                  You can help us grow our collection by
+                  <a href="{{ url_for('main.suggestion') }}">
+                    <u style="color:white">suggesting additional resources.</u></a>
                 </p>
                 <br>
                 <div class="ui action input fluid large">
@@ -106,15 +114,23 @@
                             <th class="two wide">Attribution</th>
                             <th class="two wide">Resource Type</th>
                             <th>Description</th>
-                            <th class="three wide">tags</th>
+                            <th class="three wide">Tags</th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for c in search_results[:100] %}
-                        <tr>
+                        <tr onclick="window.location.href = '{{ url_for('main.resource', id=c.id) }}';">
                             <td>{{ c.title }}</td>
-                            <td>{% if c.author_last_name or c.author_first_name %}
-                                  {{ c.author_first_name + ' ' + c.author_last_name}}
+                            <td>{% if c.author_last_name and c.author_first_name %}
+                                  {% set first_names = c.author_first_name.split(',') %}
+                                  {% set last_names =  c.author_last_name.split(',') %}
+                                    {% for x in range(first_names | length) %}
+                                      {% if (x == first_names | length - 1) %}
+                                      {{first_names[x] + ' ' + last_names[x] }}
+                                      {% else %}
+                                      {{ first_names[x] + ' ' + last_names[x] + ','}}
+                                      {% endif %}
+                                    {% endfor %}
                                 {% elif c.name %}
                                   {{ c.name }}
                                 {% elif c.govt_body %}
@@ -138,19 +154,6 @@
                     {% endfor %}
                     </tbody>
                 </table>
-                <div class="ui buttons" style="width: 100%; align-items: center; justify-content: center;">
-                  <a class="ui button left labeled icon button" type='button' href="#">
-                    <i class="left chevron icon"></i>
-                    Back
-                  </a>
-                  <a class="ui basic button" type='button'>
-                    Page 1
-                  </a>
-                  <a class="ui button right labeled icon button" type='button' href="#">
-                    Next
-                    <i class="right chevron icon"></i>
-                  </a>
-                </div>
                 </div>
               </div>
             </div>

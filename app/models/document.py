@@ -79,12 +79,16 @@ class Document(db.Model):
             if key not in ['tf', 'page_start', 'id', 'day', 'posted_date',
             'last_edited_date', 'posted_by', 'last_edited_by', 'edition',
             'broken_link', 'volume', 'file', 'document_status', '_sa_instance_state',
-            'link', 'author_first_name', 'author_last_name'] and value != None:
+            'link', 'author_first_name', 'author_last_name', 'tags', 'doc_type'] and value != None:
                 corpus.append(str(value))
             elif key in ['author_first_name', 'author_last_name'] and value != None:
                 authors = value.split(',')
                 for a in authors:
                     corpus.append(a)
+            elif key == 'doc_type':
+                type = value.split('_')
+                for t in type:
+                    corpus.append(t)
         return ' '.join(corpus)
 
     @hybrid_property
@@ -278,8 +282,6 @@ class Document(db.Model):
                 last_edited_by = name,
                 title = fake.text(max_nb_chars=50),
                 description = text,
-                city = fake.city(),
-                state = fake.state(),
                 country = "United States",
                 link = 'http://' + fake.domain_name(),
                 govt_body = body,

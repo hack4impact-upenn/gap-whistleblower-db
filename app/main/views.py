@@ -1,7 +1,8 @@
 import json
 import time
 import boto3
-from flask import Blueprint, request, render_template, redirect, url_for
+from flask import (Blueprint, abort, flash, redirect, render_template, request, jsonify,
+                   url_for)
 from flask.json import jsonify
 from random import randint
 from time import sleep
@@ -30,6 +31,12 @@ from nltk.tokenize import word_tokenize
 main = Blueprint('main', __name__)
 
 selected_tags = []
+
+def role():
+    if current_user.is_authenticated and current_user.role_id == 3:
+        return 'admin'
+    else:
+        return 'not_admin'
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -135,8 +142,7 @@ def suggestion():
             description=form.description.data)
         db.session.add(suggestion)
         db.session.commit()
-        flash(
-            'Suggestion \"{}\" successfully created'.format(
+        flash('Suggestion \"{}\" successfully created'.format(
                 form.title.data), 'form-success')
         return render_template(
             'main/suggestion.html', form=form)
@@ -181,7 +187,7 @@ def resource(id, from_saved=False):
         db.session.commit()
         return redirect(url_for('main.resource' if not from_saved else 'main.resource_saved', id=id))
     return render_template(
-        'main/resource.html', resource=resource, user_id=user_id, saved=saved, form=form, from_saved=from_saved
+        'main/resource.html', resource=resource, user_id=user_id, saved=saved, form=form, from_saved=from_saved, user_type=role()
     )
 
 

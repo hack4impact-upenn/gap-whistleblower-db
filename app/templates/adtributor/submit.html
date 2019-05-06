@@ -288,23 +288,17 @@
                       {{ f.render_form_field(law_form.law_citation, name='Citation') }}
                       </div>
                   </div>
-                  <div class = "three fields">
+                  <div class = "two fields">
                       <div class = "field">
                       {{ f.render_form_field(law_form.law_government_body, name='Government Body') }}
                       </div>
                       <div class = "field">
                       {{ f.render_form_field(law_form.law_section, name='Section') }}
                       </div>
+                  </div>
+                  <div class = "two fields">
                       <div class = "field">
                       {{ f.render_form_field(law_form.law_region, name='Region') }}
-                      </div>
-                  </div>
-                  <div class = "three fields">
-                      <div class = "field">
-                      {{ f.render_form_field(law_form.law_city, name='City') }}
-                      </div>
-                      <div class = "field">
-                      {{ f.render_form_field(law_form.law_state, name='State') }}
                       </div>
                       <div class = "field">
                       {{ f.render_form_field(law_form.law_country, name='Country') }}
@@ -599,11 +593,15 @@
               lastName = `{{ f.render_form_field(book_form.book_author_last_name[0], name="Last Name") }}`;
       }
       let index = $(`.${doc_type}-author`).length;
-      console.log(index);
+      let author_type = 'Author'
+      if (doc_type =='video') {
+        author_type = 'Director'
+      }
       $( `#${doc_type}-beforeMe` ).before(`<div class = "${doc_type}-author fields" id="${doc_type}-author-${index}">\
         <div class="four wide field">\
-        <label>Remove Author</label>\
-        <a class="ui labeled icon button fluid" id="${doc_type}-author-${index}" href="javascript:delAuthor(${index}, '${doc_type}')">\        <i class="close icon"></i>Remove Author</a>\
+        <label>Remove ${author_type}</label>\
+        <a class="ui labeled icon button fluid" id="${doc_type}-author-${index}" href="javascript:delAuthor(${index}, '${doc_type}')">\
+          <i class="close icon"></i>Remove ${author_type} </a>\
         </div>\
         <div class = "six wide field">\
         ${firstName}
