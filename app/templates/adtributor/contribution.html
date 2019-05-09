@@ -1,174 +1,190 @@
 {% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
 
 {% block content %}
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
-            {% if comes_from == 'contribution' %}
-            <a class="ui basic compact button" href="{{ url_for(user_type + '.review_contributions') }}">
+            {% if comes_from=='contribution' %}
+            <a class="ui basic compact button" href="{{ url_for('admin.review_contributions') }}">
                 <i class="caret left icon"></i>
                 Back to contributions
             </a>
-            <h2 class="ui header">
-                Review Contribution
-                <div class="sub header">Review this contribution</div>
-            </h2>
             {% else %}
             <a class="ui basic compact button" href="{{ url_for(user_type + '.view_all_drafts') }}">
                 <i class="caret left icon"></i>
                 Back to drafts
             </a>
-            <h2 class="ui header">
-                Review Draft
-                <div class="sub header">Review this draft</div>
-            </h2>
             {% endif %}
+            <br/>
+            <br/>
+            <div style="width:100%">
+              <h2 class="ui header" style="overflow-wrap: break-word; float:left;">
+                  {{ resource.title }}
+                  <div class="sub header">
+                    {% if (resource.author_last_name and resource.author_first_name) or resource.name or resource.govt_body %}
+                      {% if resource.author_last_name and resource.author_first_name %}
+                          {% set first_names = resource.author_first_name.split(',') %}
+                          {% set last_names =  resource.author_last_name.split(',') %}
+                          By
+                            {% for x in range(first_names | length) %}
+                              {% if (x == first_names | length - 1) %}
+                              {{ first_names[x] + ' ' + last_names[x] }}
+                              {% else %}
+                              {{ first_names[x] + ' ' + last_names[x] + ','}}
+                              {% endif %}
+                            {% endfor %}
+                        {% elif resource.name %}
+                          By {{ resource.name }}
+                        {% elif resource.govt_body %}
+                          Enacted by {{ resource.govt_body }}
+                        {% endif %}
+                      {% endif %}
+                    </div>
+              </h2>
+            </div>
+            <div style="height:50px"></div>
+              {% if user_type == 'admin' or resource.document_status == 'draft' %}
+              <div style="height:15px"></div>
+              <div class="ui buttons">
+                <div class="ui buttons">
+                  <a class="ui button" href="{{ url_for('admin.delete_entry', id=resource.id) }}">
+                      <i class="delete icon"></i>
+                      Delete
+                  </a>
+                  <a class="ui button" href="{{ url_for('admin.contribution_' + resource.doc_type, id=resource.id) }}">
+                      <i class="edit icon"></i>
+                      Edit
+                  </a>
+                  <a class="ui button" href="javascript:togglePublish('{{ resource.id }}')">
+                      <i class="save icon"></i>
+                      <span id="publish">Publish</span>
+                  </a>
+                </div>
+              </div>
+              {% endif %}
             <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
                <tbody>
                    <tr>
-                     <td width = "20%">Title</td>
-                     <td>{{ contribution.title }}</td>
+                     <td>Resource Type</td>
+                     <td>{{ resource.doc_type.split('_')|join(' ') }}</td>
                    </tr>
+                   {% if resource.tags | length > 0 %}
                    <tr>
-                     <td>Type</td>
-                     <td>{{ contribution.doc_type }}</td>
-                   </tr>
-                   <tr>
-                  {% if contribution.other_type %}
-                   <tr>
-                     <td>Type (if other)</td>
-                     <td>{{ contribution.other_type }}</td>
+                     <td>Tags</td>
+                     <td>
+                      {% for tag in resource.tags %}
+                       <div class="ui basic label" style="margin: 2px">
+                         {{ tag.tag.tag }}
+                       </div>
+                       {% endfor %}
+                     </td>
                    </tr>
                    {% endif %}
-                   {% if contribution.description %}
+                   {% if resource.day and resource.month and resource.year %}
+                     <td>Date</td>
+                     <td>{{ resource.month ~ ' ' ~ resource.day ~ ', ' ~ resource.year }}</td>
+                     {% elif resource.month and resource.year %}
+                     <td>Date</td>
+                     <td>{{ resource.month ~ ' ' ~ resource.year }}</td>
+                     {% elif resource.year %}
+                     <td>Description</td>
+                     <td>{{ resource.year }}</td>
+                   {% endif %}
+                   {% if resource.description %}
                    <tr>
                      <td>Description</td>
-                     <td>{{ contribution.description }}</td>
+                     <td>{{ resource.description }}</td>
                    </tr>
                    {% endif %}
-                   {% if contribution.day %}
+                  {% if resource.other_type %}
                    <tr>
-                     <td>Publication Day</td>
-                     <td>{{ contribution.day }}</td>
+                     <td>Type (if other)</td>
+                     <td>{{ resource.other_type }}</td>
                    </tr>
+                   <tr>
                    {% endif %}
-                    {% if contribution.month %}
-                   <tr>
-                     <td>Publication Month</td>
-                     <td>{{ contribution.month }}</td>
-                   </tr>
-                   {% endif %}
-                    {% if contribution.year %}
-                   <tr>
-                     <td>Publication Year</td>
-                     <td>{{ contribution.year }}</td>
-                   </tr>
-                   {% endif %}
-                   <tr>
-                     <td>Posted Date</td>
-                     <td>{{ contribution.posted_date }}</td>
-                   </tr>
-                   <tr>
-                     <td>Last Edited Date</td>
-                     <td>{{ contribution.last_edited_date }}</td>
-                   </tr>
-                   {% if contribution.link %}
+                   {% if resource.link %}
                    <tr>
                      <td>Link</td>
-                     <td>{{ contribution.link }}</td>
+                     <td><a href="{{ resource.link }}">{{ resource.link }}</a></td>
                    </tr>
                    {% endif %}
-                   {% if contribution.file %}
+                   {% if resource.citation %}
                    <tr>
-                     <td>File</td>
-                     <td>{{ contribution.file }}</td>
+                     <td>Citation</td>
+                     <td>{{ resource.citation }}</td>
                    </tr>
                    {% endif %}
-                   {% if contribution.citation %}
-                   <tr>
-                     <td>File</td>
-                     <td>{{ contribution.citation }}</td>
-                   </tr>
-                   {% endif %}
-                   {% if contribution.volume %}
+                   {% if resource.volume %}
                    <tr>
                      <td>Volume</td>
-                     <td>{{ contribution.volume }}</td>
+                     <td>{{ resource.volume }}</td>
                    </tr>
                    {% endif %}
-                   {% if contribution.edition %}
+                   {% if resource.edition %}
                    <tr>
                      <td>Edition</td>
-                     <td>{{ contribution.edition }}</td>
+                     <td>{{ resource.edition }}</td>
                    </tr>
                    {% endif %}
-                   {% if contribution.series %}
+                   {% if resource.series %}
                    <tr>
                      <td>Series</td>
-                     <td>{{ contribution.series }}</td>
+                     <td>{{ resource.series }}</td>
                    </tr>
                    {% endif %}
-                   {% if contribution.author_first_name %}
-                   <tr>
-                     <td>Author First Name</td>
-                     <td>{{ contribution.author_first_name }}</td>
-                   </tr>
-                   {% endif %}
-                   {% if contribution.author_last_name %}
-                   <tr>
-                     <td>Author Last Name</td>
-                     <td>{{ contribution.author_last_name }}</td>
-                   </tr>
-                   {% endif %}
-                   {% if contribution.editor_first_name %}
-                   <tr>
-                     <td>Editor First Name</td>
-                     <td>{{ contribution.editor_first_name }}</td>
-                   </tr>
-                   {% endif %}
-                   {% if contribution.editor_last_name %}
-                   <tr>
-                     <td>Editor Last Name</td>
-                     <td>{{ contribution.editor_last_name }}</td>
-                   </tr>
-                   {% endif %}
-                   {% if contribution.name %}
+                   {% if resource.name %}
                    <tr>
                      <td>Name</td>
-                     <td>{{ contribution.name }}</td>
+                     <td>{{ resource.name }}</td>
                    </tr>
                    {% endif %}
-                   {% if contribution.city %}
+                   {% if resource.city %}
                    <tr>
                      <td>City</td>
-                     <td>{{ contribution.city }}</td>
+                     <td>{{ resource.city }}</td>
                    </tr>
                    {% endif %}
-                   {% if contribution.state %}
+                   {% if resource.state %}
                    <tr>
                      <td>State</td>
-                     <td>{{ contribution.state }}</td>
+                     <td>{{ resource.state }}</td>
                    </tr>
                    {% endif %}
-                   {% if contribution.country %}
+                   {% if resource.country %}
                    <tr>
                      <td>Country</td>
-                     <td>{{ contribution.country }}</td>
+                     <td>{{ resource.country }}</td>
                    </tr>
                    {% endif %}
-                   {% if contribution.govt_body %}
-                   <tr>
-                     <td>Government Body</td>
-                     <td>{{ contribution.govt_body }}</td>
-                   </tr>
-                   {% endif %}
-                   {% if contribution.section %}
+                   {% if resource.section %}
                    <tr>
                      <td>Section</td>
-                     <td>{{ contribution.section }}</td>
+                     <td>{{ resource.section }}</td>
                    </tr>
                    {% endif %}
                </tbody>
            </table>
         </div>
     </div>
+
+    <script>
+        var csrf_token = "{{ csrf_token() }}";
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                }
+            }
+        });
+        function togglePublish(id) {
+            $.post('/admin/toggle_publish', {
+                id: id
+            }).done(function(response) {
+              $("#publish").text(response.status);
+            }).fail(function() {
+                // TODO?
+            });
+        }
+    </script>
 {% endblock %}

@@ -5,7 +5,7 @@
 {% block content %}
 <div class="ui grid container">
     <div class="twelve wide computer sixteen wide mobile centered column">
-        <h2 class="ui dividing header">Create Database Entry</h2>
+        <h2 class="ui dividing header">Edit Database Entry</h2>
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
                   <h3 class="ui dividing header">Submit a Video</h3>
@@ -82,19 +82,19 @@
 <script>
   $('.menu .item').tab();
   $(document).ready(function() {
-      {% for i in range(video_form.video_author_first_name | length) %}
+      {% for i in range(video_form.director_first_name | length) %}
           {% if i != 0 %}
               $("#beforeMe").before(`<div class = "author fields" id="author-{{ i }}">\
               <div class="four wide field">\
-                <label>Remove Author</label>\
+                <label>Remove Director</label>\
                 <a class="ui labeled icon button fluid" id="author-{{ i }}" href="javascript:delAuthor({{ i }})">\
-                  <i class="close icon"></i>Remove Author</a>\
+                  <i class="close icon"></i>Remove Director</a>\
               </div>\
               <div class = "six wide field">\
-                {{ f.render_form_field(video_form.video_author_first_name[i], name="First Name") }}
+                {{ f.render_form_field(video_form.director_first_name[i], name="First Name") }}
               </div>\
               <div class = "six wide field">\
-                {{ f.render_form_field(video_form.video_author_last_name[i], name="Last Name") }}
+                {{ f.render_form_field(video_form.director_last_name[i], name="Last Name") }}
               </div>\
           </div>`); //bit hacky but ok
 
@@ -110,10 +110,10 @@
               <i class="close icon"></i>Remove Director</a>\
           </div>\
           <div class = "six wide field">\
-            {{ f.render_form_field(video_form.video_author_first_name[0], name="First Name") }}
+            {{ f.render_form_field(video_form.director_first_name[0], name="First Name") }}
           </div>\
           <div class = "six wide field">\
-            {{ f.render_form_field(video_form.video_author_last_name[0], name="Last Name") }}
+            {{ f.render_form_field(video_form.director_last_name[0], name="Last Name") }}
           </div>\
       </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
   }

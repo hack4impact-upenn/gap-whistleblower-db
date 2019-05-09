@@ -40,10 +40,10 @@
                    <tr>
                        <th>Title</th>
                        <th class="two wide">Status</th>
-                       <th class="one wide">Link</th>
-                       <th class="two wide">Type</th>
+                       <th class="one wide">Edit</th>
+                       <th class="two wide">Resource Type</th>
+                       <th class="one wide">Publish</th>
                        <th class="one wide">Delete</th>
-                       <th class="one wide">Draft</th>
                    </tr>
                </thead>
                <tbody>
@@ -54,27 +54,27 @@
                         <td>
                           <div class="ui buttons">
                             <!--we give the button and icon the same id to avoid weird things with hitboxes-->
-                            <button class="ui small compact icon button"  onclick="linkMe('{{ c.link }}')"
-                            id="{{ c.id }}">
-                              <i class="linkify icon" id="{{ c.id }}"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td class="document doc_type">{{ c.doc_type }}</td>
-                        <td>
-                          <div class="ui buttons">
-                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
-                            <button class="ui small compact icon button delete-suggestion {% if c.document_status != 'draft' %}disabled{% endif %}" id="{{ c.id }}">
-                              <i class="trash alternate icon" id="{{ c.id }}"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="ui buttons">
-                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
-                            <button class="ui small compact icon button {% if c.document_status != 'draft' %}disabled{% endif %}" id="{{ c.id }}"
-                                  onclick="window.location.href = '{{ url_for(user_type + '.view_' + c.doc_type + '_draft', id=c.id) }}';">
+                            <a class="ui small compact icon button {% if c.document_status != 'draft' and user_type != 'admin' %}disabled{% endif %}" id="{{ c.id }}"
+                                  href="{{ url_for(user_type + '.view_' + c.doc_type + '_draft', id=c.id) }}">
                               <i class="edit icon" id="{{ c.id }}"></i>
+                            </a>
+                          </div>
+                        </td>
+                        <td class="document doc_type">{{ c.doc_type.split('_')|join(' ') }}</td>
+                        <td>
+                          <div class="ui buttons">
+                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
+                            <a class="ui small compact icon button {% if c.document_status != 'draft' and user_type != 'admin'%}disabled{% endif %}" id="{{ c.id }}"
+                              href="{{ url_for(user_type + '.publish_draft', id=c.id) }}">
+                              <i class="upload icon" id="{{ c.id }}"></i>
+                            </a>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="ui buttons">
+                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
+                            <button class="ui small compact icon button delete-suggestion {% if c.document_status != 'draft' and user_type != 'admin' %}disabled{% endif %}" id="{{ c.id }}">
+                              <i class="trash alternate icon" id="{{ c.id }}"></i>
                             </button>
                           </div>
                         </td>
