@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html' %}
+
 {% block content %}
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
@@ -8,7 +9,7 @@
             </a>
             <h2 class="ui header">
                 Review Contributions
-                <div class="sub header">Review and manage contributor entries</div>
+                <div class="sub header">Review and manage resources contributed by users.</div>
             </h2>
             <div class="ui menu">
                 <div id="select-type" class="ui dropdown item">
@@ -17,11 +18,14 @@
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                      <div class="item" data-value="">All resources</div>
-                      <div class="item" data-value="draft">Draft</div>
-                      <div class="item" data-value="needs review">Needs Review</div>
-                      <div class="item" data-value="under review">Under Review</div>
-                      <div class="item" data-value="published">Published</div>
+                      <div class="item" data-value="">All resource types</div>
+                      <div class="item" data-value="book">Books</div>
+                      <div class="item" data-value="article">News Articles</div>
+                      <div class="item" data-value="journal">Journal Articles</div>
+                      <div class="item" data-value="law">Laws</div>
+                      <div class="item" data-value="video">Videos</div>
+                      <div class="item" data-value="video">Reports</div>
+                      <div class="item" data-value="other">Other</div>
                     </div>
                 </div>
                 <div class="ui right search item">
@@ -35,54 +39,18 @@
                <thead>
                    <tr>
                        <th>Title</th>
-                       <th class="two wide">Status</th>
-                       <th class="one wide">Edit</th>
-                       <th class="two wide">Resource Type</th>
-                       <th class="one wide">Publish</th>
-                       <th class="one wide">Delete</th>
+                       <th>Type</th>
+                       <th>Last edited by</th>
+                       <th>Status</th>
                    </tr>
                </thead>
                <tbody>
                {% for c in contributions %}
                    <tr>
-                        <td onclick="window.location.href = '{{ url_for('admin.other_contribution', id=c.id) }}';">{{ c.title }}</td>
-                        <td class="document document_status">{{ c.document_status }}</td>
-                        <td>
-                          <div class="ui buttons">
-                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
-                            <a class="ui small compact icon button" id="{{ c.id }}"
-                                  href="{{ url_for('admin.view_' + c.doc_type + '_draft', id=c.id) }}">
-                              <i class="edit icon" id="{{ c.id }}"></i>
-                            </a>
-                          </div>
-                        </td>
-                        <td class="document doc_type">{{ c.doc_type.split('_')|join(' ') }}</td>
-                        <td>
-                          <div class="ui buttons">
-                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
-                            <a class="ui small compact icon button" id="{{ c.id }}"
-                              href="{{ url_for('admin.publish_contribution', id=c.id) }}">
-                              <i class="upload icon" id="{{ c.id }}"></i>
-                            </a>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="ui buttons">
-                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
-                            <button class="ui small compact icon button delete-suggestion" id="{{ c.id }}">
-                              <i class="trash alternate icon" id="{{ c.id }}"></i>
-                            </button>
-                          </div>
-                        </td>
-                        <div id="modal-{{ c.id }}" class="ui tiny modal delete-suggestion-modal">
-                           <div class="header">Delete Draft</div>
-                           <div class="content">Are you sure you want to delete {{ c.title }}?</div>
-                           <div class="actions">
-                             <div class="ui cancel button">Cancel</div>
-                             <a href="{{ url_for('admin.delete_entry', id=c.id) }}"
-                               class="negative ui button">Yes, delete this draft</a>
-                           </div>
-                        </div>
+                       <td onclick="window.location.href = '{{ url_for('admin.other_contribution', id=c.id) }}';">{{ c.title }}</td>
+                       <td class="suggestion type">{{ c.doc_type }}</td>
+                       <td>{% if c.document_status == "under review" %} {{ c.last_edited_by }} {% endif %}</td>
+                       <td class="suggestion status">{{ c.document_status }}</td>
                    </tr>
                {% endfor %}
                </tbody>
@@ -111,10 +79,36 @@
         });
         $('#select-type').dropdown({
             onChange: function (value, text, $selectedItem) {
-                $('td.document.document_status:contains(' + value + ')').closest('tr').removeClass('hidden').show();
-                $('td.document.document_status').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
+                $('td.suggestion.type:contains(' + value + ')').closest('tr').removeClass('hidden').show();
+                $('td.suggestion.type').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
+                 $('td.suggestion.status').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
             }
         });
       });
+      function linkMe(link) {
+        console.log(link)
+          if (isValidDomain(link)) {
+              var re  = "^(https?://)"
+              var regexHTTP = new RegExp(re,"i");
+              if (regexHTTP.test(link)) {
+                window.open(link)
+              }
+              else {
+                window.open('http://'.concat(link))
+              }
+          }
+          else {
+            alert("This suggestion has a malformed URL.")
+          }
+      }
+      function isValidDomain(v) {
+        if (!v) return false;
+        var re  = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
+        var regexUrl = new RegExp(re,"i");
+        return regexUrl.test(v);
+      }
+      function startDraft(id) {
+        window.open('draft/'.concat(id))
+      }
     </script>
 {% endblock %}

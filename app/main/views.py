@@ -1,8 +1,7 @@
 import json
 import time
 import boto3
-from flask import (Blueprint, abort, flash, redirect, render_template, request, jsonify,
-                   url_for)
+from flask import Blueprint, request, render_template, redirect, url_for
 from flask.json import jsonify
 from random import randint
 from time import sleep
@@ -12,6 +11,7 @@ from app.main.forms import SaveForm, UnsaveForm, SuggestionForm, SearchForm
 from app import db
 import datetime
 
+from app.decorators import contributor_required, admin_required
 import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
 import requests
@@ -32,12 +32,6 @@ main = Blueprint('main', __name__)
 
 selected_tags = []
 
-def role():
-    if current_user.is_authenticated and current_user.role_id == 3:
-        return 'admin'
-    else:
-        return 'not_admin'
-
 @main.route('/', methods=['GET', 'POST'])
 def index():
     tags = Tag.query.all()
@@ -47,7 +41,7 @@ def index():
 
     stemmer = SnowballStemmer("english", ignore_stopwords=True)
 
-    results = Document.query.filter_by(document_status="published").order_by(Document.last_edited_date.desc()).all()
+    results = Document.query.filter_by(document_status="published").all()
 
     if form.validate_on_submit():
         conditions = []
@@ -82,23 +76,7 @@ def index():
         'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
         'October': 10, 'November': 11, 'December': 12}
 
-        if len(form.start_date.data) > 0:
-            start_date = form.start_date.data.split(' ')
-            start_month = month_dict.get(start_date[0])
-            start_day = start_date[1][:-1]
-            start_year = start_date[2]
-            start = (start_year, start_month, start_day)
-            conditions.append(Document.is_after(start))
-
-        if len(form.end_date.data) > 0:
-            end_date = form.end_date.data.split(' ')
-            end_month = month_dict.get(end_date[0])
-            end_day = end_date[1][:-1]
-            end_year = end_date[2]
-            end = (end_year, end_month, end_day)
-            conditions.append(Document.is_before(end))
-
-        results =  Document.query.filter(and_(*conditions)).order_by(Document.last_edited_date.desc()).all()
+        results =  Document.query.filter(and_(*conditions)).all()
 
         if len(query) > 0:
             idf = {}
@@ -129,6 +107,52 @@ def about():
         'main/about.html', editable_html_obj=editable_html_obj)
 
 
+@main.route('/sign-s3/')
+@admin_required
+@contributor_required
+@login_required
+def sign_s3():
+    # Load necessary information into the application
+        S3_BUCKET = "h4i-test2"
+        TARGET_FOLDER = 'json/'
+        # Load required data from the request
+        pre_file_name = request.args.get('file-name')
+        file_name = ''.join(pre_file_name.split('.')[:-1]) +\
+            str(time.time()).replace('.',  '-') + '.' +  \
+            ''.join(pre_file_name.split('.')[-1:])
+        file_type = request.args.get('file-type')
+
+        # Initialise the S3 client
+        s3 = boto3.client('s3', 'us-east-2')
+
+        # Generate and return the presigned URL
+        S3_REGION = "us-east-2"
+        presigned_post = s3.generate_presigned_post(
+        Bucket=S3_BUCKET,
+        Key=TARGET_FOLDER + file_name,
+        Fields={
+            "acl": "public-read",
+            "Content-Type": file_type
+        },
+        Conditions=[{
+            "acl": "public-read"
+        }, {
+            "Content-Type": file_type
+        }],
+        ExpiresIn=60000)
+
+        # Return the data to the client
+        return json.dumps({
+            'data':
+            presigned_post,
+            'url_upload':
+            'https://s3.%s.amazonaws.com/%s/' % (S3_REGION, S3_BUCKET),
+            'url':
+            'https://s3.%s.amazonaws.com/%s/json/%s' % (S3_REGION, S3_BUCKET,
+                file_name)
+        })
+        
+
 @main.route('/suggestion', methods=['GET', 'POST'])
 def suggestion():
     """Suggestion page."""
@@ -142,7 +166,8 @@ def suggestion():
             description=form.description.data)
         db.session.add(suggestion)
         db.session.commit()
-        flash('Suggestion \"{}\" successfully created'.format(
+        flash(
+            'Suggestion \"{}\" successfully created'.format(
                 form.title.data), 'form-success')
         return render_template(
             'main/suggestion.html', form=form)
@@ -187,7 +212,7 @@ def resource(id, from_saved=False):
         db.session.commit()
         return redirect(url_for('main.resource' if not from_saved else 'main.resource_saved', id=id))
     return render_template(
-        'main/resource.html', resource=resource, user_id=user_id, saved=saved, form=form, from_saved=from_saved, user_type=role()
+        'main/resource.html', resource=resource, user_id=user_id, saved=saved, form=form, from_saved=from_saved
     )
 
 
@@ -196,7 +221,7 @@ def resource(id, from_saved=False):
 def review_saved():
     user_id = current_user.id
     user = User.query.get(user_id)
-    saved = user.saved.order_by(Document.last_edited_date)
+    saved = user.saved
     return render_template('main/review_saved.html', saved=saved)
 
 def check_dead_links():
@@ -220,55 +245,3 @@ def get_docs(query):
         if stuff is not None:
             search_docs.extend(stuff.docs)
     return search_docs
-
-@main.route('/sign-s3/')
-@login_required
-def sign_s3():
-    # Load necessary information into the application
-        S3_BUCKET = "h4i-test2"
-        TARGET_FOLDER = 'json/'
-        # Load required data from the request
-        pre_file_name = request.args.get('file-name')
-        file_name = ''.join(pre_file_name.split('.')[:-1]) +\
-            str(time.time()).replace('.',  '-') + '.' +  \
-            ''.join(pre_file_name.split('.')[-1:])
-        file_type = request.args.get('file-type')
-
-        # Initialise the S3 client
-        s3 = boto3.client('s3', 'us-east-2')
-
-        # Generate and return the presigned URL
-        S3_REGION = "us-east-2"
-        presigned_post = s3.generate_presigned_post(
-        Bucket=S3_BUCKET,
-        Key=TARGET_FOLDER + file_name,
-        Fields={
-            "acl": "public-read",
-            "Content-Type": file_type
-        },
-        Conditions=[{
-            "acl": "public-read"
-        }, {
-            "Content-Type": file_type
-        }],
-        ExpiresIn=60000)
-
-        # Return the data to the client
-        return json.dumps({
-            'data':
-            presigned_post,
-            'url_upload':
-            'https://s3.%s.amazonaws.com/%s/' % (S3_REGION, S3_BUCKET),
-            'url':
-            'https://s3.%s.amazonaws.com/%s/json/%s' % (S3_REGION, S3_BUCKET,
-                file_name)
-        })
-        
-
-
-
-# scheduler = BackgroundScheduler()
-# scheduler.add_job(func=check_dead_links, trigger="interval", seconds=3600)
-# scheduler.start()
-# Shut down the scheduler when exiting the app
-# atexit.register(lambda: scheduler.shutdown())

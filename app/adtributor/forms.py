@@ -96,20 +96,20 @@ class MultipleFileUploadField(StringField):
 
 class BookForm(Form):
     book_title = StringField(validators=[InputRequired()]) #title
-    book_author_first_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1) #author_first_name
-    book_author_last_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1) #author_last_name
-    book_editor_first_name = StringField()
-    book_editor_last_name = StringField()
     book_volume = StringField() #volme
     book_edition = StringField() #edition
     book_series = StringField() #series
-    book_publisher_name = StringField(validators=[InputRequired()]) #name
+    book_author_first_name = FieldList(StringField(), min_entries=1) #author_first_name
+    book_author_last_name = FieldList(StringField(), min_entries=1) #author_last_name
+    book_editor_first_name = StringField()
+    book_editor_last_name = StringField()
+    book_publisher_name = StringField() #name
     book_publication_day = IntegerField(validators=[validators.optional()]) #day
     book_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
     ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
     , ('August', 'August'), ('September', 'September'), ('October', 'October'),
     ('November', 'November'), ('December', 'December')]) #month
-    book_publication_year = IntegerField(validators=[InputRequired()]) #year
+    book_publication_year = IntegerField(validators=[validators.optional()]) #year
     book_description = TextAreaField() #description
     book_tags = SelectMultipleField(choices=[('', '')])
     book_link = StringField() #link
@@ -124,15 +124,15 @@ class BookForm(Form):
 
 class ArticleForm(Form):
     article_title = StringField(validators=[InputRequired()])
-    article_author_first_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    article_author_last_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    article_publication = StringField(validators=[InputRequired()])
+    article_author_first_name = FieldList(StringField(), min_entries=1)
+    article_author_last_name = FieldList(StringField(), min_entries=1)
+    article_publication = StringField()
     article_publication_day = IntegerField(validators=[validators.optional()])
     article_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
     ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
     , ('August', 'August'), ('September', 'September'), ('October', 'October'),
     ('November', 'November'), ('December', 'December')])
-    article_publication_year = IntegerField(validators=[InputRequired()])
+    article_publication_year = IntegerField(validators=[validators.optional()])
     article_description = TextAreaField()
     article_tags = SelectMultipleField(choices=[('', '')])
     article_link = StringField()
@@ -147,9 +147,9 @@ class ArticleForm(Form):
 
 class JournalArticleForm(Form):
     article_title = StringField(validators=[InputRequired()])
-    article_author_first_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    article_author_last_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    publisher_name = StringField(validators=[InputRequired()])
+    article_author_first_name = FieldList(StringField(), min_entries=1)
+    article_author_last_name = FieldList(StringField(), min_entries=1)
+    publisher_name = StringField()
     volume = StringField()
     start_page = IntegerField()
     end_page = IntegerField()
@@ -158,11 +158,11 @@ class JournalArticleForm(Form):
     ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
     , ('August', 'August'), ('September', 'September'), ('October', 'October'),
     ('November', 'November'), ('December', 'December')])
-    article_publication_year = IntegerField(validators=[InputRequired()])
+    article_publication_year = IntegerField(validators=[validators.optional()])
     article_description = TextAreaField()
     article_tags = SelectMultipleField(choices=[('', '')])
     article_link = StringField()
-    article_file_urls = MultipleFileUploadField()
+    journal_file_urls = MultipleFileUploadField()
     save_article = SubmitField()
     submit_article = SubmitField()
 
@@ -183,6 +183,8 @@ class LawForm(Form):
     , ('August', 'August'), ('September', 'September'), ('October', 'October'),
     ('November', 'November'), ('December', 'December')]) #month
     law_enactment_year = IntegerField(validators=[validators.optional()]) #year
+    law_city = StringField() #city
+    law_state = StringField() #state
     law_country = StringField()
     law_description = TextAreaField() #description
     law_tags = SelectMultipleField(choices=[('', '')])
@@ -198,8 +200,8 @@ class LawForm(Form):
 
 class VideoForm(Form):
     video_title = StringField(validators=[InputRequired()])
-    director_first_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    director_last_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
+    director_first_name = FieldList(StringField(), min_entries=1)
+    director_last_name = FieldList(StringField(), min_entries=1)
     video_post_source = StringField()
     video_publisher = StringField()
     video_publication_day = IntegerField(validators=[validators.optional()]) #day
@@ -207,7 +209,7 @@ class VideoForm(Form):
     ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
     , ('August', 'August'), ('September', 'September'), ('October', 'October'),
     ('November', 'November'), ('December', 'December')])
-    video_publication_year = IntegerField(validators=[InputRequired()])
+    video_publication_year = IntegerField(validators=[validators.optional()])
     video_description = TextAreaField()
     video_tags = SelectMultipleField(choices=[('', '')])
     video_link = StringField()
@@ -222,15 +224,15 @@ class VideoForm(Form):
 
 class ReportForm(Form):
     report_title = StringField(validators=[InputRequired()])
-    report_author_first_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    report_author_last_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    report_publisher = StringField(validators=[InputRequired()])
+    report_author_first_name = FieldList(StringField(), min_entries=1)
+    report_author_last_name = FieldList(StringField(), min_entries=1)
+    report_publisher = StringField()
     report_publication_day = IntegerField(validators=[validators.optional()])
     report_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
     ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
     , ('August', 'August'), ('September', 'September'), ('October', 'October'),
     ('November', 'November'), ('December', 'December')])
-    report_publication_year = IntegerField(validators=[InputRequired()])
+    report_publication_year = IntegerField(validators=[validators.optional()])
     report_description = TextAreaField()
     report_tags = SelectMultipleField(choices=[('', '')])
     report_link = StringField()
@@ -246,14 +248,14 @@ class ReportForm(Form):
 class OtherForm(Form):
     other_document_type = StringField(validators = [InputRequired()])
     other_title = StringField(validators=[InputRequired()])
-    other_author_first_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    other_author_last_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
+    other_author_first_name = FieldList(StringField(), min_entries=1)
+    other_author_last_name = FieldList(StringField(), min_entries=1)
     other_publication_day = IntegerField(validators=[validators.optional()])
     other_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
     ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
     , ('August', 'August'), ('September', 'September'), ('October', 'October'),
     ('November', 'November'), ('December', 'December')])
-    other_publication_year = IntegerField(validators=[InputRequired()])
+    other_publication_year = IntegerField(validators=[validators.optional()])
     other_description = TextAreaField()
     other_tags = SelectMultipleField(choices=[('', '')])
     other_link = StringField()
