@@ -221,6 +221,50 @@ def get_docs(query):
             search_docs.extend(stuff.docs)
     return search_docs
 
+@main.route('/sign-s3/')
+@login_required
+def sign_s3():
+    # Load necessary information into the application
+        S3_BUCKET = "h4i-test2"
+        TARGET_FOLDER = 'json/'
+        # Load required data from the request
+        pre_file_name = request.args.get('file-name')
+        file_name = ''.join(pre_file_name.split('.')[:-1]) +\
+            str(time.time()).replace('.',  '-') + '.' +  \
+            ''.join(pre_file_name.split('.')[-1:])
+        file_type = request.args.get('file-type')
+
+        # Initialise the S3 client
+        s3 = boto3.client('s3', 'us-east-2')
+
+        # Generate and return the presigned URL
+        S3_REGION = "us-east-2"
+        presigned_post = s3.generate_presigned_post(
+        Bucket=S3_BUCKET,
+        Key=TARGET_FOLDER + file_name,
+        Fields={
+            "acl": "public-read",
+            "Content-Type": file_type
+        },
+        Conditions=[{
+            "acl": "public-read"
+        }, {
+            "Content-Type": file_type
+        }],
+        ExpiresIn=60000)
+
+        # Return the data to the client
+        return json.dumps({
+            'data':
+            presigned_post,
+            'url_upload':
+            'https://s3.%s.amazonaws.com/%s/' % (S3_REGION, S3_BUCKET),
+            'url':
+            'https://s3.%s.amazonaws.com/%s/json/%s' % (S3_REGION, S3_BUCKET,
+                file_name)
+        })
+        
+
 
 
 # scheduler = BackgroundScheduler()

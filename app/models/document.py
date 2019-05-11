@@ -369,7 +369,8 @@ class Document(db.Model):
                 f'Affiliated Government Body: {self.govt_body}\n>'
                 f'Section: {self.section}\n>'
                 f'Type (if other): {self.other_type}\n>'
-                f'Document Status: {self.document_status}\n>')
+                f'Document Status: {self.document_status}\n>'
+                f'Link: {self.link}\n>')
 
     def __str__(self):
         return self.__repr__()
