@@ -191,7 +191,7 @@ class User(UserMixin, db.Model):
         s = '<User \n'
         s += 'First Name: {}\n'.format(self.first_name)
         s += 'Last Name: {}\n'.format(self.last_name)
-        s += 'Email: {}, {}\n'.format(self.email)
+        s += 'Email: {}\n'.format(self.email)
         s += 'Role: {}\n'.format(self.role)
         s += 'Organization'.format(self.organization)
         s += 'Bio: {}\n'.format(self.bio)+ '>'
