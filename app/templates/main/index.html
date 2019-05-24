@@ -108,7 +108,10 @@
           <div class="ui grid">
            <div class="row">
             <div class="sixteen wide column">
-                <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
+                <!-- it started out with a div... how did it end up like this? -->
+                {% for i in range(((search_results | length) / 100)|round(0, 'ceil')|int) %}
+                <table class="ui searchable sortable unstackable selectable celled table
+                    data-results data-results-{{ i }}" style="overflow-x: scroll;">
                     <thead>
                         <tr>
                             <th class="three wide">Title</th>
@@ -118,9 +121,6 @@
                             <th class="three wide">Tags</th>
                         </tr>
                     </thead>
-                    <!-- im sorry about this horror -->
-                    {% for i in range(((search_results | length) / 100)|round(0, 'ceil')|int) %}
-                    <tbody class="data-results data-results-{{ i }}">
                     {% for c in search_results[100*i:100*(i + 1)] %}
                         <tr onclick="window.location.href = '{{ url_for('main.resource', id=c.id) }}';">
                             <td>{{ c.title }}</td>
@@ -155,9 +155,8 @@
                             </td>
                         </tr>
                     {% endfor %}
-                    </tbody>
-                    {% endfor %}
                 </table>
+                {% endfor %}
                 </div>
               </div>
             </div>
