@@ -51,7 +51,7 @@ def index():
 
     if form.validate_on_submit():
         conditions = []
-        conditions.append(Document.document_status=='published')
+        conditions.append(Document.document_status == 'published')
 
         types = ['book', 'news_article', 'journal_article', 'law', 'video', 'report', 'other']
         selected_types = []
@@ -98,7 +98,7 @@ def index():
             end = (end_year, end_month, end_day)
             conditions.append(Document.is_before(end))
 
-        results =  Document.query.filter(and_(*conditions)).order_by(Document.last_edited_date.desc()).all()
+        results = Document.query.filter(and_(*conditions)).order_by(Document.last_edited_date.desc()).all()
 
         if len(query) > 0:
             idf = {}
@@ -120,7 +120,6 @@ def index():
         return render_template('main/index.html', search_results=results, form=form, idf=idf)
 
     return render_template('main/index.html', search_results=results, form=form, idf=idf)
-
 
 @main.route('/about')
 def about():
