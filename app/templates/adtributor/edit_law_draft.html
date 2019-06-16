@@ -5,7 +5,7 @@
 {% block content %}
 <div class="ui grid container">
     <div class="twelve wide computer sixteen wide mobile centered column">
-        <h2 class="ui dividing header">Edit Database Entry</h2>
+        <h2 class="ui dividing header">Create Database Entry</h2>
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
                   <h3 class="ui dividing header">Submit a Law</h3>
@@ -27,17 +27,23 @@
                       {{ f.render_form_field(law_form.law_citation, name='Citation') }}
                       </div>
                   </div>
-                  <div class = "two fields">
+                  <div class = "three fields">
                       <div class = "field">
                       {{ f.render_form_field(law_form.law_government_body, name='Government Body') }}
                       </div>
                       <div class = "field">
                       {{ f.render_form_field(law_form.law_section, name='Section') }}
                       </div>
-                  </div>
-                  <div class = "two fields">
                       <div class = "field">
                       {{ f.render_form_field(law_form.law_region, name='Region') }}
+                      </div>
+                  </div>
+                  <div class = "three fields">
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_city, name='City') }}
+                      </div>
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_state, name='State') }}
                       </div>
                       <div class = "field">
                       {{ f.render_form_field(law_form.law_country, name='Country') }}

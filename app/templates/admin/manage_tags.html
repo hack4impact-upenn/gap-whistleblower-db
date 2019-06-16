@@ -16,39 +16,13 @@
             {% for t in tags %}
             <div class="ui label" style="margin-bottom:3px">
               <div style="display: inline-block">{{ t.tag }}</div>
-              <a style="display: inline-block; margin-right: -8px;" href="javascript:delTag('{{t.id}}', '{{url_for('admin.delete_tag', id=t.id)}}', '{{t.tag}}', '{{t.documents | length}}')">
+              <a style="display: inline-block; margin-right: -8px;" href="{{ url_for('admin.delete_tag', id=t.id) }}">
                 <i class="delete icon" style="text-decoration: inherit;" id="{{ t.id }}"></i>
               </a>
-            </div>
-            <div class="ui mini modal tag">
-              <div class="ui icon header">
-                <i class="close icon"></i>
-                Delete Tag
-              </div>
-              <div class="content" id="modal-text">
-              </div>
-              <div class="actions">
-                <a class="ui red cancel button">
-                  <i class="remove icon"></i>
-                 Cancel
-                </a>
-                <a class="ui green ok button" id="modal-yes">
-                  <i class="checkmark icon"></i>
-                  Delete tag
-                </a>
-              </div>
             </div>
             {% endfor %}
             <h3 class="ui dividing header">Add a New Tag</h3>
             {{ f.render_form(form) }}
         </div>
     </div>
-    <script>
-      function delTag(id, url, tag, num_docs) {
-        $( "#modal-text" ).text( "Are you should sure you want to delete " + tag + "? This tag is associated with " + num_docs + " documents." );
-        $('#modal-yes').attr('href',url);
-        $('.ui.mini.modal.tag').attr('id', 'tag-modal-' + id);
-        $('#tag-modal-' + id).modal('show');
-      }
-    </script>
 {% endblock %}

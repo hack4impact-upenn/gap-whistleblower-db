@@ -1,8 +1,7 @@
 import json
 import time
 import boto3
-from flask import (Blueprint, abort, flash, redirect, render_template, request, jsonify,
-                   url_for)
+from flask import Blueprint, request, render_template, redirect, url_for
 from flask.json import jsonify
 from random import randint
 from time import sleep
@@ -32,12 +31,6 @@ main = Blueprint('main', __name__)
 
 selected_tags = []
 
-def role():
-    if current_user.is_authenticated and current_user.role_id == 3:
-        return 'admin'
-    else:
-        return 'not_admin'
-
 @main.route('/', methods=['GET', 'POST'])
 def index():
     tags = Tag.query.all()
@@ -47,7 +40,7 @@ def index():
 
     stemmer = SnowballStemmer("english", ignore_stopwords=True)
 
-    results = Document.query.filter_by(document_status="published").order_by(Document.last_edited_date.desc()).all()
+    results = Document.query.filter_by(document_status="published").all()
 
     if form.validate_on_submit():
         conditions = []
@@ -82,23 +75,19 @@ def index():
         'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
         'October': 10, 'November': 11, 'December': 12}
 
-        if len(form.start_date.data) > 0:
-            start_date = form.start_date.data.split(' ')
-            start_month = month_dict.get(start_date[0])
-            start_day = start_date[1][:-1]
-            start_year = start_date[2]
-            start = (start_year, start_month, start_day)
-            conditions.append(Document.is_after(start))
+        # start_date = form.start_date.data.split(' ')
+        # start_month = month_dict.get(start_date[0])
+        # start_day = start_date[1][:-1]
+        # start_year = start_date[2]
+        # start = datetime.date(2000, 1, 1)
 
-        if len(form.end_date.data) > 0:
-            end_date = form.end_date.data.split(' ')
-            end_month = month_dict.get(end_date[0])
-            end_day = end_date[1][:-1]
-            end_year = end_date[2]
-            end = (end_year, end_month, end_day)
-            conditions.append(Document.is_before(end))
+        # end_date = form.end_date.data.split(' ')
+        # end_month = month_dict.get(end_date[0])
+        # end_day = end_date[1][:-1]
+        # # end_year = end_date[2]
+        # end = datetime.date(2010, 1, 1)
 
-        results =  Document.query.filter(and_(*conditions)).order_by(Document.last_edited_date.desc()).all()
+        results =  Document.query.filter(and_(*conditions)).all()
 
         if len(query) > 0:
             idf = {}
@@ -142,7 +131,8 @@ def suggestion():
             description=form.description.data)
         db.session.add(suggestion)
         db.session.commit()
-        flash('Suggestion \"{}\" successfully created'.format(
+        flash(
+            'Suggestion \"{}\" successfully created'.format(
                 form.title.data), 'form-success')
         return render_template(
             'main/suggestion.html', form=form)
@@ -187,7 +177,7 @@ def resource(id, from_saved=False):
         db.session.commit()
         return redirect(url_for('main.resource' if not from_saved else 'main.resource_saved', id=id))
     return render_template(
-        'main/resource.html', resource=resource, user_id=user_id, saved=saved, form=form, from_saved=from_saved, user_type=role()
+        'main/resource.html', resource=resource, user_id=user_id, saved=saved, form=form, from_saved=from_saved
     )
 
 
@@ -196,7 +186,7 @@ def resource(id, from_saved=False):
 def review_saved():
     user_id = current_user.id
     user = User.query.get(user_id)
-    saved = user.saved.order_by(Document.last_edited_date)
+    saved = user.saved
     return render_template('main/review_saved.html', saved=saved)
 
 def check_dead_links():
