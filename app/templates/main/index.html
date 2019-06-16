@@ -10,7 +10,6 @@
         {% block custom_head_tags %}{% endblock %}
     </head>
     <body>
-      <div id="data-page" style="display: none;">0</div>
       <form method=post>
         <div class="ui inverted vertical masthead center aligned segment" style="background-color: #345073">
             <div class="ui container">
@@ -108,10 +107,7 @@
           <div class="ui grid">
            <div class="row">
             <div class="sixteen wide column">
-                <!-- it started out with a div... how did it end up like this? -->
-                {% for i in range(((search_results | length) / 100)|round(0, 'ceil')|int) %}
-                <table class="ui searchable sortable unstackable selectable celled table
-                    data-results data-results-{{ i }}" style="overflow-x: scroll;">
+                <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
                     <thead>
                         <tr>
                             <th class="three wide">Title</th>
@@ -121,7 +117,8 @@
                             <th class="three wide">Tags</th>
                         </tr>
                     </thead>
-                    {% for c in search_results[100*i:100*(i + 1)] %}
+                    <tbody>
+                    {% for c in search_results[:100] %}
                         <tr onclick="window.location.href = '{{ url_for('main.resource', id=c.id) }}';">
                             <td>{{ c.title }}</td>
                             <td>{% if c.author_last_name and c.author_first_name %}
@@ -155,26 +152,12 @@
                             </td>
                         </tr>
                     {% endfor %}
+                    </tbody>
                 </table>
-                {% endfor %}
                 </div>
               </div>
             </div>
-            <div class="ui vertical left aligned segment">
-                <div>
-                    Showing results <span id="data-range">1 &ndash; 100</span> out of {{ search_results | length }}.
-                </div>
-                <a class="ui labeled icon button prev-page" href="javascript:prevPage()">
-                  <i class="angle left icon"></i>
-                  Previous Page
-                </a>
-                <a class="ui labeled icon button next-page" href="javascript:nextPage()">
-                  Next Page
-                  <i class="angle right icon"></i>
-                </a>
-            </div>
           </div>
-
       </form>
         <script>
           $( document ).ready(function() {
@@ -194,58 +177,11 @@
                 else {
                 }
               });
-
-              $('#data-range').html('1 &ndash; ' + Math.min(100, {{ search_results | length }}));
-              var i = parseInt($('#data-page').text());
-              $('.data-results').toggle();
-              $(`.data-results-${i}`).toggle();
-
-              // Disable prev/next page buttons as necessary
-              $('.prev-page').toggleClass('disabled');
-              var max_page = parseInt({{ ((search_results | length) / 100)|round(0, 'ceil')|int }} - 1);
-              if (i == max_page) {
-                  $('.next-page').toggleClass('disabled');
-              }
           });
-
-          function nextPage() {
-              var max_page = parseInt({{ ((search_results | length) / 100)|round(0, 'ceil')|int }} - 1);
-              var page = $('#data-page');
-              var i = parseInt(page.text());
-              $(`.data-results-${i}`).toggle();
-              $(`.data-results-${i+1}`).toggle();
-              page.text(i + 1);
-              if (i + 1 == max_page) {
-                  $('.next-page').toggleClass('disabled');
-              }
-              if (i == 0) {
-                  $('.prev-page').toggleClass('disabled');
-              }
-              $('#data-range').html(`${100*(i+1)+1} &ndash; ${Math.min(100*(i+2) + 1, {{ search_results | length }})}`);
-          }
-
-          function prevPage() {
-              var max_page = parseInt({{ ((search_results | length) / 100)|round(0, 'ceil')|int }} - 1);
-              var page = $('#data-page');
-              var i = parseInt(page.text());
-              $(`.data-results-${i}`).toggle();
-              $(`.data-results-${i-1}`).toggle();
-              page.text(i - 1);
-              if (i == max_page) {
-                  $('.next-page').toggleClass('disabled');
-              }
-              if (i - 1 == 0) {
-                  $('.prev-page').toggleClass('disabled');
-              }
-              $('#data-range').html(`${100*(i-1) + 1} &ndash; ${Math.min(100*i + 1, {{ search_results | length }})}`);
-          }
-
           $(document).ready(function() {
             $('.ui.dropdown').dropdown();
             $('select.dropdown').dropdown();
-
           });
-
         </script>
     </body>
 </html>
