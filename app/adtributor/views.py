@@ -653,6 +653,7 @@ def submit():
                     save_or_submit_doc(book_form, doc_type='book', submit='draft')
 
                 if "Submit Book" in request.form.values():
+                    print("FIELDS: ", book_form.data)
                     save_or_submit_doc(book_form, doc_type='book', submit=dest_from_role())
 
                 return view_all_drafts()
@@ -1169,9 +1170,9 @@ def suggestion_other_draft(id):
     return render_template('adtributor/edit_other_draft.html', other_form=other_form, c=other_entry)
 
 
-@admin.route('sign-s3/')
+@admin.route('/sign-s3/')
 @admin_required
-@contributor.route('sign-s3/')
+@contributor.route('/sign-s3/')
 @contributor_required
 @login_required
 def sign_s3():
@@ -1255,7 +1256,6 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
 
     if doc_type == 'article':
         article_form = form
-
         kwargs = {
             'doc_type': "article",
             'title': article_form.article_title.data,
@@ -1269,6 +1269,7 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
             'year': article_form.article_publication_year.data,
             'description': article_form.article_description.data,
             'link': article_form.article_link.data,
+            'file': article_form.article_file_urls.data,
             'document_status': submit,
             'tf': Counter(article_form.book_description.data)
         }
@@ -1323,6 +1324,7 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
             'year': book_form.book_publication_year.data,
             'description': book_form.book_description.data,
             'link': book_form.book_link.data,
+            'file': book_form.book_file_urls.data,
             'document_status': submit,
             'tf': Counter(book_form.book_description.data)
         }
@@ -1375,6 +1377,7 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
             'year': journal_form.article_publication_year.data,
             'description': journal_form.article_description.data,
             'link': journal_form.article_link.data,
+            'file': book_form.journal_file_urls.data,
             'document_status': submit,
             'tf': Counter(journal_form.article_description.data)
         }
@@ -1430,6 +1433,7 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
             'link': law_form.law_link.data,
             'govt_body': law_form.law_government_body.data,
             'section': law_form.law_section.data,
+            'file': law_form.law_file_urls.data,
             'document_status': submit,
             'tf': Counter(law_form.law_description.data)
         }
@@ -1481,6 +1485,7 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
             'year': video_form.video_publication_year.data,
             'description': video_form.video_description.data,
             'link': video_form.video_link.data,
+            'file': video_form.video_file_urls.data,
             'document_status': submit,
             'tf': Counter(video_form.video_description.data)
         }
@@ -1531,6 +1536,7 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
             'year': report_form.report_publication_year.data,
             'description': report_form.report_description.data,
             'link': report_form.report_link.data,
+            'file': report_form.report_file_urls.data,
             'document_status': submit,
             'tf': (report_form.report_description.data)
         }
@@ -1581,6 +1587,7 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
             'description': other_form.other_description.data,
             'link': other_form.other_link.data,
             'other_type': other_form.other_document_type.data,
+            'file': other_form.other_file_urls.data,
             'document_status': submit,
             'tf': Counter(other_form.other_description.data)
         }

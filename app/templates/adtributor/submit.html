@@ -96,7 +96,7 @@
                   {{ f.render_form_input(book_form.book_file_urls) }}
                   </div>
                   <div class = "sixteen wide field">
-                  {{ upload.file_upload('file_urls') }}
+                  {{ upload.file_upload('book_file_urls') }}
                   </div>
                   <div class = "fields">
                   <div class = "three wide field">
@@ -167,7 +167,7 @@
                {{ f.render_form_input(article_form.article_file_urls) }}
                </div>
                <div class = "sixteen wide field">
-               {{ upload.file_upload('file_urls') }}
+               {{ upload.file_upload('article_file_urls') }}
                </div>
                <div class = "fields">
                   <div class = "three wide field">
@@ -248,10 +248,10 @@
                {{ f.render_form_field(journal_form.article_link, name='Link') }}
                </div>
                <div class = "sixteen wide field">
-               {{ f.render_form_input(journal_form.article_file_urls) }}
+               {{ f.render_form_input(journal_form.journal_file_urls) }}
                </div>
                <div class = "sixteen wide field">
-               {{ upload.file_upload('file_urls') }}
+               {{ upload.file_upload('journal_file_urls') }}
                </div>
                <div class = "fields">
                   <div class = "three wide field">
@@ -334,7 +334,7 @@
                   {{ f.render_form_input(law_form.law_file_urls) }}
                   </div>
                   <div class = "sixteen wide field">
-                  {{ upload.file_upload('file_urls') }}
+                  {{ upload.file_upload('law_file_urls') }}
                   </div>
                   <div class = "fields">
                   <div class = "three wide field">
@@ -405,7 +405,7 @@
                {{ f.render_form_input(video_form.video_file_urls) }}
                </div>
                <div class = "sixteen wide field">
-               {{ upload.file_upload('file_urls') }}
+               {{ upload.file_upload('video_file_urls') }}
                </div>
                <div class = "fields">
                   <div class = "three wide field">
@@ -476,7 +476,7 @@
                    {{ f.render_form_input(report_form.report_file_urls) }}
                    </div>
                    <div class = "sixteen wide field">
-                   {{ upload.file_upload('file_urls') }}
+                   {{ upload.file_upload('report_file_urls') }}
                    </div>
                    <div class = "fields">
                       <div class = "three wide field">
@@ -547,7 +547,7 @@
                   {{ f.render_form_input(other_form.other_file_urls) }}
                   </div>
                   <div class = "sixteen wide field">
-                  {{ upload.file_upload('file_urls') }}
+                  {{ upload.file_upload('other_file_urls') }}
                   </div>
                   <div class = "fields">
                   <div class = "three wide field">

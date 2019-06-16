@@ -162,7 +162,7 @@ class JournalArticleForm(Form):
     article_description = TextAreaField()
     article_tags = SelectMultipleField(choices=[('', '')])
     article_link = StringField()
-    article_file_urls = MultipleFileUploadField()
+    journal_file_urls = MultipleFileUploadField()
     save_article = SubmitField()
     submit_article = SubmitField()
 

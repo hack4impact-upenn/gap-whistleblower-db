@@ -137,7 +137,7 @@
         {% endfor %}
     {% elif field.type == 'MultipleFileUploadField' %}
         <strong>Upload File</strong>
-        <input type="file" id="file" style=""><br>
+        <input type="file" id="file-{{field.id}}" style=""><br>
         <div style="display:none">{{ field }}</div>
         <div id="{{ field.id }}_list">
           {% if field.data %}

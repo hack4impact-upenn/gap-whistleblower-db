@@ -11,6 +11,7 @@ from app.main.forms import SaveForm, UnsaveForm, SuggestionForm, SearchForm
 from app import db
 import datetime
 
+from app.decorators import contributor_required, admin_required
 import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
 import requests
@@ -75,18 +76,6 @@ def index():
         'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
         'October': 10, 'November': 11, 'December': 12}
 
-        # start_date = form.start_date.data.split(' ')
-        # start_month = month_dict.get(start_date[0])
-        # start_day = start_date[1][:-1]
-        # start_year = start_date[2]
-        # start = datetime.date(2000, 1, 1)
-
-        # end_date = form.end_date.data.split(' ')
-        # end_month = month_dict.get(end_date[0])
-        # end_day = end_date[1][:-1]
-        # # end_year = end_date[2]
-        # end = datetime.date(2010, 1, 1)
-
         results =  Document.query.filter(and_(*conditions)).all()
 
         if len(query) > 0:
@@ -117,6 +106,52 @@ def about():
     return render_template(
         'main/about.html', editable_html_obj=editable_html_obj)
 
+
+@main.route('/sign-s3/')
+@admin_required
+@contributor_required
+@login_required
+def sign_s3():
+    # Load necessary information into the application
+        S3_BUCKET = "h4i-test2"
+        TARGET_FOLDER = 'json/'
+        # Load required data from the request
+        pre_file_name = request.args.get('file-name')
+        file_name = ''.join(pre_file_name.split('.')[:-1]) +\
+            str(time.time()).replace('.',  '-') + '.' +  \
+            ''.join(pre_file_name.split('.')[-1:])
+        file_type = request.args.get('file-type')
+
+        # Initialise the S3 client
+        s3 = boto3.client('s3', 'us-east-2')
+
+        # Generate and return the presigned URL
+        S3_REGION = "us-east-2"
+        presigned_post = s3.generate_presigned_post(
+        Bucket=S3_BUCKET,
+        Key=TARGET_FOLDER + file_name,
+        Fields={
+            "acl": "public-read",
+            "Content-Type": file_type
+        },
+        Conditions=[{
+            "acl": "public-read"
+        }, {
+            "Content-Type": file_type
+        }],
+        ExpiresIn=60000)
+
+        # Return the data to the client
+        return json.dumps({
+            'data':
+            presigned_post,
+            'url_upload':
+            'https://s3.%s.amazonaws.com/%s/' % (S3_REGION, S3_BUCKET),
+            'url':
+            'https://s3.%s.amazonaws.com/%s/json/%s' % (S3_REGION, S3_BUCKET,
+                file_name)
+        })
+        
 
 @main.route('/suggestion', methods=['GET', 'POST'])
 def suggestion():
@@ -210,11 +245,3 @@ def get_docs(query):
         if stuff is not None:
             search_docs.extend(stuff.docs)
     return search_docs
-
-
-
-# scheduler = BackgroundScheduler()
-# scheduler.add_job(func=check_dead_links, trigger="interval", seconds=3600)
-# scheduler.start()
-# Shut down the scheduler when exiting the app
-# atexit.register(lambda: scheduler.shutdown())
