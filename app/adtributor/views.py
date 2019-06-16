@@ -2,6 +2,8 @@ from flask import (Blueprint, abort, flash, redirect, render_template, request, 
                    url_for)
 
 from flask_login import login_required, current_user
+from flask_rq import get_queue
+
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import update
 
