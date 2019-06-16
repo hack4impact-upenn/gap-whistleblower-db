@@ -20,8 +20,8 @@
                     <div class="menu">
                         <div class="item" data-value="">All resource types</div>
                         <div class="item" data-value="book">Books</div>
-                        <div class="item" data-value="news article">News Articles</div>
-                        <div class="item" data-value="journal article">Journal Articles</div>
+                        <div class="item" data-value="news_article">News Articles</div>
+                        <div class="item" data-value="journal-article">Journal Articles</div>
                         <div class="item" data-value="law">Laws</div>
                         <div class="item" data-value="video">Videos</div>
                         <div class="item" data-value="report">Reports</div>
@@ -39,16 +39,26 @@
                <thead>
                    <tr>
                        <th>Title</th>
-                       <th>Resource Type</th>
+                       <th class="one wide">Link</th>
+                       <th>Type</th>
                        <th class="one wide">Delete</th>
                        <th class="one wide">Draft</th>
                    </tr>
                </thead>
                <tbody>
                {% for s in suggestions %}
-                   <tr onclick="window.location.href = '{{ url_for('admin.suggestion', id=s.id) }}';">
-                       <td>{{ s.title }}</td>
-                       <td class="suggestion type">{{ s.doc_type.split('_')|join(' ') }}</td>
+                   <tr>
+                       <td onclick="window.location.href = '{{ url_for('admin.suggestion', id=s.id) }}';">{{ s.title }}</td>
+                       <td>
+                         <div class="ui buttons">
+                           <!--we give the button and icon the same id to avoid weird things with hitboxes-->
+                           <button class="ui small compact icon button"  onclick="linkMe('{{ s.link }}')"
+                           id="{{ s.id }}">
+                             <i class="linkify icon" id="{{ s.id }}"></i>
+                           </button>
+                         </div>
+                       </td>
+                       <td class="suggestion type">{{ s.doc_type }}</td>
                        <td>
                          <div class="ui buttons">
                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
@@ -109,5 +119,30 @@
             }
         });
       });
+      function linkMe(link) {
+        console.log(link)
+          if (isValidDomain(link)) {
+              var re  = "^(https?://)"
+              var regexHTTP = new RegExp(re,"i");
+              if (regexHTTP.test(link)) {
+                window.open(link)
+              }
+              else {
+                window.open('http://'.concat(link))
+              }
+          }
+          else {
+            alert("This suggestion has a malformed URL.")
+          }
+      }
+      function isValidDomain(v) {
+        if (!v) return false;
+        var re  = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
+        var regexUrl = new RegExp(re,"i");
+        return regexUrl.test(v);
+      }
+      function startDraft(id) {
+        window.open('draft/'.concat(id))
+      }
     </script>
 {% endblock %}

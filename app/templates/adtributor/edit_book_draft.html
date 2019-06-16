@@ -5,7 +5,7 @@
 {% block content %}
 <div class="ui grid container">
     <div class="twelve wide computer sixteen wide mobile centered column">
-        <h2 class="ui dividing header">Edit Database Entry</h2>
+        <h2 class="ui dividing header">Create Database Entry</h2>
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
                   <h3 class="ui dividing header">Submit a Book</h3>
@@ -78,7 +78,7 @@
                   {{ f.render_form_input(book_form.book_file_urls) }}
                   </div>
                   <div class = "sixteen wide field">
-                  {{ upload.file_upload('file_urls') }}
+                  {{ upload.file_upload('book_file_urls') }}
                   </div>
                   <div class = "fields">
                   <div class = "three wide field">

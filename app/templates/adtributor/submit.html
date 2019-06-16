@@ -96,7 +96,7 @@
                   {{ f.render_form_input(book_form.book_file_urls) }}
                   </div>
                   <div class = "sixteen wide field">
-                  {{ upload.file_upload('file_urls') }}
+                  {{ upload.file_upload('book_file_urls') }}
                   </div>
                   <div class = "fields">
                   <div class = "three wide field">
@@ -167,7 +167,7 @@
                {{ f.render_form_input(article_form.article_file_urls) }}
                </div>
                <div class = "sixteen wide field">
-               {{ upload.file_upload('file_urls') }}
+               {{ upload.file_upload('article_file_urls') }}
                </div>
                <div class = "fields">
                   <div class = "three wide field">
@@ -248,10 +248,10 @@
                {{ f.render_form_field(journal_form.article_link, name='Link') }}
                </div>
                <div class = "sixteen wide field">
-               {{ f.render_form_input(journal_form.article_file_urls) }}
+               {{ f.render_form_input(journal_form.journal_file_urls) }}
                </div>
                <div class = "sixteen wide field">
-               {{ upload.file_upload('file_urls') }}
+               {{ upload.file_upload('journal_file_urls') }}
                </div>
                <div class = "fields">
                   <div class = "three wide field">
@@ -288,17 +288,23 @@
                       {{ f.render_form_field(law_form.law_citation, name='Citation') }}
                       </div>
                   </div>
-                  <div class = "two fields">
+                  <div class = "three fields">
                       <div class = "field">
                       {{ f.render_form_field(law_form.law_government_body, name='Government Body') }}
                       </div>
                       <div class = "field">
                       {{ f.render_form_field(law_form.law_section, name='Section') }}
                       </div>
-                  </div>
-                  <div class = "two fields">
                       <div class = "field">
                       {{ f.render_form_field(law_form.law_region, name='Region') }}
+                      </div>
+                  </div>
+                  <div class = "three fields">
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_city, name='City') }}
+                      </div>
+                      <div class = "field">
+                      {{ f.render_form_field(law_form.law_state, name='State') }}
                       </div>
                       <div class = "field">
                       {{ f.render_form_field(law_form.law_country, name='Country') }}
@@ -328,7 +334,7 @@
                   {{ f.render_form_input(law_form.law_file_urls) }}
                   </div>
                   <div class = "sixteen wide field">
-                  {{ upload.file_upload('file_urls') }}
+                  {{ upload.file_upload('law_file_urls') }}
                   </div>
                   <div class = "fields">
                   <div class = "three wide field">
@@ -399,7 +405,7 @@
                {{ f.render_form_input(video_form.video_file_urls) }}
                </div>
                <div class = "sixteen wide field">
-               {{ upload.file_upload('file_urls') }}
+               {{ upload.file_upload('video_file_urls') }}
                </div>
                <div class = "fields">
                   <div class = "three wide field">
@@ -470,7 +476,7 @@
                    {{ f.render_form_input(report_form.report_file_urls) }}
                    </div>
                    <div class = "sixteen wide field">
-                   {{ upload.file_upload('file_urls') }}
+                   {{ upload.file_upload('report_file_urls') }}
                    </div>
                    <div class = "fields">
                       <div class = "three wide field">
@@ -541,7 +547,7 @@
                   {{ f.render_form_input(other_form.other_file_urls) }}
                   </div>
                   <div class = "sixteen wide field">
-                  {{ upload.file_upload('file_urls') }}
+                  {{ upload.file_upload('other_file_urls') }}
                   </div>
                   <div class = "fields">
                   <div class = "three wide field">
@@ -593,15 +599,12 @@
               lastName = `{{ f.render_form_field(book_form.book_author_last_name[0], name="Last Name") }}`;
       }
       let index = $(`.${doc_type}-author`).length;
-      let author_type = 'Author'
-      if (doc_type =='video') {
-        author_type = 'Director'
-      }
+      console.log(index);
       $( `#${doc_type}-beforeMe` ).before(`<div class = "${doc_type}-author fields" id="${doc_type}-author-${index}">\
         <div class="four wide field">\
-        <label>Remove ${author_type}</label>\
-        <a class="ui labeled icon button fluid" id="${doc_type}-author-${index}" href="javascript:delAuthor(${index}, '${doc_type}')">\
-          <i class="close icon"></i>Remove ${author_type} </a>\
+        <label>Remove Author</label>\
+        <a class="ui labeled icon button fluid" id="${doc_type}-author-${index}" href="javascript:delAuthor(${index}, ${doc_type})">\
+        <i class="close icon"></i>Remove Author</a>\
         </div>\
         <div class = "six wide field">\
         ${firstName}

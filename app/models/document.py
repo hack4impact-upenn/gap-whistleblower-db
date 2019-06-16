@@ -12,7 +12,7 @@ nltk.data.path.append(os.environ.get('NLTK_DATA'))
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sqlalchemy.dialects.postgresql import ARRAY
-from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+from sqlalchemy.ext.hybrid import hybrid_property
 from nltk.stem.snowball import SnowballStemmer
 
 class Document(db.Model):
@@ -78,44 +78,9 @@ class Document(db.Model):
         for key, value in fields.items():
             if key not in ['tf', 'page_start', 'id', 'day', 'posted_date',
             'last_edited_date', 'posted_by', 'last_edited_by', 'edition',
-            'broken_link', 'volume', 'file', 'document_status', '_sa_instance_state',
-            'link', 'author_first_name', 'author_last_name', 'tags', 'doc_type'] and value != None:
+            'broken_link', 'volume', 'file', 'document_status', '_sa_instance_state', 'link'] and value != None:
                 corpus.append(str(value))
-            elif key in ['author_first_name', 'author_last_name'] and value != None:
-                authors = value.split(',')
-                for a in authors:
-                    corpus.append(a)
-            elif key == 'doc_type':
-                type = value.split('_')
-                for t in type:
-                    corpus.append(t)
         return ' '.join(corpus)
-
-    @hybrid_property
-    def date(self):
-        if self.year != "":
-            if self.month != "":
-                if self.day != "":
-                    return self.month + " " + str(self.day) + ", " + str(self.year)
-                return self.month + " " + str(self.year)
-            return str(self.year)
-        return ""
-
-    @hybrid_method
-    def is_after(self, start_date):
-        month_dict = {'January': 1, 'February': 2, 'March': 3, 'April': 4,
-        'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
-        'October': 10, 'November': 11, 'December': 12}
-        now_tuple = (self.year, month_dict.get(self.month), self.day)
-        return now_tuple >= start_date
-
-    @hybrid_method
-    def is_before(self, end_date):
-        month_dict = {'January': 1, 'February': 2, 'March': 3, 'April': 4,
-        'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
-        'October': 10, 'November': 11, 'December': 12}
-        now_tuple = (self.year, month_dict.get(self.month), self.day)
-        return now_tuple <= end_date
 
 
     @staticmethod
@@ -282,6 +247,8 @@ class Document(db.Model):
                 last_edited_by = name,
                 title = fake.text(max_nb_chars=50),
                 description = text,
+                city = fake.city(),
+                state = fake.state(),
                 country = "United States",
                 link = 'http://' + fake.domain_name(),
                 govt_body = body,
