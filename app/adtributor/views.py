@@ -1202,53 +1202,6 @@ def suggestion_other_draft(id):
 
     return render_template('adtributor/edit_other_draft.html', other_form=other_form)
 
-
-@admin.route('sign-s3/')
-@admin_required
-@contributor.route('sign-s3/')
-@contributor_required
-@login_required
-def sign_s3():
-    # Load necessary information into the application
-        S3_BUCKET = "h4i-test2"
-        TARGET_FOLDER = 'json/'
-        # Load required data from the request
-        pre_file_name = request.args.get('file-name')
-        file_name = ''.join(pre_file_name.split('.')[:-1]) +\
-            str(time.time()).replace('.',  '-') + '.' +  \
-            ''.join(pre_file_name.split('.')[-1:])
-        file_type = request.args.get('file-type')
-
-        # Initialise the S3 client
-        s3 = boto3.client('s3', 'us-east-2')
-
-        # Generate and return the presigned URL
-        presigned_post = s3.generate_presigned_post(
-        Bucket=S3_BUCKET,
-        Key=TARGET_FOLDER + file_name,
-        Fields={
-            "acl": "public-read",
-            "Content-Type": file_type
-        },
-        Conditions=[{
-            "acl": "public-read"
-        }, {
-            "Content-Type": file_type
-        }],
-        ExpiresIn=60000)
-
-        # Return the data to the client
-        return json.dumps({
-            'data':
-            presigned_post,
-            'url_upload':
-            'https://%s.%s.amazonaws.com' % (S3_BUCKET, S3_REGION),
-            'url':
-            'https://%s.amazonaws.com/%s/json/%s' % (S3_REGION, S3_BUCKET,
-                                                     file_name)
-        })
-
-
 @admin.route('/view_all_drafts/delete/<int:id>', methods=['GET', 'POST'])
 @admin_required
 @contributor.route('/view_all_drafts/delete/<int:id>', methods=['GET', 'POST'])
@@ -1382,7 +1335,7 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
             'month': book_form.book_publication_month.data,
             'year': book_form.book_publication_year.data,
             'description': book_form.book_description.data,
-            'link': book_form.book_link.data,
+            'link': book_form.book_file_urls.data,
             'document_status': submit,
         }
         if entry != None:

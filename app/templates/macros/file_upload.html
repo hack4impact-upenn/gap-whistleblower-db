@@ -1,25 +1,29 @@
 {% macro file_upload(fieldname) %}
 <script>
-$('body').on('change', 'input:file', function() {
+  $('body').on('change', '#file-{{ fieldname }}', function() {
   var file = $(this)[0].files[0];
-  getSignedRequest(file)
+  console.log(file.name);
+  {{fieldname}}_getSignedRequest(file)
 })
-function getSignedRequest(file){
+
+function {{fieldname}}_getSignedRequest(file){
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', `/sign-s3?file-name=${file.name}&file-type=${file.type}`);
-  xhr.onreadystatechange = function() {
-  if (xhr.readyState === 4) {
-    if (xhr.status === 200){
-      var response = JSON.parse(xhr.responseText);
-      uploadFile(file, response.data, response.url, response.url_upload)
-    } else{
-    alert('Could not get signed URL.'); //INTERNAL SERVER ERROR HERE
+  if (file.name && file.name.length > 0) {
+    xhr.open('GET', `/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+    xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200){
+        var response = JSON.parse(xhr.responseText);
+        {{fieldname}}_uploadFile(file, response.data, response.url, response.url_upload)
+      } else{
+      alert('Could not get signed URL.'); //INTERNAL SERVER ERROR HERE
+      }
     }
   }
 };
   xhr.send();
 }
-function uploadFile(file, s3Data, url, urlUpload, fieldName) {
+function {{fieldname}}_uploadFile(file, s3Data, url, urlUpload, fieldName) {
   // basic validation
   var fileType = url.substring(url.lastIndexOf('.') + 1);
   var xhr = new XMLHttpRequest();
@@ -28,12 +32,10 @@ function uploadFile(file, s3Data, url, urlUpload, fieldName) {
   var postData = new FormData();
   postData.append('key', s3Data.fields.key);
   postData.append('file', file);
-  $('.modal')
-    .modal('show');
   xhr.onreadystatechange = function()  {
     if (xhr.readyState === 4) {
       if (xhr.status === 200 || xhr.status === 204) {
-        handleFunc(url, file);
+        {{fieldname}}_handleFunc(url, file);
       } else{
         alert('Could not upload file.');
       }
@@ -41,14 +43,17 @@ function uploadFile(file, s3Data, url, urlUpload, fieldName) {
   };
   xhr.send(postData);
 }
-function handleFunc(url, file) {
+function {{fieldname}}_handleFunc(url, file) {
+  console.log(url);
   var curr = $("#{{ fieldname }}").val()
   $("div > input#{{ fieldname }}").val(curr + ( curr ? ',': '' ) + url);
   $("#{{ fieldname }}_list").append(
-    '<div class="badge badge-light"><i class="file icon"></i><a href="' + url + '">' + url + '</a><span class="delete badge badge-danger" data-url="' + url + '">Delete Document</span></span>')
+    '<div class="badge badge-light"><i class="file icon"></i><a href="' + url + '">' + url + '</a><span id="{{fieldname}}-delete"class="delete badge badge-danger" data-url="' + url + '">Delete Document</span></span>')
 };
-$('body').on('click', '.delete', function() {
+
+$('body').on('click', '#{{fieldname}}-delete', function() {
   var url = $(this).data('url');
+  
   var arr = $("div > input#{{ fieldname }}").val().split(',');
   var idx = arr.indexOf(url);
   if (idx > -1) {
