@@ -4,22 +4,23 @@
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
             <h2 class="ui header">
-                Saved Resources
-                <div class="sub header">Review and manage my saved resources.</div>
+                Saved resources
+                <div class="sub header">Review and manage my saved resources</div>
             </h2>
             <div class="ui menu">
                 <div id="select-type" class="ui dropdown item">
                     <div class="text">
-                        All resource types
+                        All resources
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <div class="item" data-value="">All resource types</div>
-                        <div class="item" data-value="book">Books</div>
+                        <div class="item" data-value="">All resources</div>
+                        <div class="item" data-value="book">Book</div>
                         <div class="item" data-value="news article">News Article</div>
                         <div class="item" data-value="journal article">Journal Article</div>
-                        <div class="item" data-value="research">Research</div>
-                        <div class="item" data-value="law">Laws</div>
+                        <div class="item" data-value="law">Law</div>
+                        <div class="item" data-value="video">Video</div>
+                        <div class="item" data-value="report">Report</div>
                         <div class="item" data-value="other">Other</div>
                     </div>
                 </div>
@@ -42,7 +43,7 @@
                <tbody>
                {% for s in saved %}
                    <tr>
-                       <td onclick="window.location.href = '{{ url_for('main.resource_saved', id=s.id) }}';">{{ s.title }}</td>
+                       <td onclick="window.location.href='{{ url_for('main.resource_saved', id=s.id) }}';">{{ s.title }}</td>
                        <td>
                          <div class="ui buttons">
                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
@@ -52,7 +53,7 @@
                            </button>
                          </div>
                        </td>
-                       <td class="suggestion type">{{ s.doc_type }}</td>
+                       <td class="suggestion type">{{ s.doc_type.split('_')|join(' ') }}</td>
                        <td>
                          <a class="ui massive star rating" data-rating="1" data-max-rating="1" id="star-{{ s.id }}"
                             href="javascript:toggleSave('{{ s.id }}');">
@@ -73,11 +74,11 @@
         console.log(value)
       });
     $('.delete-suggestion').on('click', function(e) {
-        id = e.target.id; // gets the id and shows the appropriate modal
+        id=e.target.id; // gets the id and shows the appropriate modal
         $('#modal-' + id).modal('show');
     });
     $('#search-suggestions').keyup(function () {
-            var searchText = $(this).val();
+            var searchText=$(this).val();
             if (searchText.length > 0) {
                 $('tbody td:icontains(' + searchText + ')').addClass('positive');
                 $('td.positive').not(':icontains(' + searchText + ')').removeClass('positive');
@@ -98,8 +99,8 @@
     function linkMe(link) {
     console.log(link)
       if (isValidDomain(link)) {
-          var re  = "^(https?://)"
-          var regexHTTP = new RegExp(re,"i");
+          var re ="^(https?://)"
+          var regexHTTP=new RegExp(re,"i");
           if (regexHTTP.test(link)) {
             window.open(link)
           }
@@ -113,14 +114,14 @@
     }
     function isValidDomain(v) {
     if (!v) return false;
-    var re  = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
-    var regexUrl = new RegExp(re,"i");
+    var re ="^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
+    var regexUrl=new RegExp(re,"i");
     return regexUrl.test(v);
     }
     function startDraft(id) {
     window.open('draft/'.concat(id))
     }
-    var csrf_token = "{{ csrf_token() }}";
+    var csrf_token="{{ csrf_token() }}";
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
             if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {

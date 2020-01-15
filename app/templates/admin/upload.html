@@ -65,33 +65,33 @@
               <div class="item">Find the resources in your "Downloads" folder.</div>
           <br/>
           </h4>
-          {% set flashes = {
+          {% set flashes={
                 'success': get_flashed_messages(category_filter=['form-success'])
             } %}
             {{ f.form_message(flashes['success'], header='Success!', class='success') }}
             {{ f.begin_form(form, flashes) }}
-            <div class = "field">
+            <div class="field">
             {{ f.render_form_field(form.book) }}
             </div>
-            <div class = "field">
+            <div class="field">
             {{ f.render_form_field(form.news_article) }}
             </div>
-            <div class = "field">
+            <div class="field">
             {{ f.render_form_field(form.journal_article) }}
             </div>
-            <div class = "field">
+            <div class="field">
             {{ f.render_form_field(form.law) }}
             </div>
-            <div class = "field">
+            <div class="field">
             {{ f.render_form_field(form.video) }}
             </div>
-            <div class = "field">
+            <div class="field">
             {{ f.render_form_field(form.report) }}
             </div>
-            <div class = "field">
+            <div class="field">
             {{ f.render_form_field(form.other) }}
             </div>
-            <div class = "field">
+            <div class="field">
             {{ f.render_form_field(form.download) }}
             </div>
             {{ f.end_form(form) }}
@@ -102,9 +102,9 @@
 $(document).ready(function() {
    $('#book-file').on('change', function(e) {
       var filename;
-      var $label = $('#book-file-label');
+      var $label=$('#book-file-label');
       if (e.target.value) {
-         filename = e.target.value.split('\\').pop();
+         filename=e.target.value.split('\\').pop();
       }
       if (filename) {
          $label.html('<i class="file icon"></i>&nbsp' + filename);

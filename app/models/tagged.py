@@ -1,12 +1,14 @@
 from .. import db
 from app.models import Document, Tag
-from sqlalchemy import Integer, ForeignKey
+from sqlalchemy import ForeignKey
 
 
 class Tagged(db.Model):
     __tablename__ = 'tagged'
     tag_id = db.Column(db.Integer, ForeignKey('tag.id'), primary_key=True)
-    document_id = db.Column(db.Integer, ForeignKey('document.id'), primary_key=True)
+    document_id = db.Column(
+        db.Integer, ForeignKey('document.id'), primary_key=True
+    )
     tag_name = db.Column(db.String(1000))
     tag = db.relationship("Tag", backref="documents")
     document = db.relationship("Document", backref="tags")

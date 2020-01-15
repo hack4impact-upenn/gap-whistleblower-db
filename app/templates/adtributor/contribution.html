@@ -4,7 +4,7 @@
 {% block content %}
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
-            {% if comes_from=='contribution' %}
+            {% if comes_from =='contribution' %}
             <a class="ui basic compact button" href="{{ url_for('admin.review_contributions') }}">
                 <i class="caret left icon"></i>
                 Back to contributions
@@ -23,8 +23,8 @@
                   <div class="sub header">
                     {% if (resource.author_last_name and resource.author_first_name) or resource.name or resource.govt_body %}
                       {% if resource.author_last_name and resource.author_first_name %}
-                          {% set first_names = resource.author_first_name.split(',') %}
-                          {% set last_names =  resource.author_last_name.split(',') %}
+                          {% set first_names=resource.author_first_name.split(',') %}
+                          {% set last_names= resource.author_last_name.split(',') %}
                           By
                             {% for x in range(first_names | length) %}
                               {% if (x == first_names | length - 1) %}
@@ -109,6 +109,12 @@
                      <td><a href="{{ resource.link }}">{{ resource.link }}</a></td>
                    </tr>
                    {% endif %}
+                   {% if resource.file %}
+                   <tr>
+                     <td>File</td>
+                     <td><a href="{{ resource.file }}">{{ resource.file }}</a></td>
+                   </tr>
+                   {% endif %}
                    {% if resource.citation %}
                    <tr>
                      <td>Citation</td>
@@ -169,7 +175,7 @@
     </div>
 
     <script>
-        var csrf_token = "{{ csrf_token() }}";
+        var csrf_token="{{ csrf_token() }}";
         $.ajaxSetup({
             beforeSend: function(xhr, settings) {
                 if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {

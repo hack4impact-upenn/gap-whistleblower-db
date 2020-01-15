@@ -15,6 +15,7 @@ app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 migrate = Migrate(app, db)
 
+
 def make_shell_context():
     return dict(app=app, db=db, User=User, Role=Role)
 
@@ -50,17 +51,15 @@ def recreate_db():
     type=int,
     help='Number of each model type to create',
     dest='number_users')
-
 def add_fake_data(number_users):
-    """
-    Adds fake data to the database.
-    """
-    User.generate_fake(count = number_users)
-    Document.generate_fake(count = number_users)
-    Suggestion.generate_fake(count = number_users)
+    """Add fake data to the database."""
+    User.generate_fake(count=number_users)
+    Document.generate_fake(count=number_users)
+    Suggestion.generate_fake(count=number_users)
     Saved.generate_fake()
-    Tag.generate_fake(count = number_users)
+    Tag.generate_fake(count=number_users)
     Tagged.generate_fake()
+
 
 @manager.command
 def setup_dev():
@@ -91,7 +90,9 @@ def setup_general():
 
     contributor_query = Role.query.filter_by(name='Contributor')
     if contributor_query.first() is not None:
-        if User.query.filter_by(email=Config.CONTRIBUTOR_EMAIL).first() is None:
+        if User.query.filter_by(
+            email=Config.CONTRIBUTOR_EMAIL
+        ).first() is None:
             user = User(
                 first_name='Contributor',
                 last_name='Account',

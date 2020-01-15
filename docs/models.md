@@ -3,8 +3,8 @@
 ## `Permission` class
 
 ```
-GENERAL = 0x01
-ADMINISTER = 0xff
+GENERAL=0x01
+ADMINISTER=0xff
 ```
 Okay so here is a seemingly simple piece of code I really think is
 really cool! First of all we are setting up two enums here.
@@ -30,11 +30,11 @@ So we can create a method 'check(input, checker)' that will
 take an input hex to test and one to text against. We only need
 to do '(input & checker) == checker'. But there are some more
 interesting applications for this. Let us define, for example,
-a set of enums CAN_LIKE = 0x01, CAN_POST = 0x02, CAN_EDIT = 0x04
-and CAN_REMOVE = 0x08. These are respectively in binary 00000001,
+a set of enums CAN_LIKE=0x01, CAN_POST=0x02, CAN_EDIT=0x04
+and CAN_REMOVE=0x08. These are respectively in binary 00000001,
 00000010, 00000100, 00001000. We can use binary OR (|) to create
 composite user permissions e.g. CAN_LIKE | CAN_POST | CAN_EDIT =
-0x07 = 00000111 -> NEW_ROLE. We can run 'check(NEW_ROLE, CAN_LIKE)'
+0x07=00000111 -> NEW_ROLE. We can run 'check(NEW_ROLE, CAN_LIKE)'
 or 'check(NEW_ROLE, CAN_POST)' or 'check(NEW_ROLE, CAN_EDIT)' and
 all of these will return True.
 For example NEW_ROLE & CAN_EDIT
@@ -76,7 +76,7 @@ creation of users such as a general user and an administrator
   a new property on both a given Role and User object. E.g. Role.users
   will refer to the User object (i.e. the user table). and User.role
   (role being the string specified with backref) will refer to the
-  Role object. Lazy = dynamic specifies to return a Query object
+  Role object. Lazy=dynamic specifies to return a Query object
   instead of actually asking the relationship to load all of its child
   elements upon creating the relationship. It is best practice to
   include lazy=dynamic upon the establishment of a relationship.
@@ -92,7 +92,7 @@ Roles in the Role collection will be *much* less than the amount of
 entries in the User collection. However, we can specify that User.role
 uses the lazy-dynamic loading scheme. Simply redefine users here to
 ```
-users = db.relationship('User', backref=db.backref('role',
+users=db.relationship('User', backref=db.backref('role',
                                       lazy='dynamic'), lazy='dynamic')
 ```
 
@@ -136,8 +136,8 @@ needs to implement is_authenticated (returns True if the user is
 authenticated and in turn fulfill login_required), is_active
 (returns True if the user has been activated i.e. confirmed by
 email in our case), is_anonymous (returns if a user is Anonymous
-i.e. is_active = is_authenticated = False, is_anonymous = True,
-and get_id() = None), get_id() (returns a UNICODE that has the
+i.e. is_active=is_authenticated=False, is_anonymous=True,
+and get_id()=None), get_id() (returns a UNICODE that has the
 id of the user NOT an int).
 
 ### Column Descriptions:
@@ -145,7 +145,7 @@ id of the user NOT an int).
 `id` - primary key for the table. Id of the user. i.e. the
   unique identifier for the collection
 
-`confirmed` - boolean val (default value = False) that is
+`confirmed` - boolean val (default value=False) that is
   an indication of whether the user has confirmed their
   account via email.
 
@@ -168,7 +168,7 @@ Note: first_name, last_name, email form an index table for easy lookup. See Role
 
 `role_id` is the id of the role the user is. It is a foreign key
   and relates to the id's in the Role collection. By default
-  the general user is role.id = 1, and role.id = 2 is the
+  the general user is role.id=1, and role.id=2 is the
   admin. Also note that we refer to the Role collection with
   'roles' rather than the assigned backref 'role' since we
   are referring to an individual column.
@@ -188,7 +188,7 @@ templates since they are attached to the user instance.
 `password` This does not give a password if a user just
   calls the method and throws an AttributeError. However
   if someone chooses to set a password e.g.
-  u = User( password = `test` ) the second definition of
+  u=User( password=`test` ) the second definition of
   password method is run, taking the keyword arg (kwarg) as the
   password to then call the generate_password_hash method and
   set the password_hash property of the user to the generated
@@ -231,7 +231,7 @@ SignatureExpired if the token is past the expiration time.
 The change_email method will take in a token (which was presumably
 generated from the generate_email_token method) and then return True
 True if the token is valid (see above method for explanation of 'valid')
-and contains the key 'change_email' with value = user id in addition to
+and contains the key 'change_email' with value=user id in addition to
 the key 'new_email' with the new email address the user wants to change
 their email to. Before the new_email is committed to the session, a
 query is performed on the User collection on all the emails to maintain
@@ -257,7 +257,7 @@ class AnonymousUser(AnonymousUserMixin):
 ```
 
 ```
-login_manager.anonymous_user = AnonymousUser
+login_manager.anonymous_user=AnonymousUser
 ```
 
 We then register our custom AnonymousUser class as the default login_manager

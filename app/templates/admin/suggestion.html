@@ -47,8 +47,8 @@
   function linkMe(link) {
     console.log(link)
       if (isValidDomain(link)) {
-          var re  = "^(https?://)"
-          var regexHTTP = new RegExp(re,"i");
+          var re ="^(https?://)"
+          var regexHTTP=new RegExp(re,"i");
           if (regexHTTP.test(link)) {
             window.open(link)
           }
@@ -62,8 +62,8 @@
   }
   function isValidDomain(v) {
     if (!v) return false;
-    var re  = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
-    var regexUrl = new RegExp(re,"i");
+    var re ="^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
+    var regexUrl=new RegExp(re,"i");
     return regexUrl.test(v);
   }
 </script>

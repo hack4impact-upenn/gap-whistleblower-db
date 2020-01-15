@@ -20,15 +20,15 @@
 #}
 
 {% macro header_items(current_user) %}
-    {% set endpoints = [
+    {% set endpoints=[
       ('main.index', 'Database', 'home'),
       ('main.about', 'About', 'info')
     ]%}
-    {% set user = [] %}
+    {% set user=[] %}
     {% if current_user.is_authenticated and current_user.role.name != 'User' %}
-      {% set user = ([(current_user.role.index + '.index', current_user.role.name + ' Dashboard', 'user')]) %}
+      {% set user=([(current_user.role.index + '.index', current_user.role.name + ' Dashboard', 'user')]) %}
     {% else %}
-      {% set user = [('main.suggestion', 'Suggest Resources', 'lightbulb')]%}
+      {% set user=[('main.suggestion', 'Suggest Resources', 'lightbulb')]%}
     {% endif %}
     {{ render_menu_items( endpoints +  user ) }}
 {% endmacro %}
@@ -38,7 +38,7 @@
 #}
 {% macro account_items(current_user) %}
     {% if current_user.is_authenticated %}
-      {% set endpoints = [
+      {% set endpoints=[
         ('main.review_saved', 'Saved Resources', 'save'),
         ('account.manage', 'Your Account', 'settings'),
       ] %}
@@ -73,7 +73,7 @@
         }
       </script>
     {% else %}
-      {% set endpoints = [
+      {% set endpoints=[
         ('account.register', 'Register', 'list layout'),
         ('account.login', 'Log In', 'sign in')
       ] %}

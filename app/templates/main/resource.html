@@ -15,16 +15,37 @@
                 Back to database
             </a>
             {% endif %}
-            <br/>
-            <br/>
+              <div style="height:15px;"></div>
+              {% if user_type == 'admin'%}
+              <div class="ui buttons">
+                  <a class="ui button" href="{{ url_for('admin.delete_entry', id=resource.id) }}">
+                      <i class="delete icon"></i>
+                      Delete
+                  </a>
+                  <a class="ui button" href="{{ url_for('admin.contribution_' + resource.doc_type, id=resource.id) }}">
+                      <i class="edit icon"></i>
+                      Edit
+                  </a>
+                  <a class="ui button" href="javascript:togglePublish('{{ resource.id }}')">
+                      <i class="share square icon"></i>
+                      {% if resource.document_status == 'published'%}
+                        <span id="publish">Unpublish</span>
+                      {% else %}
+                        <span id="publish">Publish</span>
+                      {% endif %}
+                  </a>
+              </div>
+              {% endif %}
+            <br>
+            <br>
             <div style="width:100%">
-              <h2 class="ui header" style="overflow-wrap: break-word; float:left;">
+              <h2 class="ui header" style="overflow-wrap: break-word; float:left; margin-bottom:15px;">
                   {{ resource.title }}
                   <div class="sub header">
                     {% if (resource.author_last_name and resource.author_first_name) or resource.name or resource.govt_body %}
                       {% if resource.author_last_name and resource.author_first_name %}
-                          {% set first_names = resource.author_first_name.split(',') %}
-                          {% set last_names =  resource.author_last_name.split(',') %}
+                          {% set first_names=resource.author_first_name.split(',') %}
+                          {% set last_names=resource.author_last_name.split(',') %}
                           By
                             {% for x in range(first_names | length) %}
                               {% if (x == first_names | length - 1) %}
@@ -40,42 +61,23 @@
                         {% endif %}
                       {% endif %}
                     </div>
+                    <div class="ui basic label" style="margin:2px;">
+                     {% if resource.type == 'other' %}
+                       {{ resource.other_type }}
+                     {% else %}
+                       {{ resource.doc_type.split('_')|join(' ') }}
+                     {% endif %}
+                    </div>
               </h2>
-              {% if user_id and user_type != 'admin'%}
-                <div style="float:right;">
-                  {{ f.render_form(form) }}
-                </div>
-              {% endif %}
             </div>
-            <div style="height:50px"></div>
-              {% if user_type == 'admin'%}
-              <div style="height:15px"></div>
-              <div class="ui buttons">
-                <div class="ui buttons">
-                  <a class="ui button" href="{{ url_for('admin.delete_entry', id=resource.id) }}">
-                      <i class="delete icon"></i>
-                      Delete
-                  </a>
-                  <a class="ui button" href="{{ url_for('admin.contribution_' + resource.doc_type, id=resource.id) }}">
-                      <i class="edit icon"></i>
-                      Edit
-                  </a>
-                  <a class="ui button" href="javascript:togglePublish('{{ resource.id }}')">
-                      <i class="save icon"></i>
-                      <span id="publish">Unpublish</span>
-                  </a>
-                </div>
-                <div style="position: absolute; right:1rem">
-                  {{ f.render_form(form) }}
-                </div>
-              </div>
-              {% endif %}
             <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
+              <thead>
+                  <tr>
+                      <th class="three wide" style="padding:0; border-bottom:0;"></th>
+                      <th class="nine wide" style="padding:0; border-bottom:0;"></th>
+                  </tr>
+              </thead>
                <tbody>
-                   <tr>
-                     <td>Resource Type</td>
-                     <td>{{ resource.doc_type.split('_')|join(' ') }}</td>
-                   </tr>
                    {% if resource.tags | length > 0 %}
                    <tr>
                      <td>Tags</td>
@@ -87,43 +89,37 @@
                        {% endfor %}
                      </td>
                    </tr>
-                   {% endif %}
-                   {% if resource.day and resource.month and resource.year %}
+                  {% endif %}
+                    {% if resource.editor_last_name and resource.editor_first_name %}
+                        <td>Editor</td>
+                        {% set first_names=resource.editor_first_name.split(',') %}
+                        {% set last_names=resource.editor_last_name.split(',') %}
+                        <td>
+                          {% for x in range(first_names | length) %}
+                            {% if (x == first_names | length - 1) %}
+                            {{ first_names[x] + ' ' + last_names[x] }}
+                            {% else %}
+                            {{ first_names[x] + ' ' + last_names[x] + ','}}
+                            {% endif %}
+                          {% endfor %}
+                        </td>
+                    {% endif %}
+                  {% if resource.day and resource.month and resource.year %}
                      <td>Date</td>
                      <td>{{ resource.month ~ ' ' ~ resource.day ~ ', ' ~ resource.year }}</td>
-                     {% elif resource.month and resource.year %}
+                  {% elif resource.month and resource.year %}
                      <td>Date</td>
                      <td>{{ resource.month ~ ' ' ~ resource.year }}</td>
-                     {% elif resource.year %}
-                     <td>Description</td>
+                  {% elif resource.year %}
+                     <td>Year</td>
                      <td>{{ resource.year }}</td>
-                   {% endif %}
-                   {% if resource.description %}
-                   <tr>
-                     <td>Description</td>
-                     <td>{{ resource.description }}</td>
-                   </tr>
-                   {% endif %}
+                  {% endif %}
                   {% if resource.other_type %}
                    <tr>
                      <td>Type (if other)</td>
                      <td>{{ resource.other_type }}</td>
                    </tr>
                    <tr>
-                   {% endif %}
-                   <tr>
-                     <td>Posted Date</td>
-                     <td>{{ resource.posted_date }}</td>
-                   </tr>
-                   <tr>
-                     <td>Last Edited Date</td>
-                     <td>{{ resource.last_edited_date }}</td>
-                   </tr>
-                   {% if resource.link %}
-                   <tr>
-                     <td>Link</td>
-                     <td><a href="{{ resource.link }}">{{ resource.link }}</a></td>
-                   </tr>
                    {% endif %}
                    {% if resource.citation %}
                    <tr>
@@ -155,22 +151,15 @@
                      <td>{{ resource.name }}</td>
                    </tr>
                    {% endif %}
-                   {% if resource.city %}
+                   {% if resource.region and resource.country %}
                    <tr>
-                     <td>City</td>
-                     <td>{{ resource.city }}</td>
+                     <td>Location</td>
+                     <td>{{ resource.region  ~ ', ' ~ resource.country }}</td>
                    </tr>
-                   {% endif %}
-                   {% if resource.state %}
+                   {% elif resource.region %}
                    <tr>
-                     <td>State</td>
-                     <td>{{ resource.state }}</td>
-                   </tr>
-                   {% endif %}
-                   {% if resource.country %}
-                   <tr>
-                     <td>Country</td>
-                     <td>{{ resource.country }}</td>
+                     <td>Region</td>
+                     <td>{{ resource.region }}</td>
                    </tr>
                    {% endif %}
                    {% if resource.section %}
@@ -179,18 +168,48 @@
                      <td>{{ resource.section }}</td>
                    </tr>
                    {% endif %}
+                   {% if resource.description %}
+                    <tr>
+                      <td>Description</td>
+                      <td>{{ resource.description }}</td>
+                    </tr>
+                   {% endif %}
                </tbody>
            </table>
+           <div class="ui buttons">
+           {% if resource.link %}
+           <a class="ui button" href="{{ resource.link }}" target="_blank">
+               <i class="linkify icon"></i>
+               <span id="link">Access Resource</span>
+           </a>
+           {% endif %}
+           {% if resource.file %}
+           <a class="ui button" href="{{ resource.file }}">
+               <i class="file icon"></i>
+               <span id="file">Access Resource File</span>
+           </a>
+           {% endif %}
+           {% if user_id %}
+           <a class="ui button" href="javascript:toggleSave('{{ resource.id }}')">
+               <i class="save icon"></i>
+               {% if saved %}
+                 <span id="save">Unsave</span>
+               {% else %}
+                 <span id="save">Save</span>
+               {% endif %}
+           </a>
+           {% endif %}
+           </div>
         </div>
     </div>
 
     <script>
         $(document).ready(function() {
-            var save_btn = $('#save-btn');
+            var save_btn=$('#save-btn');
                 save_btn.text('Unsave resource');
                 save_btn.addClass('active');
         });
-        var csrf_token = "{{ csrf_token() }}";
+        var csrf_token="{{ csrf_token() }}";
         $.ajaxSetup({
             beforeSend: function(xhr, settings) {
                 if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
@@ -203,6 +222,15 @@
                 id: id
             }).done(function(response) {
               $("#publish").text(response.status);
+            }).fail(function() {
+                // TODO?
+            });
+        }
+        function toggleSave(id) {
+            $.post('/toggleSave', {
+                id: id
+            }).done(function(response) {
+                $("#save").text(response.status);
             }).fail(function() {
                 // TODO?
             });

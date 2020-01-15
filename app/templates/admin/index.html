@@ -27,24 +27,26 @@
                 Admin Dashboard
             </h2>
             <div class="ui two column stackable grid">
-                {{ dashboard_option('Registered Users', 'admin.registered_users',
-                                    description='View and manage user accounts', icon='users icon') }}
-                {{ dashboard_option('Add New User', 'admin.new_user',
-                                    description='Create a new user account', icon='add user icon') }}
-                {{ dashboard_option('Invite New User', 'admin.invite_user',
-                                    description='Invite a new user to create their own account', icon='envelope icon') }}
-                {{ dashboard_option('My Entries', 'admin.view_all_drafts',
-                                    description='Create and review my database entries', icon='edit icon') }}
-                {{ dashboard_option('Review Suggestions', 'admin.review_suggestions',
-                                    description='Review entries suggested by users', icon='lightbulb icon') }}
-                {{ dashboard_option('Review Contributions', 'admin.review_contributions',
-                                    description='Review entries submitted by contributors', icon='tasks icon') }}
-                {{ dashboard_option('Manage Tags', 'admin.manage_tags',
+                {{ dashboard_option('Create new resource', 'admin.submit',
+                                    description='Draft a new resource', icon='edit icon') }}
+                {{ dashboard_option('View my drafts', 'admin.view_all_drafts',
+                                    description='View, edit, and submit my drafts', icon='file alternate outline icon') }}
+                {{ dashboard_option('Review suggestions', 'admin.review_suggestions',
+                                    description='Review resources suggested by users', icon='lightbulb icon') }}
+                {{ dashboard_option('Review contributions', 'admin.review_contributions',
+                                    description='Review resources submitted by contributors', icon='tasks icon') }}
+                {{ dashboard_option('Manage tags', 'admin.manage_tags',
                                     description='Review and manage resource tags', icon='tag icon') }}
-                {{ dashboard_option('Update Broken Links', 'admin.view_broken_links',
-                                    description='Update entries that have broken links', icon='sync icon') }}
-                {{ dashboard_option('Upload and Download Entries', 'admin.upload_and_download',
-                                    description='Upload and download database entries from CSV', icon='download icon') }}
+                {{ dashboard_option('See registered users', 'admin.registered_users',
+                                    description='View and manage user accounts', icon='users icon') }}
+                {{ dashboard_option('Add new user', 'admin.new_user',
+                                    description='Create a new user account', icon='add user icon') }}
+                {{ dashboard_option('Invite new user', 'admin.invite_user',
+                                    description='Invite a new user to create an account', icon='envelope icon') }}
+                {{ dashboard_option('Fix broken links', 'admin.view_broken_links',
+                                    description='Update resources that have broken links', icon='sync icon') }}
+                {{ dashboard_option('Upload & download resources', 'admin.upload_and_download',
+                                    description='Upload and download resources from CSV file', icon='download icon') }}
             </div>
         </div>
     </div>
