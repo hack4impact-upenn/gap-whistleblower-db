@@ -1089,7 +1089,7 @@ def contribution_news_article(id):
         article_description=article_entry.description,
         article_tags=[str(t.tag_id) for t in article_entry.tags],
         article_link=article_entry.link,
-        artile_file_urls=article_entry.file,
+        article_file_urls=article_entry.file,
         document_status="draft"
     )
 

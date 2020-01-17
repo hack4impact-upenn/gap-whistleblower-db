@@ -4,7 +4,7 @@
 
     function {{fieldname}}_getSignedRequest(file) {
       var xhr = new XMLHttpRequest();
-      if (file.name && file.name.length > 0) {
+      if (file && file.name && file.name.length > 0) {
         xhr.open('GET', `/sign-s3?file-name=${file.name}&file-type=${file.type}`);
         xhr.onreadystatechange = function () {
           if (xhr.readyState === 4) {
@@ -75,9 +75,12 @@
 
     $(document).ready(function () {
       $('body').on('change', '#file-{{ fieldname }}', function () {
-        disableInputs();
         var file = $(this)[0].files[0];
-        {{fieldname}}_getSignedRequest(file);
+
+        if (file) {
+          disableInputs();
+          {{fieldname}}_getSignedRequest(file);
+        }
       });
 
       $('body').on('click', '#{{fieldname}}-delete', function () {
