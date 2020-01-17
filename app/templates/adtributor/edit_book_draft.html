@@ -84,8 +84,6 @@
                   </div>
                   <div class="sixteen wide field">
                   {{ f.render_form_input(book_form.book_file_urls) }}
-                  </div>
-                  <div class="sixteen wide field">
                   {{ upload.file_upload('book_file_urls') }}
                   </div>
                   <div class="fields">
@@ -159,9 +157,8 @@
       </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
   }
   function delAuthor(author_id) {
-    let id="#author-" + author_id
-    console.log(author_id)
-      $(id).remove();
+    let id="#author-" + author_id;
+    $(id).remove();
   }
   function addEditor() {
       let index=$(".editor").length;
@@ -180,9 +177,8 @@
       </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
   }
   function delEditor(editor_id) {
-    let id="#editor-" + editor_id
-    console.log(editor_id)
-      $(id).remove();
+    let id="#editor-" + editor_id;
+    $(id).remove();
   }
 
 </script>

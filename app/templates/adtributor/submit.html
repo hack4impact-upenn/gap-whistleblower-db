@@ -642,9 +642,8 @@
         </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
   }
   function delAuthor(author_id, doc_type) {
-    let id=`#${doc_type}-author-${author_id}`
-    console.log(author_id)
-      $(id).remove();
+    let id=`#${doc_type}-author-${author_id}`;
+    $(id).remove();
   }
   function addEditor() {
       let index=$(".editor").length;
@@ -663,9 +662,8 @@
       </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
   }
   function delEditor(editor_id) {
-    let id="#editor-" + editor_id
-    console.log(editor_id)
-      $(id).remove();
+    let id="#editor-" + editor_id;
+    $(id).remove();
   }
 </script>
 
