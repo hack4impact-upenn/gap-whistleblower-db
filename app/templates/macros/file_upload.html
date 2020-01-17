@@ -82,6 +82,7 @@
 
       $('body').on('click', '#{{fieldname}}-delete', function () {
         $('#file-{{ fieldname }}').val('');
+        $("input#{{ fieldname }}").val('');
         $(this).parent().remove();
         $(this).remove();
       });
