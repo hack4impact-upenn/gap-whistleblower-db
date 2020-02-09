@@ -9,18 +9,18 @@
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
                   <h3 class="ui dividing header">Submit a Book</h3>
-                   {% set book_flashes = {
+                   {% set book_flashes={
                       'success': get_flashed_messages(category_filter=['form-success'])
                   } %}
                   {{ f.begin_form(book_form, book_flashes) }}
                   <input type="hidden" name="form-name" value="book_form">
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.form_message(book_flashes['success'], header='Success!', class='success') }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_field(book_form.book_title, name="Title") }}
                   </div>
-                  <div class = "author fields" id="author-0">
+                  <div class="author fields" id="author-0">
                       <div class='four wide field'>
                         <label>Add Author</label>
                         <a class="ui labeled icon button fluid" href="javascript:addAuthor()">
@@ -28,63 +28,69 @@
                           Add Author
                         </a>
                       </div>
-                      <div class = "six wide field">
+                      <div class="six wide field">
                       {{ f.render_form_field(book_form.book_author_first_name[0], name="First Name") }}
                       </div>
-                      <div class = "six wide field">
+                      <div class="six wide field">
                       {{ f.render_form_field(book_form.book_author_last_name[0], name="Last Name") }}
                       </div>
                   </div>
-                   <div class = "fields" id="beforeMe">
-                      <div class = "eight wide field">
-                      {{ f.render_form_field(book_form.book_editor_first_name, name="Editor First Name") }}
+                  <div id="beforeMe"/>
+                  <div class="editor fields" id="editor-0">
+                      <div class='four wide field'>
+                        <label>Add Editor</label>
+                        <a class="ui labeled icon button fluid" href="javascript:addEditor()">
+                          <i class="plus icon"></i>
+                          Add Editor
+                        </a>
                       </div>
-                      <div class = "eight wide field">
-                      {{ f.render_form_field(book_form.book_editor_last_name, name="Editor Last Name") }}
+                      <div class="six wide field">
+                      {{ f.render_form_field(book_form.book_editor_first_name[0], name="First Name*") }}
+                      </div>
+                      <div class="six wide field">
+                      {{ f.render_form_field(book_form.book_editor_last_name[0], name="Last Name*") }}
                       </div>
                   </div>
-                  <div class = "three fields">
-                      <div class = "field">
+                  <div class="three fields" id="beforeMe2">
+                      <div class="field">
                       {{ f.render_form_field(book_form.book_volume, name="Volume") }}
                       </div>
-                      <div class = "field">
+                      <div class="field">
                       {{ f.render_form_field(book_form.book_edition, name="Edition") }}
                       </div>
-                      <div class = "field">
+                      <div class="field">
                       {{ f.render_form_field(book_form.book_series, name="Series") }}
                       </div>
                   </div>
-                  <div class = "sixteen wide field">
-                  {{ f.render_form_field(book_form.book_publisher_name, name="Publisher") }}
+                  <div class="sixteen wide field">
+                  {{ f.render_form_field(book_form.book_publisher_name, name="Publisher*") }}
                   </div>
-                  <div class = "two fields">
-      	            <div class = "eight wide field">
+                  <div class="two fields">
+      	            <div class="eight wide field">
       	            {{ f.render_form_field(book_form.book_publication_month, name="Publication Month") }}
       	            </div>
-      	            <div class = "eight wide field">
-      	            {{ f.render_form_field(book_form.book_publication_year, name="Publication Year") }}
+      	            <div class="eight wide field">
+      	            {{ f.render_form_field(book_form.book_publication_year, name="Publication Year*") }}
       	            </div>
       	          </div>
-                  <div class = "sixteen wide field">
-                  {{ f.render_form_field(book_form.book_description, name="Description") }}
+                  <div class="sixteen wide field">
+                  {{ f.render_form_field(book_form.book_description, name="Description*") }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_field(book_form.book_tags, name="Tags") }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_field(book_form.book_link, name="Link") }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_input(book_form.book_file_urls) }}
+                  {{ upload.file_upload('book_file_urls') }}
                   </div>
-                  <div class = "sixteen wide field">
-                  {{ upload.file_upload('file_urls') }}
-                  </div>
-                  <div class = "fields">
-                  <div class = "three wide field">
+                  <div class="fields">
+                  <div class="three wide field">
                   {{ f.render_form_field(book_form.save_book) }}
                   </div>
-                  <div class = "three wide field">
+                  <div class="three wide field">
                   {{ f.render_form_field(book_form.submit_book) }}
                   </div>
                   </div>
@@ -93,49 +99,86 @@
           </div>
         </div>
     </div>
-</div>
 <script>
   $('.menu .item').tab();
   $(document).ready(function() {
       {% for i in range(book_form.book_author_first_name | length) %}
           {% if i != 0 %}
-            $( "#beforeMe" ).before(`<div class = "author fields" id="author-{{ i }}">\
+            $( "#beforeMe" ).before(`<div class="author fields" id="author-{{ i }}">\
               <div class="four wide field">\
                 <label>Remove Author</label>\
                 <a class="ui labeled icon button fluid" id="author-{{ i }}" href="javascript:delAuthor({{ i }})">\
                   <i class="close icon"></i>Remove Author</a>\
               </div>\
-              <div class = "six wide field">\
+              <div class="six wide field">\
                 {{ f.render_form_field(book_form.book_author_first_name[i], name="First Name") }}
               </div>\
-              <div class = "six wide field">\
+              <div class="six wide field">\
                 {{ f.render_form_field(book_form.book_author_last_name[i], name="Last Name") }}
               </div>\
           </div>`); //bit hacky but ok
 
           {% endif %}
       {% endfor %}
+      {% for i in range(book_form.book_editor_first_name | length) %}
+          {% if i != 0 %}
+            $( "#beforeMe2" ).before(`<div class="editor fields" id="editor-{{ i }}">\
+              <div class="four wide field">\
+                <label>Remove Editor</label>\
+                <a class="ui labeled icon button fluid" id="editor-{{ i }}" href="javascript:delEditor({{ i }})">\
+                  <i class="close icon"></i>Remove Editor</a>\
+              </div>\
+              <div class="six wide field">\
+                {{ f.render_form_field(book_form.book_editor_first_name[i], name="First Name") }}
+              </div>\
+              <div class="six wide field">\
+                {{ f.render_form_field(book_form.book_editor_last_name[i], name="Last Name") }}
+              </div>\
+          </div>`); //bit hacky but ok
+
+          {% endif %}
+      {% endfor %}
+
   });
   function addAuthor() {
-      let index = $(".author").length;
-      $( "#beforeMe" ).before(`<div class = "author fields" id="author-${index}">\
+      let index=$(".author").length;
+      $( "#beforeMe" ).before(`<div class="author fields" id="author-${index}">\
           <div class="four wide field">\
             <label>Remove Author</label>\
             <a class="ui labeled icon button fluid" id="author-${index}" href="javascript:delAuthor(${index})">\
               <i class="close icon"></i>Remove Author</a>\
           </div>\
-          <div class = "six wide field">\
+          <div class="six wide field">\
             {{ f.render_form_field(book_form.book_author_first_name[0], name="First Name") }}
           </div>\
-          <div class = "six wide field">\
+          <div class="six wide field">\
             {{ f.render_form_field(book_form.book_author_last_name[0], name="Last Name") }}
           </div>\
       </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
   }
   function delAuthor(author_id) {
-    let id = "#author-" + author_id
-    console.log(author_id)
-      $(id).remove();
+    let id="#author-" + author_id;
+    $(id).remove();
+  }
+  function addEditor() {
+      let index=$(".editor").length;
+      $( "#beforeMe2" ).before(`<div class="editor fields" id="editor-${index}">\
+          <div class="four wide field">\
+            <label>Remove Editor</label>\
+            <a class="ui labeled icon button fluid" id="editor-${index}" href="javascript:delEditor(${index})">\
+              <i class="close icon"></i>Remove Editor</a>\
+          </div>\
+          <div class="six wide field">\
+            {{ f.render_form_field(book_form.book_editor_first_name[0], name="First Name") }}
+          </div>\
+          <div class="six wide field">\
+            {{ f.render_form_field(book_form.book_editor_last_name[0], name="Last Name") }}
+          </div>\
+      </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
+  }
+  function delEditor(editor_id) {
+    let id="#editor-" + editor_id;
+    $(id).remove();
   }
 
 </script>

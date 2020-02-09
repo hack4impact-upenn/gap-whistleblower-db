@@ -10,7 +10,7 @@
         enctype       – <form> enctype attribute. If None, will automatically be set to
                         multipart/form-data if a FileField is present in the form. #}
 {% macro render_form(form, method='POST', extra_classes='', enctype=None) %}
-    {% set flashes = {
+    {% set flashes={
         'error':   get_flashed_messages(category_filter=['form-error']),
         'warning': get_flashed_messages(category_filter=['form-check-email']),
         'info':    get_flashed_messages(category_filter=['form-info']),
@@ -38,9 +38,9 @@
 {% macro begin_form(form, flashes, method='POST', extra_classes='', enctype=None) %}
     {# Set proper enctype #}
     {% if enctype is none and (form | selectattr('type', 'equalto', 'FileField') | list | length > 0) %}
-        {% set enctype = 'multipart/form-data' %}
+        {% set enctype='multipart/form-data' %}
     {% else %}
-        {% set enctype = '' %}
+        {% set enctype='' %}
     {% endif %}
 
     <form action="" method="{{ method }}" enctype="{{ enctype }}" class="ui form {{ extra_classes }}
@@ -107,7 +107,7 @@
 {# Render a field for the form #}
 {% macro render_form_field(field, value, name=field.label.text, extra_classes='') %}
     {% if field.type == 'RadioField' %}
-        {% set extra_classes = extra_classes + ' grouped fields' %}
+        {% set extra_classes=extra_classes + ' grouped fields' %}
     {% endif %}
     <div class="field {% if field.errors %}error{% endif %} {{ extra_classes }}">
         {{ render_form_input(field, value, name) }}
@@ -135,16 +135,17 @@
             </div>
         </div>
         {% endfor %}
-    {% elif field.type == 'MultipleFileUploadField' %}
-        <strong>Upload File</strong>
-        <input type="file" id="file" style=""><br>
-        <div style="display:none">{{ field }}</div>
-        <div id="{{ field.id }}_list">
+    {% elif field.type == 'FileUploadField' %}
+        <label>Upload File</label>
+        <input type="file" id="file-{{ field.name }}" style=""><br/>
+        <div style="display: none;">{{ field }}</div>
+        <div id="{{ field.id }}_meta">
           {% if field.data %}
-            {% set data = field.data.split(',') %}
-            {% for d in data %}
-            <span class="badge badge-light"><a href="{{ d }}">{{ d }}</a> <span class="delete badge badge-danger" data-url="{{ d }}">Delete Document</span></span><br/>
-            {% endfor %}
+          {% set url=field.data.split('/')[-1] %}
+            <div class="ui label">
+              <i class="icon close" id="{{ field.name }}-delete" data-url="{{ field.data }}"></i>
+              <a class="detail" href="{{ field.data }}">{{ url }}</a>
+            </div>
           {% endif %}
         </div>
     {% elif field.type == 'SubmitField' %}

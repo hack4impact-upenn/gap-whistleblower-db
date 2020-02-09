@@ -9,71 +9,69 @@
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
                   <h3 class="ui dividing header">Submit a Law</h3>
-                   {% set law_flashes = {
+                   {% set law_flashes={
                       'success': get_flashed_messages(category_filter=['form-success'])
                   } %}
                   {{ f.begin_form(law_form, law_flashes) }}
                   <input type="hidden" name="form-name" value="law_form">
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.form_message(law_flashes['success'], header='Success!', class='success') }}
                   </div>
-                  <div class = "fields">
-                      <div class = "sixteen wide field">
-                      {{ f.render_form_field(law_form.law_title, name='Title') }}
+                  <div class="fields">
+                      <div class="sixteen wide field">
+                      {{ f.render_form_field(law_form.law_title, name='Title*') }}
                       </div>
                   </div>
-                  <div class = "fields">
-                      <div class = "sixteen wide field">
-                      {{ f.render_form_field(law_form.law_citation, name='Citation') }}
+                  <div class="fields">
+                      <div class="sixteen wide field">
+                      {{ f.render_form_field(law_form.law_citation, name='Citation*') }}
                       </div>
                   </div>
-                  <div class = "two fields">
-                      <div class = "field">
+                  <div class="two fields">
+                      <div class="field">
                       {{ f.render_form_field(law_form.law_government_body, name='Government Body') }}
                       </div>
-                      <div class = "field">
+                      <div class="field">
                       {{ f.render_form_field(law_form.law_section, name='Section') }}
                       </div>
                   </div>
-                  <div class = "two fields">
-                      <div class = "field">
+                  <div class="two fields">
+                      <div class="field">
                       {{ f.render_form_field(law_form.law_region, name='Region') }}
                       </div>
-                      <div class = "field">
+                      <div class="field">
                       {{ f.render_form_field(law_form.law_country, name='Country') }}
                       </div>
                   </div>
-                  <div class = "three fields">
-                      <div class = "field">
+                  <div class="three fields">
+                      <div class="field">
                       {{ f.render_form_field(law_form.law_enactment_day, name='Enactment Day') }}
                       </div>
-                      <div class = "field">
+                      <div class="field">
                       {{ f.render_form_field(law_form.law_enactment_month, name='Enactment Month') }}
                       </div>
-                      <div class = "field">
-                      {{ f.render_form_field(law_form.law_enactment_year, name='Enactment Year') }}
+                      <div class="field">
+                      {{ f.render_form_field(law_form.law_enactment_year, name='Enactment Year*') }}
                       </div>
                   </div>
-                  <div class = "sixteen wide field">
-                  {{ f.render_form_field(law_form.law_description, name='Description') }}
+                  <div class="sixteen wide field">
+                  {{ f.render_form_field(law_form.law_description, name='Description*') }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_field(law_form.law_tags, name="Tags") }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_field(law_form.law_link, name='Link') }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_input(law_form.law_file_urls) }}
+                  {{ upload.file_upload('law_file_urls') }}
                   </div>
-                  <div class = "sixteen wide field">
-                  {{ upload.file_upload('file_urls') }}
-                  </div>
-                  <div class = "fields">
-                  <div class = "three wide field">
+                  <div class="fields">
+                  <div class="three wide field">
                   {{ f.render_form_field(law_form.save_law) }}
                   </div>
-                  <div class = "three wide field">
+                  <div class="three wide field">
                   {{ f.render_form_field(law_form.submit_law) }}
                   </div>
                   </div>

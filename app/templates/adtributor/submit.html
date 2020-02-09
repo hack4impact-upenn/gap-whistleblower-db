@@ -13,7 +13,7 @@
           <i class="caret left icon"></i>
           Back to my contributions
       </a>
-        <h2 class="ui dividing header">Create Database Entry</h2>
+        <h2 class="ui dividing header">Create Resource</h2>
         <div class="ui top attached tabular menu">
           <a class="{% if active == 'book' %}active {% endif %}item" data-tab="first">Book</a>
           <a class="{% if active == 'article' %}active {% endif %}item" data-tab="second">News Article</a>
@@ -26,19 +26,19 @@
         <div class="ui bottom attached {% if active == 'book' %}active {% endif %}tab segment" data-tab="first">
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
-                  <h3 class="ui dividing header">Submit a Book</h3>
-                   {% set book_flashes = {
+                  <h3 class="ui dividing header">Submit Book</h3>
+                   {% set book_flashes={
                       'success': get_flashed_messages(category_filter=['form-success'])
                   } %}
                   {{ f.begin_form(book_form, book_flashes) }}
                   <input type="hidden" name="form-name" value="book_form">
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.form_message(book_flashes['success'], header='Success!', class='success') }}
                   </div>
-                  <div class = "sixteen wide field">
-                  {{ f.render_form_field(book_form.book_title, name="Title") }}
+                  <div class="sixteen wide field">
+                  {{ f.render_form_field(book_form.book_title, name="Title*") }}
                   </div>
-                  <div class = "book-author fields" id="book-author-0">
+                  <div class="book-author fields" id="book-author-0">
                       <div class='four wide field'>
                         <label>Add Author</label>
                         <a class="ui labeled icon button fluid" href="javascript:addAuthor('book')">
@@ -46,63 +46,71 @@
                           Add Author
                         </a>
                       </div>
-                      <div class = "six wide field">
-                      {{ f.render_form_field(book_form.book_author_first_name[0], name="First Name") }}
+                      <div class="six wide field">
+                      {{ f.render_form_field(book_form.book_author_first_name[0], name="First Name*") }}
                       </div>
-                      <div class = "six wide field">
-                      {{ f.render_form_field(book_form.book_author_last_name[0], name="Last Name") }}
-                      </div>
-                  </div>
-                  <div class = "fields" id="book-beforeMe">
-                      <div class = "eight wide field">
-                      {{ f.render_form_field(book_form.book_editor_first_name, name="Editor First Name") }}
-                      </div>
-                      <div class = "eight wide field">
-                      {{ f.render_form_field(book_form.book_editor_last_name, name="Editor Last Name") }}
+                      <div class="six wide field">
+                      {{ f.render_form_field(book_form.book_author_last_name[0], name="Last Name*") }}
                       </div>
                   </div>
-                  <div class = "three fields">
-                      <div class = "field">
+                  <div id="book-beforeMe"></div>
+                  <div class="editor fields" id="editor-0">
+                      <div class='four wide field'>
+                        <label>Add Editor</label>
+                        <a class="ui labeled icon button fluid" href="javascript:addEditor('book')">
+                          <i class="plus icon"></i>
+                          Add Editor
+                        </a>
+                      </div>
+                      <div class="six wide field">
+                      {{ f.render_form_field(book_form.book_editor_first_name[0], name="First Name") }}
+                      </div>
+                      <div class="six wide field">
+                      {{ f.render_form_field(book_form.book_editor_last_name[0], name="Last Name") }}
+                      </div>
+                  </div>
+                  <div class="three fields" id="editBeforeMe">
+                      <div class="field">
                       {{ f.render_form_field(book_form.book_volume, name="Volume") }}
                       </div>
-                      <div class = "field">
+                      <div class="field">
                       {{ f.render_form_field(book_form.book_edition, name="Edition") }}
                       </div>
-                      <div class = "field">
+                      <div class="field">
                       {{ f.render_form_field(book_form.book_series, name="Series") }}
                       </div>
                   </div>
-                  <div class = "sixteen wide field">
-                  {{ f.render_form_field(book_form.book_publisher_name, name="Publisher") }}
+                  <div class="sixteen wide field">
+                  {{ f.render_form_field(book_form.book_publisher_name, name="Publisher*") }}
                   </div>
-                  <div class = "two fields">
-      	            <div class = "eight wide field">
+                  <div class="two fields">
+      	            <div class="eight wide field">
       	            {{ f.render_form_field(book_form.book_publication_month, name="Publication Month") }}
       	            </div>
-      	            <div class = "eight wide field">
-      	            {{ f.render_form_field(book_form.book_publication_year, name="Publication Year") }}
+      	            <div class="eight wide field">
+      	            {{ f.render_form_field(book_form.book_publication_year, name="Publication Year*") }}
       	            </div>
       	          </div>
-                  <div class = "sixteen wide field">
-                  {{ f.render_form_field(book_form.book_description, name="Description") }}
+                  <div class="sixteen wide field">
+                  {{ f.render_form_field(book_form.book_description, name="Description*") }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_field(book_form.book_tags, name="Tags") }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_field(book_form.book_link, name="Link") }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_input(book_form.book_file_urls) }}
                   </div>
-                  <div class = "sixteen wide field">
-                  {{ upload.file_upload('file_urls') }}
+                  <div class="sixteen wide field">
+                  {{ upload.file_upload('book_file_urls') }}
                   </div>
-                  <div class = "fields">
-                  <div class = "three wide field">
+                  <div class="fields">
+                  <div class="three wide field">
                   {{ f.render_form_field(book_form.save_book) }}
                   </div>
-                  <div class = "three wide field">
+                  <div class="three wide field">
                   {{ f.render_form_field(book_form.submit_book) }}
                   </div>
                   </div>
@@ -113,19 +121,19 @@
         <div class="ui bottom attached {% if active == 'article' %}active {% endif %}tab segment" data-tab="second">
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
-              <h3 class="ui dividing header">Submit a News Article</h3>
-              {% set article_flashes = {
+              <h3 class="ui dividing header">Submit News Article</h3>
+              {% set article_flashes={
                  'success': get_flashed_messages(category_filter=['form-success'])
              } %}
              {{ f.begin_form(article_form, article_flashes) }}
              <input type="hidden" name="form-name" value="article_form">
-             <div class = "sixteen wide field">
+             <div class="sixteen wide field">
              {{ f.form_message(article_flashes['success'], header='Success!', class='success') }}
              </div>
-             <div class = "sixteen wide field">
-             {{ f.render_form_field(article_form.article_title, name='Title') }}
+             <div class="sixteen wide field">
+             {{ f.render_form_field(article_form.article_title, name='Title*') }}
              </div>
-             <div class = "article-author fields" id="article-author-0">
+             <div class="article-author fields" id="article-author-0">
                       <div class='four wide field'>
                         <label>Add Author</label>
                         <a class="ui labeled icon button fluid" href="javascript:addAuthor('article')">
@@ -133,47 +141,47 @@
                           Add Author
                         </a>
                       </div>
-                      <div class = "six wide field">
-                      {{ f.render_form_field(article_form.article_author_first_name[0], name="First Name") }}
+                      <div class="six wide field">
+                      {{ f.render_form_field(article_form.article_author_first_name[0], name="First Name*") }}
                       </div>
-                      <div class = "six wide field">
-                      {{ f.render_form_field(article_form.article_author_last_name[0], name="Last Name") }}
+                      <div class="six wide field">
+                      {{ f.render_form_field(article_form.article_author_last_name[0], name="Last Name*") }}
                       </div>
                   </div>
-             <div class = "sixteen wide field" id="article-beforeMe">
-             {{ f.render_form_field(article_form.article_publication, name='Publication') }}
+             <div class="sixteen wide field" id="article-beforeMe">
+             {{ f.render_form_field(article_form.article_publication, name='Publication*') }}
              </div>
-             <div class = "three fields">
-               <div class = "field">
+             <div class="three fields">
+               <div class="field">
                {{ f.render_form_field(article_form.article_publication_day, name='Publication Day') }}
                </div>
-               <div class = "field">
+               <div class="field">
                {{ f.render_form_field(article_form.article_publication_month, name='Publication Month') }}
                </div>
-               <div class = "field">
-               {{ f.render_form_field(article_form.article_publication_year, name='Publication Year') }}
+               <div class="field">
+               {{ f.render_form_field(article_form.article_publication_year, name='Publication Year*') }}
                </div>
              </div>
-               <div class = "sixteen wide field">
-               {{ f.render_form_field(article_form.article_description, name='Description') }}
+               <div class="sixteen wide field">
+               {{ f.render_form_field(article_form.article_description, name='Description*') }}
                </div>
-               <div class = "sixteen wide field">
+               <div class="sixteen wide field">
                {{ f.render_form_field(article_form.article_tags, name="Tags") }}
                </div>
-               <div class = "sixteen wide field">
+               <div class="sixteen wide field">
                {{ f.render_form_field(article_form.article_link, name='Link') }}
                </div>
-               <div class = "sixteen wide field">
+               <div class="sixteen wide field">
                {{ f.render_form_input(article_form.article_file_urls) }}
                </div>
-               <div class = "sixteen wide field">
-               {{ upload.file_upload('file_urls') }}
+               <div class="sixteen wide field">
+               {{ upload.file_upload('article_file_urls') }}
                </div>
-               <div class = "fields">
-                  <div class = "three wide field">
+               <div class="fields">
+                  <div class="three wide field">
                   {{ f.render_form_field(article_form.save_article) }}
                   </div>
-                  <div class = "three wide field">
+                  <div class="three wide field">
                   {{ f.render_form_field(article_form.submit_article) }}
                   </div>
                   </div>
@@ -184,19 +192,19 @@
         <div class="ui bottom attached {% if active == 'journal' %}active {% endif %}tab segment" data-tab="third">
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
-              <h3 class="ui dividing header">Submit a Journal Article</h3>
-              {% set article_flashes = {
+              <h3 class="ui dividing header">Submit Journal Article</h3>
+              {% set journal_flashes={
                  'success': get_flashed_messages(category_filter=['form-success'])
              } %}
-             {{ f.begin_form(journal_form, article_flashes) }}
+             {{ f.begin_form(journal_form, journal_flashes) }}
              <input type="hidden" name="form-name" value="journal_form">
-             <div class = "sixteen wide field">
-             {{ f.form_message(article_flashes['success'], header='Success!', class='success') }}
+             <div class="sixteen wide field">
+             {{ f.form_message(journal_flashes['success'], header='Success!', class='success') }}
              </div>
-             <div class = "sixteen wide field">
-             {{ f.render_form_field(journal_form.article_title, name='Title') }}
+             <div class="sixteen wide field">
+             {{ f.render_form_field(journal_form.journal_title, name='Title*') }}
              </div>
-             <div class = "journal-author fields" id="journal-author-0">
+             <div class="journal-author fields" id="journal-author-0">
                       <div class='four wide field'>
                         <label>Add Author</label>
                         <a class="ui labeled icon button fluid" href="javascript:addAuthor('journal')">
@@ -204,61 +212,64 @@
                           Add Author
                         </a>
                       </div>
-                      <div class = "six wide field">
-                      {{ f.render_form_field(journal_form.article_author_first_name[0], name="First Name") }}
+                      <div class="six wide field">
+                      {{ f.render_form_field(journal_form.journal_author_first_name[0], name="First Name*") }}
                       </div>
-                      <div class = "six wide field">
-                      {{ f.render_form_field(journal_form.article_author_last_name[0], name="Last Name") }}
+                      <div class="six wide field">
+                      {{ f.render_form_field(journal_form.journal_author_last_name[0], name="Last Name*") }}
                       </div>
              </div>
-             <div class = "sixteen wide field" id="journal-beforeMe">
-             {{ f.render_form_field(journal_form.publisher_name, name='Publication') }}
-             </div>
-             <div class = "sixteen wide field">
-             <div class = "three fields">
-             <div class = "field">
-             {{ f.render_form_field(journal_form.volume) }}
-             </div>
-             <div class = "field">
-             {{ f.render_form_field(journal_form.start_page) }}
-             </div>
-             <div class = "field">
-             {{ f.render_form_field(journal_form.end_page) }}
-             </div>
-             </div>
-             </div>
-             <div class = "three fields">
-               <div class = "field">
-               {{ f.render_form_field(journal_form.article_publication_day, name='Publication Day') }}
+             <div class="two fields" id="journal-beforeMe">
+               <div class="field">
+               {{ f.render_form_field(journal_form.journal_volume, name='Volume') }}
                </div>
-               <div class = "field">
-               {{ f.render_form_field(journal_form.article_publication_month, name='Publication Month') }}
-               </div>
-               <div class = "field">
-               {{ f.render_form_field(journal_form.article_publication_year, name='Publication Year') }}
+               <div class="field">
+               {{ f.render_form_field(journal_form.journal_issue, name='Issue') }}
                </div>
              </div>
-               <div class = "sixteen wide field">
-               {{ f.render_form_field(journal_form.article_description, name='Description') }}
+             <div class="two fields">
+               <div class="field">
+               {{ f.render_form_field(journal_form.journal_start_page, name='Start Page') }}
                </div>
-               <div class = "sixteen wide field">
-                  {{ f.render_form_field(journal_form.article_tags, name="Tags") }}
+               <div class="field">
+               {{ f.render_form_field(journal_form.journal_end_page, name='End Page') }}
                </div>
-               <div class = "sixteen wide field">
-               {{ f.render_form_field(journal_form.article_link, name='Link') }}
+             </div>
+             <div class="sixteen wide field" >
+             {{ f.render_form_field(journal_form.journal_publication, name='Publication*') }}
+             </div>
+             <div class="three fields">
+               <div class="field">
+               {{ f.render_form_field(journal_form.journal_publication_day, name='Publication Day') }}
                </div>
-               <div class = "sixteen wide field">
-               {{ f.render_form_input(journal_form.article_file_urls) }}
+               <div class="field">
+               {{ f.render_form_field(journal_form.journal_publication_month, name='Publication Month') }}
                </div>
-               <div class = "sixteen wide field">
-               {{ upload.file_upload('file_urls') }}
+               <div class="field">
+               {{ f.render_form_field(journal_form.journal_publication_year, name='Publication Year*') }}
                </div>
-               <div class = "fields">
-                  <div class = "three wide field">
-                  {{ f.render_form_field(journal_form.save_article) }}
+             </div>
+               <div class="sixteen wide field">
+               {{ f.render_form_field(journal_form.journal_description, name='Description*') }}
+               </div>
+               <div class="sixteen wide field">
+                  {{ f.render_form_field(journal_form.journal_tags, name="Tags") }}
+               </div>
+               <div class="sixteen wide field">
+               {{ f.render_form_field(journal_form.journal_link, name='Link') }}
+               </div>
+               <div class="sixteen wide field">
+               {{ f.render_form_input(journal_form.journal_file_urls) }}
+               </div>
+               <div class="sixteen wide field">
+               {{ upload.file_upload('journal_file_urls') }}
+               </div>
+               <div class="fields">
+                  <div class="three wide field">
+                  {{ f.render_form_field(journal_form.save_journal) }}
                   </div>
-                  <div class = "three wide field">
-                  {{ f.render_form_field(journal_form.submit_article) }}
+                  <div class="three wide field">
+                  {{ f.render_form_field(journal_form.submit_journal) }}
                   </div>
                   </div>
               </div>
@@ -269,72 +280,72 @@
         <div class="ui bottom attached {% if active == 'law' %}active {% endif %}tab segment" data-tab="fourth">
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
-                  <h3 class="ui dividing header">Submit a Law</h3>
-                   {% set law_flashes = {
+                  <h3 class="ui dividing header">Submit Law</h3>
+                   {% set law_flashes={
                       'success': get_flashed_messages(category_filter=['form-success'])
                   } %}
                   {{ f.begin_form(law_form, law_flashes) }}
                   <input type="hidden" name="form-name" value="law_form">
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.form_message(law_flashes['success'], header='Success!', class='success') }}
                   </div>
-                  <div class = "fields">
-                      <div class = "sixteen wide field">
-                      {{ f.render_form_field(law_form.law_title, name='Title') }}
+                  <div class="fields">
+                      <div class="sixteen wide field">
+                      {{ f.render_form_field(law_form.law_title, name='Title*') }}
                       </div>
                   </div>
-                  <div class = "fields">
-                      <div class = "sixteen wide field">
-                      {{ f.render_form_field(law_form.law_citation, name='Citation') }}
+                  <div class="fields">
+                      <div class="sixteen wide field">
+                      {{ f.render_form_field(law_form.law_citation, name='Citation*') }}
                       </div>
                   </div>
-                  <div class = "two fields">
-                      <div class = "field">
+                  <div class="two fields">
+                      <div class="field">
                       {{ f.render_form_field(law_form.law_government_body, name='Government Body') }}
                       </div>
-                      <div class = "field">
+                      <div class="field">
                       {{ f.render_form_field(law_form.law_section, name='Section') }}
                       </div>
                   </div>
-                  <div class = "two fields">
-                      <div class = "field">
+                  <div class="two fields">
+                      <div class="field">
                       {{ f.render_form_field(law_form.law_region, name='Region') }}
                       </div>
-                      <div class = "field">
+                      <div class="field">
                       {{ f.render_form_field(law_form.law_country, name='Country') }}
                       </div>
                   </div>
-                  <div class = "three fields">
-                      <div class = "field">
+                  <div class="three fields">
+                      <div class="field">
                       {{ f.render_form_field(law_form.law_enactment_day, name='Enactment Day') }}
                       </div>
-                      <div class = "field">
+                      <div class="field">
                       {{ f.render_form_field(law_form.law_enactment_month, name='Enactment Month') }}
                       </div>
-                      <div class = "field">
-                      {{ f.render_form_field(law_form.law_enactment_year, name='Enactment Year') }}
+                      <div class="field">
+                      {{ f.render_form_field(law_form.law_enactment_year, name='Enactment Year*') }}
                       </div>
                   </div>
-                  <div class = "sixteen wide field">
-                  {{ f.render_form_field(law_form.law_description, name='Description') }}
+                  <div class="sixteen wide field">
+                  {{ f.render_form_field(law_form.law_description, name='Description*') }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_field(law_form.law_tags, name="Tags") }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_field(law_form.law_link, name='Link') }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_input(law_form.law_file_urls) }}
                   </div>
-                  <div class = "sixteen wide field">
-                  {{ upload.file_upload('file_urls') }}
+                  <div class="sixteen wide field">
+                  {{ upload.file_upload('law_file_urls') }}
                   </div>
-                  <div class = "fields">
-                  <div class = "three wide field">
+                  <div class="fields">
+                  <div class="three wide field">
                   {{ f.render_form_field(law_form.save_law) }}
                   </div>
-                  <div class = "three wide field">
+                  <div class="three wide field">
                   {{ f.render_form_field(law_form.submit_law) }}
                   </div>
                   </div>
@@ -345,19 +356,19 @@
         <div class="ui bottom attached {% if active == 'video' %}active {% endif %}tab segment" data-tab="fifth">
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
-              <h3 class="ui dividing header">Submit a Video</h3>
-              {% set video_flashes = {
+              <h3 class="ui dividing header">Submit Video</h3>
+              {% set video_flashes={
                  'success': get_flashed_messages(category_filter=['form-success'])
              } %}
              {{ f.begin_form(video_form, video_flashes) }}
              <input type="hidden" name="form-name" value="video_form">
-             <div class = "sixteen wide field">
+             <div class="sixteen wide field">
              {{ f.form_message(video_form['success'], header='Success!', class='success') }}
              </div>
-             <div class = "sixteen wide field">
-             {{ f.render_form_field(video_form.video_title, name="Title") }}
+             <div class="sixteen wide field">
+             {{ f.render_form_field(video_form.video_title, name="Title*") }}
              </div>
-             <div class = "video-author fields" id="video-author-0">
+             <div class="video-author fields" id="video-author-0">
                       <div class='four wide field'>
                         <label>Add Director</label>
                         <a class="ui labeled icon button fluid" href="javascript:addAuthor('video')">
@@ -365,47 +376,63 @@
                           Add Director
                         </a>
                       </div>
-                      <div class = "six wide field">
+                      <div class="six wide field">
                       {{ f.render_form_field(video_form.director_first_name[0], name="First Name") }}
                       </div>
-                      <div class = "six wide field">
+                      <div class="six wide field">
                       {{ f.render_form_field(video_form.director_last_name[0], name="Last Name") }}
                       </div>
              </div>
-             <div class = "sixteen wide field" id="video-beforeMe">
-             {{ f.render_form_field(video_form.video_post_source, name="Source") }}
+             <div class="sixteen wide field" id="video-beforeMe">
+             {{ f.render_form_field(video_form.video_series, name="Series") }}
              </div>
-             <div class = "three fields">
-               <div class = "field">
+             <div class="two fields">
+               <div class="field">
+               {{ f.render_form_field(video_form.video_studio, name="Network/Studio") }}
+               </div>
+               <div class="field">
+              {{ f.render_form_field(video_form.video_publisher, name="Published/Uploaded By") }}
+               </div>
+             </div>
+             <div class="two fields">
+               <div class="field">
+               {{ f.render_form_field(video_form.video_source, name="Source") }}
+               </div>
+               <div class="field">
+               {{ f.render_form_field(video_form.video_country, name="Country") }}
+               </div>
+             </div>
+             <div class="three fields">
+               <div class="field">
                {{ f.render_form_field(video_form.video_publication_day, name="Release Day") }}
                </div>
-               <div class = "field">
+               <div class="field">
                {{ f.render_form_field(video_form.video_publication_month, name="Release Month") }}
                </div>
-               <div class = "field">
-               {{ f.render_form_field(video_form.video_publication_year, name="Release Year") }}
+               <div class="field">
+               {{ f.render_form_field(video_form.video_publication_year, name="Release Year*") }}
                </div>
             </div>
-               <div class = "sixteen wide field">
-               {{ f.render_form_field(video_form.video_description, name='Description') }}
+               <div class="sixteen wide field">
+               {{ f.render_form_field(video_form.video_description, name='Description*') }}
                </div>
-               <div class = "sixteen wide field">
+               <div class="sixteen wide field">
                   {{ f.render_form_field(video_form.video_tags, name='Tags') }}
                </div>
-               <div class = "sixteen wide field">
+               <div class="sixteen wide field">
                {{ f.render_form_field(video_form.video_link, name='Link') }}
                </div>
-               <div class = "sixteen wide field">
+               <div class="sixteen wide field">
                {{ f.render_form_input(video_form.video_file_urls) }}
                </div>
-               <div class = "sixteen wide field">
-               {{ upload.file_upload('file_urls') }}
+               <div class="sixteen wide field">
+               {{ upload.file_upload('video_file_urls') }}
                </div>
-               <div class = "fields">
-                  <div class = "three wide field">
+               <div class="fields">
+                  <div class="three wide field">
                   {{ f.render_form_field(video_form.save_video) }}
                   </div>
-                  <div class = "three wide field">
+                  <div class="three wide field">
                   {{ f.render_form_field(video_form.submit_video) }}
                   </div>
                   </div>
@@ -416,19 +443,19 @@
             <div class="ui bottom attached {% if active == 'report' %}active {% endif %}tab segment" data-tab="sixth">
               <div class="ui grid container">
                   <div class="sixteen wide computer sixteen wide mobile centered column">
-                  <h3 class="ui dividing header">Submit a Report</h3>
-                  {% set report_flashes = {
+                  <h3 class="ui dividing header">Submit Report</h3>
+                  {% set report_flashes={
                      'success': get_flashed_messages(category_filter=['form-success'])
                  } %}
                  {{ f.begin_form(report_form, video_flashes) }}
                  <input type="hidden" name="form-name" value="report_form">
-                 <div class = "sixteen wide field">
+                 <div class="sixteen wide field">
                  {{ f.form_message(report_form['success'], header='Success!', class='success') }}
                  </div>
-                 <div class = "sixteen wide field">
-                 {{ f.render_form_field(report_form.report_title, name="Title") }}
+                 <div class="sixteen wide field">
+                 {{ f.render_form_field(report_form.report_title, name="Title*") }}
                  </div>
-                 <div class = "report-author fields" id="report-author-0">
+                 <div class="report-author fields" id="report-author-0">
                       <div class='four wide field'>
                         <label>Add Author</label>
                         <a class="ui labeled icon button fluid" href="javascript:addAuthor('report')">
@@ -436,47 +463,47 @@
                           Add Author
                         </a>
                       </div>
-                      <div class = "six wide field">
+                      <div class="six wide field">
                       {{ f.render_form_field(report_form.report_author_first_name[0], name="First Name") }}
                       </div>
-                      <div class = "six wide field">
+                      <div class="six wide field">
                       {{ f.render_form_field(report_form.report_author_last_name[0], name="Last Name") }}
                       </div>
                  </div>
-                 <div class = "sixteen wide field" id="report-beforeMe">
-                 {{ f.render_form_field(report_form.report_publisher, name="Publisher") }}
+                 <div class="sixteen wide field" id="report-beforeMe">
+                 {{ f.render_form_field(report_form.report_publisher, name="Publisher*") }}
                  </div>
-                 <div class = "three fields">
-                   <div class = "field">
-                   {{ f.render_form_field(report_form.report_publication_day, name="Day") }}
+                 <div class="three fields">
+                   <div class="field">
+                   {{ f.render_form_field(report_form.report_publication_day, name="Release Day") }}
                    </div>
-                   <div class = "field">
-                   {{ f.render_form_field(report_form.report_publication_month, name="Month") }}
+                   <div class="field">
+                   {{ f.render_form_field(report_form.report_publication_month, name="Release Month") }}
                    </div>
-                   <div class = "field">
-                   {{ f.render_form_field(report_form.report_publication_year, name="Year") }}
+                   <div class="field">
+                   {{ f.render_form_field(report_form.report_publication_year, name="Release Year*") }}
                    </div>
                 </div>
-                   <div class = "sixteen wide field">
-                   {{ f.render_form_field(report_form.report_description, name='Description') }}
+                   <div class="sixteen wide field">
+                   {{ f.render_form_field(report_form.report_description, name='Description*') }}
                    </div>
-                   <div class = "sixteen wide field">
+                   <div class="sixteen wide field">
                    {{ f.render_form_field(report_form.report_tags, name='Tags') }}
                    </div>
-                   <div class = "sixteen wide field">
+                   <div class="sixteen wide field">
                    {{ f.render_form_field(report_form.report_link, name='Link') }}
                    </div>
-                   <div class = "sixteen wide field">
+                   <div class="sixteen wide field">
                    {{ f.render_form_input(report_form.report_file_urls) }}
                    </div>
-                   <div class = "sixteen wide field">
-                   {{ upload.file_upload('file_urls') }}
+                   <div class="sixteen wide field">
+                   {{ upload.file_upload('report_file_urls') }}
                    </div>
-                   <div class = "fields">
-                      <div class = "three wide field">
+                   <div class="fields">
+                      <div class="three wide field">
                       {{ f.render_form_field(report_form.save_report) }}
                       </div>
-                      <div class = "three wide field">
+                      <div class="three wide field">
                       {{ f.render_form_field(report_form.submit_report) }}
                       </div>
                       </div>
@@ -488,18 +515,18 @@
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
                   <h3 class="ui dividing header">Submit Other</h3>
-                   {% set other_flashes = {
+                   {% set other_flashes={
                       'success': get_flashed_messages(category_filter=['form-success'])
                   } %}
                   {{ f.begin_form(other_form, other_flashes) }}
                   <input type="hidden" name="form-name" value="other_form">
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.form_message(other_flashes['success'], header='Success!', class='success') }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                     {{ f.render_form_field(other_form.other_title, name='Title') }}
                   </div>
-                  <div class = "other-author fields" id="other-author-0">
+                  <div class="other-author fields" id="other-author-0">
                       <div class='four wide field'>
                         <label>Add Author</label>
                         <a class="ui labeled icon button fluid" href="javascript:addAuthor('other')">
@@ -507,47 +534,50 @@
                           Add Author
                         </a>
                       </div>
-                      <div class = "six wide field">
+                      <div class="six wide field">
                       {{ f.render_form_field(other_form.other_author_first_name[0], name="First Name") }}
                       </div>
-                      <div class = "six wide field">
+                      <div class="six wide field">
                       {{ f.render_form_field(other_form.other_author_last_name[0], name="Last Name") }}
                       </div>
                   </div>
-                  <div class = "sixteen wide field" id="other-beforeMe">
+                  <div class="sixteen wide field" id="other-beforeMe">
                   {{ f.render_form_field(other_form.other_document_type, name='Resource Type') }}
                   </div>
-                  <div class = "three fields">
-      	            <div class = "field">
+                  <div class="sixteen wide field">
+                  {{ f.render_form_field(other_form.other_source, name='Source') }}
+                  </div>
+                  <div class="three fields">
+      	            <div class="field">
       	            {{ f.render_form_field(other_form.other_publication_day, name='Day') }}
       	            </div>
-      	            <div class = "field">
+      	            <div class="field">
       	            {{ f.render_form_field(other_form.other_publication_month, name='Month') }}
       	            </div>
-      	            <div class = "field">
+      	            <div class="field">
       	            {{ f.render_form_field(other_form.other_publication_year, name='Year') }}
       	            </div>
       	        </div>
-                  <div class = "sixteen wide field">
-                  {{ f.render_form_field(other_form.other_description, name='Description') }}
+                  <div class="sixteen wide field">
+                  {{ f.render_form_field(other_form.other_description, name='Description*') }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_field(other_form.other_tags, name="Tags") }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_field(other_form.other_link, name='Link') }}
                   </div>
-                  <div class = "sixteen wide field">
+                  <div class="sixteen wide field">
                   {{ f.render_form_input(other_form.other_file_urls) }}
                   </div>
-                  <div class = "sixteen wide field">
-                  {{ upload.file_upload('file_urls') }}
+                  <div class="sixteen wide field">
+                  {{ upload.file_upload('other_file_urls') }}
                   </div>
-                  <div class = "fields">
-                  <div class = "three wide field">
+                  <div class="fields">
+                  <div class="three wide field">
                   {{ f.render_form_field(other_form.save_other) }}
                   </div>
-                  <div class = "three wide field">
+                  <div class="three wide field">
                   {{ f.render_form_field(other_form.submit_other) }}
                   </div>
                   </div>
@@ -561,60 +591,79 @@
 <script>
   $('.menu .item').tab();
   function addAuthor(doc_type) {
-      let firstName = "";
-      let lastName = "";
+      let firstName="";
+      let lastName="";
       switch (doc_type) {
           case 'book':
-              firstName = `{{ f.render_form_field(book_form.book_author_first_name[0], name="First Name") }}`;
-              lastName = `{{ f.render_form_field(book_form.book_author_last_name[0], name="Last Name") }}`;
+              firstName=`{{ f.render_form_field(book_form.book_author_first_name[0], name="First Name*") }}`;
+              lastName=`{{ f.render_form_field(book_form.book_author_last_name[0], name="Last Name*") }}`;
               break;
           case 'article':
-              firstName = `{{ f.render_form_field(article_form.article_author_first_name[0], name="First Name") }}`;
-              lastName = `{{ f.render_form_field(article_form.article_author_last_name[0], name="Last Name") }}`;
+              firstName=`{{ f.render_form_field(article_form.article_author_first_name[0], name="First Name*") }}`;
+              lastName=`{{ f.render_form_field(article_form.article_author_last_name[0], name="Last Name*") }}`;
               break;
           case 'journal':
-              firstName = `{{ f.render_form_field(journal_form.article_author_first_name[0], name="First Name") }}`;
-              lastName = `{{ f.render_form_field(journal_form.article_author_last_name[0], name="Last Name") }}`;
+              firstName=`{{ f.render_form_field(journal_form.journal_author_first_name[0], name="First Name*") }}`;
+              lastName=`{{ f.render_form_field(journal_form.journal_author_last_name[0], name="Last Name*") }}`;
               break;
           case 'report':
-              firstName = `{{ f.render_form_field(report_form.report_author_first_name[0], name="First Name") }}`;
-              lastName = `{{ f.render_form_field(report_form.report_author_last_name[0], name="Last Name") }}`;
+              firstName=`{{ f.render_form_field(report_form.report_author_first_name[0], name="First Name") }}`;
+              lastName=`{{ f.render_form_field(report_form.report_author_last_name[0], name="Last Name") }}`;
               break;
           case 'video':
-              firstName = `{{ f.render_form_field(video_form.director_first_name[0], name="First Name") }}`;
-              lastName = `{{ f.render_form_field(video_form.director_last_name[0], name="Last Name") }}`;
+              firstName=`{{ f.render_form_field(video_form.director_first_name[0], name="First Name") }}`;
+              lastName=`{{ f.render_form_field(video_form.director_last_name[0], name="Last Name") }}`;
               break;
           case 'other':
-              firstName = `{{ f.render_form_field(other_form.other_author_first_name[0], name="First Name") }}`;
-              lastName = `{{ f.render_form_field(other_form.other_author_last_name[0], name="Last Name") }}`;
+              firstName=`{{ f.render_form_field(other_form.other_author_first_name[0], name="First Name") }}`;
+              lastName=`{{ f.render_form_field(other_form.other_author_last_name[0], name="Last Name") }}`;
               break;
           default:
-              firstName = `{{ f.render_form_field(book_form.book_author_first_name[0], name="First Name") }}`;
-              lastName = `{{ f.render_form_field(book_form.book_author_last_name[0], name="Last Name") }}`;
+              firstName=`{{ f.render_form_field(book_form.book_author_first_name[0], name="First Name*") }}`;
+              lastName=`{{ f.render_form_field(book_form.book_author_last_name[0], name="Last Name*") }}`;
       }
-      let index = $(`.${doc_type}-author`).length;
-      let author_type = 'Author'
+      let index=$(`.${doc_type}-author`).length;
+      let author_type='Author'
       if (doc_type =='video') {
-        author_type = 'Director'
+        author_type='Director'
       }
-      $( `#${doc_type}-beforeMe` ).before(`<div class = "${doc_type}-author fields" id="${doc_type}-author-${index}">\
+      $( `#${doc_type}-beforeMe` ).before(`<div class="${doc_type}-author fields" id="${doc_type}-author-${index}">\
         <div class="four wide field">\
         <label>Remove ${author_type}</label>\
         <a class="ui labeled icon button fluid" id="${doc_type}-author-${index}" href="javascript:delAuthor(${index}, '${doc_type}')">\
           <i class="close icon"></i>Remove ${author_type} </a>\
         </div>\
-        <div class = "six wide field">\
+        <div class="six wide field">\
         ${firstName}
         </div>\
-        <div class = "six wide field">\
+        <div class="six wide field">\
         ${lastName}
         </div>\
         </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
   }
   function delAuthor(author_id, doc_type) {
-    let id = `#${doc_type}-author-${author_id}`
-    console.log(author_id)
-      $(id).remove();
+    let id=`#${doc_type}-author-${author_id}`;
+    $(id).remove();
+  }
+  function addEditor() {
+      let index=$(".editor").length;
+      $( "#editBeforeMe" ).before(`<div class="editor fields" id="editor-${index}">\
+          <div class="four wide field">\
+            <label>Remove Editor</label>\
+            <a class="ui labeled icon button fluid" id="editor-${index}" href="javascript:delEditor(${index})">\
+              <i class="close icon"></i>Remove Editor</a>\
+          </div>\
+          <div class="six wide field">\
+            {{ f.render_form_field(book_form.book_editor_first_name[0], name="First Name") }}
+          </div>\
+          <div class="six wide field">\
+            {{ f.render_form_field(book_form.book_editor_last_name[0], name="Last Name") }}
+          </div>\
+      </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
+  }
+  function delEditor(editor_id) {
+    let id="#editor-" + editor_id;
+    $(id).remove();
   }
 </script>
 

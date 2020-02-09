@@ -56,7 +56,7 @@ class Config:
     USER_EMAIL = os.environ.get(
         'USER_EMAIL') or 'flask-base-user@example.com'
     EMAIL_SUBJECT_PREFIX = '[{}]'.format(APP_NAME)
-    
+
     EMAIL_SENDER = '{app_name} Admin <{email}>'.format(
         app_name=APP_NAME, email=MAIL_USERNAME)
 
@@ -86,15 +86,8 @@ class DevelopmentConfig(Config):
     DEBUG = True
     ASSETS_DEBUG = True
 
-    POSTGRES = {
-        'user': 'sarahraines',
-        'pw': 'hello123',
-        'db': 'postgres',
-        'host': 'gap-whistleblower-db.cmgekcdmmaaq.us-east-1.rds.amazonaws.com',
-        'port': '5432',
-    }
-
-    SQLALCHEMY_DATABASE_URI = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
 
     @classmethod
     def init_app(cls, app):

@@ -24,6 +24,7 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'account.login'
 
+
 def create_app(config_name):
     app = Flask(__name__)
 
@@ -73,7 +74,10 @@ def create_app(config_name):
         app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
         from .adtributor import contributor as contributor_blueprint
-        app.register_blueprint(contributor_blueprint, url_prefix='/contributor')
+        app.register_blueprint(
+            contributor_blueprint,
+            url_prefix='/contributor'
+        )
 
         db.app = app
 

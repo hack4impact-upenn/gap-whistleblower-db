@@ -4,7 +4,11 @@ app_css = Bundle('app.scss', filters='scss', output='styles/app.css')
 
 app_js = Bundle('app.js', filters='jsmin', output='scripts/app.js')
 
-vendor_css = Bundle('vendor/semantic.min.css', 'vendor/calendar.min.css', output='styles/vendor.css')
+vendor_css = Bundle(
+    'vendor/semantic.min.css',
+    'vendor/calendar.min.css',
+    output='styles/vendor.css'
+)
 
 vendor_js = Bundle(
     'vendor/jquery.min.js',
@@ -13,4 +17,5 @@ vendor_js = Bundle(
     'vendor/zxcvbn.js',
     'vendor/calendar.min.js',
     filters='jsmin',
-    output='scripts/vendor.js')
+    output='scripts/vendor.js'
+)

@@ -7,8 +7,8 @@ See app/__init__.py for details on this
 context is set as the assets/styles and
 assetts/scripts folders
 
-filter = scss -> convers .scss to css
-filter = jsmin -> converts to minified
+filter=scss -> convers .scss to css
+filter=jsmin -> converts to minified
                   javascript
 
 Bundle is just the plugin that helps us

@@ -8,9 +8,9 @@ This guide will be explaining the concept of routing by going through a file. We
 @account.route('/login', methods=['GET', 'POST'])
 def login():
     """Log in an existing user."""
-    form = LoginForm()
+    form=LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user=User.query.filter_by(email=form.email.data).first()
         if user is not None and user.password_hash is not None and \
                 user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)

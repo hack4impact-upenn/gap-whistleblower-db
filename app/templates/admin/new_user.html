@@ -17,7 +17,7 @@
                 <div class="sub header">Create a new user account.</div>
             </h2>
 
-            {% set flashes = {
+            {% set flashes={
                 'error':   get_flashed_messages(category_filter=['form-error']),
                 'warning': get_flashed_messages(category_filter=['form-check-email']),
                 'info':    get_flashed_messages(category_filter=['form-info']),

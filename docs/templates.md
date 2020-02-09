@@ -16,7 +16,7 @@ This will cover various methods used in our jinja templates.
     </head>
     <body>
       {# Example dropdown menu setup. Uncomment lines to view
-        {% set dropdown = 
+        {% set dropdown=
           [
             ('account stuff',
               [
@@ -67,7 +67,7 @@ This uses the zcvbn password checker to check the entropy of the password provid
 
 ```jinja
 {% macro render_form(form, method='POST', extra_classes='', enctype=None) %}
-    {% set flashes = {
+    {% set flashes={
         'error':   get_flashed_messages(category_filter=['form-error']),
         'warning': get_flashed_messages(category_filter=['form-check-email']),
         'info':    get_flashed_messages(category_filter=['form-info']),
@@ -134,7 +134,7 @@ Then the form tag is created with a method default of POST, enctype decided by t
 check explained above. If there are errors (by field specific validator errors or 
 if the flashes.error, flashes.warning, flashes.info, flashes.success is not None, 
 then that class is added to the overall class of the form (along with any specified
-extra_classes, default = ''). 
+extra_classes, default=''). 
 
 Lastly the hidden_tags are rendered. WTForms includes in this method the rendering of
 the hidden CSRF field. We don't have to worry about that. 
@@ -194,8 +194,8 @@ See the macros/form_macros for extended explanation of the
    get_flashed_messages(category_filter) method. This macro renders
    general flash methods that appear at the top of the page. We render
    by flash type and create a separate 'ui {{ class }} message' div
-   for each message within a specific flash type. Error = red,
-   warning = yellow, info = blue, success = green.
+   for each message within a specific flash type. Error=red,
+   warning=yellow, info=blue, success=green.
 
 ## Partials: `_head`
 
