@@ -6,7 +6,9 @@ from flask import (
     render_template,
     request,
     jsonify,
-    url_for
+    url_for,
+    send_file,
+    send_from_directory
 )
 
 from nltk.corpus import stopwords
@@ -58,6 +60,7 @@ import os
 import nltk
 import threading
 import logging
+import tempfile
 
 logger = logging.getLogger('werkzeug')
 
@@ -2146,13 +2149,12 @@ def upload_and_download():
 
     if request.method == 'POST':
         if "Download" in request.form.values():
-            home_folder = os.path.expanduser('~')
-            file_path = home_folder + "/Downloads/"
+            file_path = tempfile.mkdtemp()
             documents = Document.query.order_by(Document.id.desc()).all()
 
             if download_form.book.data:
                 with io.open(
-                    file_path + 'book.csv', 'w', newline=''
+                    os.path.join(file_path, 'book.csv'), 'w', newline=''
                 ) as csvfile:
 
                     csv_writer = csv.writer(csvfile)
@@ -2185,10 +2187,10 @@ def upload_and_download():
                                 d.file,
                                 d.document_status,
                                 ", ".join(t.tag_name for t in d.tags)])
-
-            if download_form.news_article.data is True:
+                    send_file(csvfile)
+            if download_form.news_article.data:
                 with io.open(
-                    file_path + 'news_article.csv', 'w', newline=''
+                    os.path.join(file_path, 'news_article.csv'), 'w', newline=''
                 ) as csvfile:
                     csv_writer = csv.writer(csvfile)
 
@@ -2295,7 +2297,7 @@ def upload_and_download():
 
             if download_form.video.data is True:
                 with io.open(
-                    file_path + 'video.csv', 'w', newline=''
+                    os.path.join(file_path, 'video.csv'), 'w', newline=''
                 ) as csvfile:
                     csv_writer = csv.writer(csvfile)
 
@@ -2339,7 +2341,7 @@ def upload_and_download():
                                 d.file,
                                 d.document_status,
                                 ", ".join(t.tag_name for t in d.tags)])
-
+                send_from_directory(file_path, "video.csv", as_attachment=True)
             if download_form.report.data is True:
                 with io.open(
                     file_path + 'report.csv', 'w', newline=''
