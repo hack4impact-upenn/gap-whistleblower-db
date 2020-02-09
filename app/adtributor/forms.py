@@ -19,10 +19,8 @@ from wtforms.validators import (
     InputRequired,
     Length,
 )
-from app.utils import CustomSelectField
 from app import db
 from app.models import Role, User, Tag
-from flask_wtf.file import FileField
 
 
 class ChangeUserEmailForm(Form):
@@ -80,8 +78,15 @@ class NewUserForm(InviteUserForm):
 
     submit = SubmitField('Create')
 
+
 class TagForm(Form):
     tag = StringField(validators=[InputRequired()])
+    submit = SubmitField()
+
+
+class UpdateLinkForm(Form):
+    id = IntegerField()
+    link = StringField()
     submit = SubmitField()
 
 
@@ -95,24 +100,35 @@ class MultipleFileUploadField(StringField):
 
 
 class BookForm(Form):
-    book_title = StringField(validators=[InputRequired()]) #title
-    book_author_first_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1) #author_first_name
-    book_author_last_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1) #author_last_name
-    book_editor_first_name = StringField()
-    book_editor_last_name = StringField()
-    book_volume = StringField() #volme
-    book_edition = StringField() #edition
-    book_series = StringField() #series
-    book_publisher_name = StringField(validators=[InputRequired()]) #name
-    book_publication_day = IntegerField(validators=[validators.optional()]) #day
-    book_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
-    ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
-    , ('August', 'August'), ('September', 'September'), ('October', 'October'),
-    ('November', 'November'), ('December', 'December')]) #month
-    book_publication_year = IntegerField(validators=[InputRequired()]) #year
-    book_description = TextAreaField() #description
+    book_title = StringField(validators=[InputRequired()])
+    book_author_first_name = FieldList(
+        StringField(validators=[InputRequired()]),
+        min_entries=1
+    )
+    book_author_last_name = FieldList(
+        StringField(validators=[InputRequired()]), min_entries=1
+    )
+    book_editor_first_name = FieldList(
+        StringField(), min_entries=1
+    )
+    book_editor_last_name = FieldList(
+        StringField(), min_entries=1
+    )
+    book_volume = StringField()
+    book_edition = StringField()
+    book_series = StringField()
+    book_publisher = StringField(validators=[InputRequired()])
+    book_publication_month = SelectField(choices=[
+        ('', ''), ('January', 'January'), ('February', 'February'),
+        ('March', 'March'), ('April', 'April'), ('May', 'May'),
+        ('June', 'June'), ('July', 'July'), ('August', 'August'),
+        ('September', 'September'), ('October', 'October'),
+        ('November', 'November'), ('December', 'December')
+    ])
+    book_publication_year = IntegerField(validators=[InputRequired()])  # year
+    book_description = TextAreaField(validators=[InputRequired()])  # description
     book_tags = SelectMultipleField(choices=[('', '')])
-    book_link = StringField() #link
+    book_link = StringField()  # link
     book_file_urls = MultipleFileUploadField()
     save_book = SubmitField()
     submit_book = SubmitField()
@@ -122,18 +138,26 @@ class BookForm(Form):
         self.book_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
         self.book_tags.default = kwargs.get('book_tags')
 
+
 class ArticleForm(Form):
     article_title = StringField(validators=[InputRequired()])
-    article_author_first_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    article_author_last_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
+    article_author_first_name = FieldList(
+        StringField(validators=[InputRequired()]), min_entries=1
+    )
+    article_author_last_name = FieldList(
+        StringField(validators=[InputRequired()]), min_entries=1
+    )
     article_publication = StringField(validators=[InputRequired()])
     article_publication_day = IntegerField(validators=[validators.optional()])
-    article_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
-    ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
-    , ('August', 'August'), ('September', 'September'), ('October', 'October'),
-    ('November', 'November'), ('December', 'December')])
+    article_publication_month = SelectField(choices=[
+        ('', ''), ('January', 'January'), ('February', 'February'),
+        ('March', 'March'), ('April', 'April'), ('May', 'May'),
+        ('June', 'June'), ('July', 'July'), ('August', 'August'),
+        ('September', 'September'), ('October', 'October'),
+        ('November', 'November'), ('December', 'December')
+    ])
     article_publication_year = IntegerField(validators=[InputRequired()])
-    article_description = TextAreaField()
+    article_description = TextAreaField(validators=[InputRequired()])
     article_tags = SelectMultipleField(choices=[('', '')])
     article_link = StringField()
     article_file_urls = MultipleFileUploadField()
@@ -142,51 +166,68 @@ class ArticleForm(Form):
 
     def __init__(self, **kwargs):
         super(ArticleForm, self).__init__(**kwargs)
-        self.article_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
+        self.article_tags.choices = [
+            (str(t.id), t.tag) for t in Tag.query.all()
+        ]
         self.article_tags.default = kwargs.get('article_tags')
 
+
 class JournalArticleForm(Form):
-    article_title = StringField(validators=[InputRequired()])
-    article_author_first_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    article_author_last_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    publisher_name = StringField(validators=[InputRequired()])
-    volume = StringField()
-    start_page = IntegerField()
-    end_page = IntegerField()
-    article_publication_day = IntegerField(validators=[validators.optional()])
-    article_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
-    ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
-    , ('August', 'August'), ('September', 'September'), ('October', 'October'),
-    ('November', 'November'), ('December', 'December')])
-    article_publication_year = IntegerField(validators=[InputRequired()])
-    article_description = TextAreaField()
-    article_tags = SelectMultipleField(choices=[('', '')])
-    article_link = StringField()
-    article_file_urls = MultipleFileUploadField()
-    save_article = SubmitField()
-    submit_article = SubmitField()
+    journal_title = StringField(validators=[InputRequired()])
+    journal_author_first_name = FieldList(
+        StringField(validators=[InputRequired()]), min_entries=1
+    )
+    journal_author_last_name = FieldList(
+        StringField(validators=[InputRequired()]), min_entries=1
+    )
+    journal_publication = StringField(validators=[InputRequired()])
+    journal_volume = StringField()
+    journal_issue = StringField()
+    journal_start_page = StringField()
+    journal_end_page = StringField()
+    journal_publication_day = IntegerField(validators=[validators.optional()])
+    journal_publication_month = SelectField(choices=[
+        ('', ''), ('January', 'January'), ('February', 'February'),
+        ('March', 'March'), ('April', 'April'), ('May', 'May'),
+        ('June', 'June'), ('July', 'July'), ('August', 'August'),
+        ('September', 'September'), ('October', 'October'),
+        ('November', 'November'), ('December', 'December')
+    ])
+    journal_publication_year = IntegerField(validators=[InputRequired()])
+    journal_description = TextAreaField(validators=[InputRequired()])
+    journal_tags = SelectMultipleField(choices=[('', '')])
+    journal_link = StringField()
+    journal_file_urls = MultipleFileUploadField()
+    save_journal = SubmitField()
+    submit_journal = SubmitField()
 
     def __init__(self, **kwargs):
         super(JournalArticleForm, self).__init__(**kwargs)
-        self.article_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
-        self.article_tags.default = kwargs.get('article_tags')
+        self.journal_tags.choices = [
+            (str(t.id), t.tag) for t in Tag.query.all()
+        ]
+        self.journal_tags.default = kwargs.get('journal_tags')
+
 
 class LawForm(Form):
-    law_title = StringField(validators=[InputRequired()]) #title
-    law_citation = StringField(validators=[InputRequired()]) #citation
-    law_government_body = StringField() #govt_body
-    law_section = StringField() #section
-    law_region = StringField() #region
-    law_enactment_day = IntegerField(validators=[validators.optional()]) #day
-    law_enactment_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
-    ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
-    , ('August', 'August'), ('September', 'September'), ('October', 'October'),
-    ('November', 'November'), ('December', 'December')]) #month
-    law_enactment_year = IntegerField(validators=[validators.optional()]) #year
+    law_title = StringField(validators=[InputRequired()])
+    law_citation = StringField(validators=[InputRequired()])
+    law_government_body = StringField(validators=[InputRequired()])
+    law_section = StringField()
+    law_region = StringField()
+    law_enactment_day = IntegerField(validators=[validators.optional()])
+    law_enactment_month = SelectField(choices=[
+        ('', ''), ('January', 'January'), ('February', 'February'),
+        ('March', 'March'), ('April', 'April'), ('May', 'May'),
+        ('June', 'June'), ('July', 'July'), ('August', 'August'),
+        ('September', 'September'), ('October', 'October'),
+        ('November', 'November'), ('December', 'December')
+    ])
+    law_enactment_year = IntegerField()
     law_country = StringField()
-    law_description = TextAreaField() #description
+    law_description = TextAreaField(validators=[InputRequired()])
     law_tags = SelectMultipleField(choices=[('', '')])
-    law_link = StringField() #link
+    law_link = StringField()
     law_file_urls = MultipleFileUploadField()
     save_law = SubmitField()
     submit_law = SubmitField()
@@ -196,19 +237,30 @@ class LawForm(Form):
         self.law_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
         self.law_tags.default = kwargs.get('law_tags')
 
+
 class VideoForm(Form):
     video_title = StringField(validators=[InputRequired()])
-    director_first_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    director_last_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    video_post_source = StringField()
+    video_series = StringField()
+    director_first_name = FieldList(
+        StringField(), min_entries=1
+    )
+    director_last_name = FieldList(
+        StringField(), min_entries=1
+    )
+    video_source = StringField()
     video_publisher = StringField()
-    video_publication_day = IntegerField(validators=[validators.optional()]) #day
-    video_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
-    ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
-    , ('August', 'August'), ('September', 'September'), ('October', 'October'),
-    ('November', 'November'), ('December', 'December')])
+    video_studio = StringField()
+    video_country = StringField()
+    video_publication_day = IntegerField(validators=[validators.optional()])
+    video_publication_month = SelectField(choices=[
+        ('', ''), ('January', 'January'), ('February', 'February'),
+        ('March', 'March'), ('April', 'April'), ('May', 'May'),
+        ('June', 'June'), ('July', 'July'), ('August', 'August'),
+        ('September', 'September'), ('October', 'October'),
+        ('November', 'November'), ('December', 'December')
+    ])
     video_publication_year = IntegerField(validators=[InputRequired()])
-    video_description = TextAreaField()
+    video_description = TextAreaField(validators=[InputRequired()])
     video_tags = SelectMultipleField(choices=[('', '')])
     video_link = StringField()
     video_file_urls = MultipleFileUploadField()
@@ -220,18 +272,26 @@ class VideoForm(Form):
         self.video_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
         self.video_tags.default = kwargs.get('video_tags')
 
+
 class ReportForm(Form):
     report_title = StringField(validators=[InputRequired()])
-    report_author_first_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    report_author_last_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
+    report_author_first_name = FieldList(
+        StringField(), min_entries=1
+    )
+    report_author_last_name = FieldList(
+        StringField(), min_entries=1
+    )
     report_publisher = StringField(validators=[InputRequired()])
     report_publication_day = IntegerField(validators=[validators.optional()])
-    report_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
-    ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
-    , ('August', 'August'), ('September', 'September'), ('October', 'October'),
-    ('November', 'November'), ('December', 'December')])
+    report_publication_month = SelectField(choices=[
+        ('', ''), ('January', 'January'), ('February', 'February'),
+        ('March', 'March'), ('April', 'April'), ('May', 'May'),
+        ('June', 'June'), ('July', 'July'), ('August', 'August'),
+        ('September', 'September'), ('October', 'October'),
+        ('November', 'November'), ('December', 'December')
+    ])
     report_publication_year = IntegerField(validators=[InputRequired()])
-    report_description = TextAreaField()
+    report_description = TextAreaField(validators=[InputRequired()])
     report_tags = SelectMultipleField(choices=[('', '')])
     report_link = StringField()
     report_file_urls = MultipleFileUploadField()
@@ -240,21 +300,32 @@ class ReportForm(Form):
 
     def __init__(self, **kwargs):
         super(ReportForm, self).__init__(**kwargs)
-        self.report_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
+        self.report_tags.choices = [
+            (str(t.id), t.tag) for t in Tag.query.all()
+        ]
         self.report_tags.default = kwargs.get('report_tags')
 
+
 class OtherForm(Form):
-    other_document_type = StringField(validators = [InputRequired()])
+    other_document_type = StringField(validators=[InputRequired()])
     other_title = StringField(validators=[InputRequired()])
-    other_author_first_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
-    other_author_last_name = FieldList(StringField(validators=[InputRequired()]), min_entries=1)
+    other_author_first_name = FieldList(
+        StringField(), min_entries=1
+    )
+    other_author_last_name = FieldList(
+        StringField(), min_entries=1
+    )
     other_publication_day = IntegerField(validators=[validators.optional()])
-    other_publication_month = SelectField(choices=[('',''), ('January', 'January'), ('February', 'February'),
-    ('March', 'March'), ('April', 'April'), ('May', 'May'), ('June', 'June'), ('July', 'July')
-    , ('August', 'August'), ('September', 'September'), ('October', 'October'),
-    ('November', 'November'), ('December', 'December')])
+    other_publication_month = SelectField(choices=[
+        ('', ''), ('January', 'January'), ('February', 'February'),
+        ('March', 'March'), ('April', 'April'), ('May', 'May'),
+        ('June', 'June'), ('July', 'July'), ('August', 'August'),
+        ('September', 'September'), ('October', 'October'),
+        ('November', 'November'), ('December', 'December')
+    ])
+    other_source = StringField(validators=[InputRequired()])
     other_publication_year = IntegerField(validators=[InputRequired()])
-    other_description = TextAreaField()
+    other_description = TextAreaField(validators=[InputRequired()])
     other_tags = SelectMultipleField(choices=[('', '')])
     other_link = StringField()
     other_file_urls = MultipleFileUploadField()
@@ -265,6 +336,7 @@ class OtherForm(Form):
         super(OtherForm, self).__init__(**kwargs)
         self.other_tags.choices = [(str(t.id), t.tag) for t in Tag.query.all()]
         self.other_tags.default = kwargs.get('other_tags')
+
 
 class DownloadForm(Form):
     book = BooleanField()

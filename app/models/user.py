@@ -6,6 +6,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from .. import db, login_manager
 
+
 class Permission:
     GENERAL = 0x01
     CONTRIBUTOR = 0x02
@@ -25,12 +26,8 @@ class Role(db.Model):
     def insert_roles():
         roles = {
             'User': (Permission.GENERAL, 'main', True),
-            'Contributor':(Permission.CONTRIBUTOR, 'contributor', False),
-            'Administrator': (
-                Permission.ADMINISTER,
-                'admin',
-                False  # grants all permissions
-            )
+            'Contributor': (Permission.CONTRIBUTOR, 'contributor', False),
+            'Administrator': (Permission.ADMINISTER, 'admin', False)
         }
         for r in roles:
             role = Role.query.filter_by(name=r).first()
@@ -57,7 +54,9 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     organization = db.Column(db.String(128))
     bio = db.Column(db.Text)
-    saved = db.relationship('Document', secondary='saved', backref='user', lazy='dynamic')
+    saved = db.relationship(
+        'Document', secondary='saved', backref='user', lazy='dynamic'
+    )
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -77,7 +76,7 @@ class User(UserMixin, db.Model):
             (self.role.permissions & permissions) == permissions
 
     def is_user(self):
-       return self.role_id == 1
+        return self.role_id == 1
 
     def is_contributor(self):
         return self.role_id == 2
@@ -171,7 +170,6 @@ class User(UserMixin, db.Model):
         Role.insert_roles()
         roles = Role.query.all()
 
-
         seed()
         for role in roles:
             for i in range(count):
@@ -194,7 +192,7 @@ class User(UserMixin, db.Model):
         s += 'Email: {}\n'.format(self.email)
         s += 'Role: {}\n'.format(self.role)
         s += 'Organization'.format(self.organization)
-        s += 'Bio: {}\n'.format(self.bio)+ '>'
+        s += 'Bio: {}\n'.format(self.bio) + '>'
         return s
 
 

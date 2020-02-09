@@ -1,5 +1,5 @@
 {% macro render_flashes(class) %}
-    {% with msgs = get_flashed_messages(category_filter=[class]) %}
+    {% with msgs=get_flashed_messages(category_filter=[class]) %}
         {% for msg in msgs %}
             <div class="ui {{ class }} message">
                 <i class="close icon"></i>

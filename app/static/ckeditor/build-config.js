@@ -24,7 +24,7 @@
  *    Changing this file will not change your CKEditor configuration.
  */
 
-var CKBUILDER_CONFIG = {
+var CKBUILDER_CONFIG={
 	skin: 'flat',
 	preset: 'standard',
 	ignore: [

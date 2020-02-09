@@ -15,18 +15,18 @@ The following code block will look for a '.env' file which
 contains environment variables for things like email address
 and any other env vars. The .env file will be parsed and
 santized. Each line contains some "NAME=VALUE" pair. Split
-this and then store var[0] = "NAME" and var[1] = "VALUE".
+this and then store var[0]="NAME" and var[1]="VALUE".
 Then formally set the environment variable in the last line of
-this block. Per our running example, os.environ["NAME"] = "VALUE"
+this block. Per our running example, os.environ["NAME"]="VALUE"
 These environment variables can be accessed with "os.getenv('KEY')"
 
 ```python
 if os.path.exists('.env'):
     print('Importing environment from .env file')
     for line in open('.env'):
-        var = line.strip().split('=')
+        var=line.strip().split('=')
         if len(var) == 2:
-            os.environ[var[0]] = var[1]
+            os.environ[var[0]]=var[1]
 ```
 
 ## Config and `create_app`
@@ -34,9 +34,9 @@ if os.path.exists('.env'):
 Refer to `manage.py` for more details. 
 
 ```python
-app = create_app(os.getenv('FLASK_CONFIG') or 'default')
-manager = Manager(app)
-migrate = Migrate(app, db)
+app=create_app(os.getenv('FLASK_CONFIG') or 'default')
+manager=Manager(app)
+migrate=Migrate(app, db)
 ```
 
 Currently the application will
@@ -76,7 +76,7 @@ It is possible to create a general app shell or database specific shell.
 For example doing 'python manage.py shell'
 
 ```sh
-$ me = User()
+$ me=User()
 $ db.session.add(me) && db.session.commit()
 $ me.id
 >> 1
@@ -120,8 +120,8 @@ and add a queue of items that needs to be processed on that worker.
 @manager.command
 def run_worker():
     """Initializes a slim rq task queue."""
-    listen = ['default']
-    conn = Redis(
+    listen=['default']
+    conn=Redis(
         host=app.config['RQ_DEFAULT_HOST'],
         port=app.config['RQ_DEFAULT_PORT'],
         db=0,
@@ -129,7 +129,7 @@ def run_worker():
     )
 
     with Connection(conn):
-        worker = Worker(map(Queue, listen))
+        worker=Worker(map(Queue, listen))
         worker.work()
 ```
 

@@ -46,7 +46,7 @@
                </thead>
                <tbody>
                {% for s in suggestions %}
-                   <tr onclick="window.location.href = '{{ url_for('admin.suggestion', id=s.id) }}';">
+                   <tr onclick="window.location.href='{{ url_for('admin.suggestion', id=s.id) }}';">
                        <td>{{ s.title }}</td>
                        <td class="suggestion type">{{ s.doc_type.split('_')|join(' ') }}</td>
                        <td>
@@ -87,11 +87,11 @@
     <script>
       $(document).ready(function () {
         $('.delete-suggestion').on('click', function(e) {
-            id = e.target.id; // gets the id and shows the appropriate modal
+            id=e.target.id; // gets the id and shows the appropriate modal
             $('#modal-' + id).modal('show');
         });
         $('#search-suggestions').keyup(function () {
-                var searchText = $(this).val();
+                var searchText=$(this).val();
                 if (searchText.length > 0) {
                     $('tbody td:icontains(' + searchText + ')').addClass('positive');
                     $('td.positive').not(':icontains(' + searchText + ')').removeClass('positive');

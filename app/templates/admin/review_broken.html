@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
 
 {% block content %}
     <div class="ui stackable centered grid container">
@@ -41,20 +42,30 @@
                        <th>Title</th>
                        <th>Resource Type</th>
                        <th class="one wide">Edit</th>
+                       <th class="one wide">Ignore</th>
                    </tr>
                </thead>
                <tbody>
                {% for b in broken %}
                    <tr>
-                       <td onclick="window.location.href = '{{ url_for('admin.contribution', id=b.id) }}';">{{ b.title }}</td>
+                       <td onclick="window.location.href='{{ url_for('admin.contribution', id=b.id) }}';">{{ b.title }}</td>
                        <td class="suggestion type">{{ b.doc_type.split('_')|join(' ') }}</td>
                        <!--confirmation modal for deleting a checklist item-->
                        <td>
                          <div class="ui buttons">
                            <!--we give the button and icon the same id to avoid weird things with hitboxes-->
                            <a class="ui small compact icon button" id="{{ b.id }}"
-                            href="{{ url_for('admin.contribution_' + b.doc_type, id=b.id) }}">
+                            href="javascript:updateLink('{{ b.id }}', '{{ b.link }}', '{{ b.title }}')">
                              <i class="edit icon" id="{{ b.id }}"></i>
+                           </a>
+                         </div>
+                       </td>
+                       <td>
+                         <div class="ui buttons">
+                           <!--we give the button and icon the same id to avoid weird things with hitboxes-->
+                           <a class="ui small compact icon button" id="{{ b.id }}"
+                            href="{{ url_for('admin.ignore_link', id=b.id) }}">
+                             <i class="ban icon" id="{{ b.id }}"></i>
                            </a>
                          </div>
                        </td>
@@ -65,15 +76,38 @@
 
         </div>
     </div>
-
+    <div class="ui small modal">
+      <div class="header">Update broken link</div>
+      <div class="content">
+        {% set flashes={} %}
+        {{ f.begin_form(form, flashes) }}
+        <p>The resource <b><span id="resource-name"></span></b> has a broken link. You can update it here.</p>
+        <div class="ui tiny header" style="font-size:.92857143em;">Old Link</div>
+        <a id=old-link><span id="old-link-text"></span></a>
+        <br/>
+        <br/>
+        <div hidden class="field">
+        {{ f.render_form_field(form.id) }}
+        </div>
+        <div class="field">
+        {{ f.render_form_field(form.link, name='New Link') }}
+        </div>
+        <br/>
+        <div class="actions fields">
+          {{ f.render_form_field(form.submit, name='Submit') }}
+          <div class="ui cancel button">Cancel</div>
+        </div>
+        {{ f.end_form(form) }}
+      </div>
+    </div>
     <script>
       $(document).ready(function () {
         $('.delete-suggestion').on('click', function(e) {
-            id = e.target.id; // gets the id and shows the appropriate modal
+            id=e.target.id; // gets the id and shows the appropriate modal
             $('#modal-' + id).modal('show');
         });
         $('#search-suggestions').keyup(function () {
-                var searchText = $(this).val();
+                var searchText=$(this).val();
                 if (searchText.length > 0) {
                     $('tbody td:icontains(' + searchText + ')').addClass('positive');
                     $('td.positive').not(':icontains(' + searchText + ')').removeClass('positive');
@@ -90,28 +124,15 @@
                 $('td.suggestion.type').not(':contains(' + value + ')').closest('tr').addClass('hidden').hide();
             }
         });
+        $("input").prop('required', true);
       });
-      function linkMe(link) {
-        console.log(link)
-          if (isValidDomain(link)) {
-              var re  = "^(https?://)"
-              var regexHTTP = new RegExp(re,"i");
-              if (regexHTTP.test(link)) {
-                window.open(link)
-              }
-              else {
-                window.open('http://'.concat(link))
-              }
-          }
-          else {
-            alert("This suggestion has a malformed URL.")
-          }
-      }
-      function isValidDomain(v) {
-        if (!v) return false;
-        var re  = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
-        var regexUrl = new RegExp(re,"i");
-        return regexUrl.test(v);
+      function updateLink(id, old_link, resource_name) {
+        $('.ui.small.modal').attr('id', 'link-modal-' + id);
+        $('#old-link').attr('href', old_link);
+        $('#old-link-text').text(old_link);
+        $('#resource-name').text(resource_name);
+        $('#id').val(id);
+        $('#link-modal-' + id).modal('show');
       }
     </script>
 {% endblock %}

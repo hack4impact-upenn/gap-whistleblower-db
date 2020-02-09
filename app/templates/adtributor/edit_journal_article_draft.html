@@ -9,18 +9,18 @@
           <div class="ui grid container">
               <div class="sixteen wide computer sixteen wide mobile centered column">
                   <h3 class="ui dividing header">Submit a Journal Article</h3>
-                   {% set article_flashes = {
+                   {% set journal_flashes={
                       'success': get_flashed_messages(category_filter=['form-success'])
                   } %}
-                  {{ f.begin_form(journal_form, article_flashes) }}
+                  {{ f.begin_form(journal_form, journal_flashes) }}
                   <input type="hidden" name="form-name" value="journal_form">
-                  <div class = "sixteen wide field">
-                  {{ f.form_message(article_flashes['success'], header='Success!', class='success') }}
+                  <div class="sixteen wide field">
+                  {{ f.form_message(journal_flashes['success'], header='Success!', class='success') }}
                   </div>
-                  <div class = "sixteen wide field">
-                  {{ f.render_form_field(journal_form.article_title, name='Title') }}
+                  <div class="sixteen wide field">
+                  {{ f.render_form_field(journal_form.journal_title, name='Title*') }}
                   </div>
-                  <div class = "author fields" id="author-0">
+                  <div class="author fields" id="author-0">
                       <div class='four wide field'>
                         <label>Add Author</label>
                         <a class="ui labeled icon button fluid" href="javascript:addAuthor()">
@@ -28,61 +28,64 @@
                           Add Author
                         </a>
                       </div>
-                      <div class = "six wide field">
-                      {{ f.render_form_field(journal_form.article_author_first_name[0], name="First Name") }}
+                      <div class="six wide field">
+                      {{ f.render_form_field(journal_form.journal_author_first_name[0], name="First Name*") }}
                       </div>
-                      <div class = "six wide field">
-                      {{ f.render_form_field(journal_form.article_author_last_name[0], name="Last Name") }}
+                      <div class="six wide field">
+                      {{ f.render_form_field(journal_form.journal_author_last_name[0], name="Last Name*") }}
                       </div>
                   </div>
-                  <div class = "sixteen wide field" id="beforeMe">
-                  {{ f.render_form_field(journal_form.publisher_name, name='Publication') }}
-                  </div>
-                  <div class = "sixteen wide field">
-                  <div class = "three fields">
-                  <div class = "field">
-                  {{ f.render_form_field(journal_form.volume) }}
-                  </div>
-                  <div class = "field">
-                  {{ f.render_form_field(journal_form.start_page) }}
-                  </div>
-                  <div class = "field">
-                  {{ f.render_form_field(journal_form.end_page) }}
-                  </div>
-                  </div>
-                  </div>
-                  <div class = "three fields">
-                    <div class = "field">
-                    {{ f.render_form_field(journal_form.article_publication_day, name='Publication Day') }}
+                  <div class="two fields" id="journal-beforeMe">
+                    <div class="field">
+                    {{ f.render_form_field(journal_form.journal_volume, name='Volume') }}
                     </div>
-                    <div class = "field">
-                    {{ f.render_form_field(journal_form.article_publication_month, name='Publication Month') }}
-                    </div>
-                    <div class = "field">
-                    {{ f.render_form_field(journal_form.article_publication_year, name='Publication Year') }}
+                    <div class="field">
+                    {{ f.render_form_field(journal_form.journal_issue, name='Issue') }}
                     </div>
                   </div>
-                    <div class = "sixteen wide field">
-                    {{ f.render_form_field(journal_form.article_description, name='Description') }}
+                  <div class="two fields">
+                    <div class="field">
+                    {{ f.render_form_field(journal_form.journal_start_page, name='Start Page') }}
                     </div>
-                  <div class = "sixteen wide field">
-                  {{ f.render_form_field(journal_form.article_tags, name="Tags") }}
+                    <div class="field">
+                    {{ f.render_form_field(journal_form.journal_end_page, name='End Page') }}
+                    </div>
                   </div>
-                    <div class = "sixteen wide field">
-                    {{ f.render_form_field(journal_form.article_link, name='Link') }}
+                  <div class="sixteen wide field" >
+                  {{ f.render_form_field(journal_form.journal_publication, name='Publication*') }}
+                  </div>
+                  <div class="three fields">
+                    <div class="field">
+                    {{ f.render_form_field(journal_form.journal_publication_day, name='Publication Day') }}
                     </div>
-                    <div class = "sixteen wide field">
-                    {{ f.render_form_input(journal_form.article_file_urls) }}
+                    <div class="field">
+                    {{ f.render_form_field(journal_form.journal_publication_month, name='Publication Month') }}
                     </div>
-                    <div class = "sixteen wide field">
-                    {{ upload.file_upload('file_urls') }}
+                    <div class="field">
+                    {{ f.render_form_field(journal_form.journal_publication_year, name='Publication Year*') }}
                     </div>
-                    <div class = "fields">
-                       <div class = "three wide field">
-                       {{ f.render_form_field(journal_form.save_article) }}
+                  </div>
+                    <div class="sixteen wide field">
+                    {{ f.render_form_field(journal_form.journal_description, name='Description*') }}
+                    </div>
+                  <div class="sixteen wide field">
+                  {{ f.render_form_field(journal_form.journal_tags, name="Tags") }}
+                  </div>
+                    <div class="sixteen wide field">
+                    {{ f.render_form_field(journal_form.journal_link, name='Link') }}
+                    </div>
+                    <div class="sixteen wide field">
+                    {{ f.render_form_input(journal_form.journal_file_urls) }}
+                    </div>
+                    <div class="sixteen wide field">
+                    {{ upload.file_upload('journal_file_urls') }}
+                    </div>
+                    <div class="fields">
+                       <div class="three wide field">
+                       {{ f.render_form_field(journal_form.save_journal) }}
                        </div>
-                       <div class = "three wide field">
-                       {{ f.render_form_field(journal_form.submit_article) }}
+                       <div class="three wide field">
+                       {{ f.render_form_field(journal_form.submit_journal) }}
                        </div>
                     </div>
                   {{ f.end_form(journal_form) }}
@@ -93,19 +96,19 @@
 <script>
   $('.menu .item').tab();
   $(document).ready(function() {
-      {% for i in range(journal_form.article_author_first_name | length) %}
+      {% for i in range(journal_form.journal_author_first_name | length) %}
           {% if i != 0 %}
-              $("#beforeMe").before(`<div class = "author fields" id="author-{{ i }}">\
+              $("#beforeMe").before(`<div class="author fields" id="author-{{ i }}">\
               <div class="four wide field">\
                 <label>Remove Author</label>\
                 <a class="ui labeled icon button fluid" id="author-{{ i }}" href="javascript:delAuthor({{ i }})">\
                   <i class="close icon"></i>Remove Author</a>\
               </div>\
-              <div class = "six wide field">\
-                {{ f.render_form_field(journal_form.article_author_first_name[i], name="First Name") }}
+              <div class="six wide field">\
+                {{ f.render_form_field(journal_form.journal_author_first_name[i], name="First Name*") }}
               </div>\
-              <div class = "six wide field">\
-                {{ f.render_form_field(journal_form.article_author_last_name[i], name="Last Name") }}
+              <div class="six wide field">\
+                {{ f.render_form_field(journal_form.journal_author_last_name[i], name="Last Name*") }}
               </div>\
           </div>`); //bit hacky but ok
 
@@ -113,23 +116,23 @@
       {% endfor %}
   });
   function addAuthor() {
-      let index = $(".author").length;
-      $( "#beforeMe" ).before(`<div class = "author fields" id="author-${index}">\
+      let index=$(".author").length;
+      $( "#beforeMe" ).before(`<div class="author fields" id="author-${index}">\
           <div class="four wide field">\
             <label>Remove Author</label>\
             <a class="ui labeled icon button fluid" id="author-${index}" href="javascript:delAuthor(${index})">\
               <i class="close icon"></i>Remove Author</a>\
           </div>\
-          <div class = "six wide field">\
-            {{ f.render_form_field(journal_form.article_author_first_name[0], name="First Name") }}
+          <div class="six wide field">\
+            {{ f.render_form_field(journal_form.journal_author_first_name[0], name="First Name*") }}
           </div>\
-          <div class = "six wide field">\
-            {{ f.render_form_field(journal_form.article_author_last_name[0], name="Last Name") }}
+          <div class="six wide field">\
+            {{ f.render_form_field(journal_form.journal_author_last_name[0], name="Last Name*") }}
           </div>\
       </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
   }
   function delAuthor(author_id) {
-    let id = "#author-" + author_id
+    let id="#author-" + author_id
     console.log(author_id)
       $(id).remove();
   }

@@ -2,6 +2,7 @@ from .. import db
 import random
 from faker import Faker
 
+
 class Suggestion(db.Model):
     __tablename__ = 'suggestion'
     id = db.Column(db.Integer, primary_key=True)
@@ -18,7 +19,15 @@ class Suggestion(db.Model):
         fake = Faker()
         suggestions = []
         for i in range(count):
-            doc_type = random.choice(["book", "video", "news_article", "journal_article", "law", "report", "other"])
+            doc_type = random.choice([
+                "book",
+                "video",
+                "news_article",
+                "journal_article",
+                "law",
+                "report",
+                "other"
+            ])
             item = Suggestion(
                 title=fake.sentence(),
                 link=fake.domain_name(),
@@ -33,7 +42,8 @@ class Suggestion(db.Model):
             db.session.rollback()
         return suggestions
 
-
     def __repr__(self):
-        return '<Suggestion: Title = {}, Description = {}, Type = {} Link = {}>'.format(
-            self.title, self.description, self.type, self.link)
+        return '<Suggestion: Title={}, Description={}, Type={},' \
+            ' Link={}>'.format(
+                self.title, self.description, self.type, self.link
+            )

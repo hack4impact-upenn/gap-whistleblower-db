@@ -18,10 +18,8 @@
                     <i class="dropdown icon"></i>
                     <div class="menu">
                       <div class="item" data-value="">All resources</div>
-                      <div class="item" data-value="draft">Draft</div>
                       <div class="item" data-value="needs review">Needs Review</div>
                       <div class="item" data-value="under review">Under Review</div>
-                      <div class="item" data-value="published">Published</div>
                     </div>
                 </div>
                 <div class="ui right search item">
@@ -45,7 +43,7 @@
                <tbody>
                {% for c in contributions %}
                    <tr>
-                        <td onclick="window.location.href = '{{ url_for('admin.other_contribution', id=c.id) }}';">{{ c.title }}</td>
+                        <td onclick="window.location.href='{{ url_for('admin.other_contribution', id=c.id) }}';">{{ c.title }}</td>
                         <td class="document document_status">{{ c.document_status }}</td>
                         <td>
                           <div class="ui buttons">
@@ -94,11 +92,11 @@
     <script>
       $(document).ready(function () {
         $('.delete-suggestion').on('click', function(e) {
-            id = e.target.id; // gets the id and shows the appropriate modal
+            id=e.target.id; // gets the id and shows the appropriate modal
             $('#modal-' + id).modal('show');
         });
         $('#search-suggestions').keyup(function () {
-                var searchText = $(this).val();
+                var searchText=$(this).val();
                 if (searchText.length > 0) {
                     $('tbody td:icontains(' + searchText + ')').addClass('positive');
                     $('td.positive').not(':icontains(' + searchText + ')').removeClass('positive');

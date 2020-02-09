@@ -49,7 +49,7 @@
                <tbody>
                {% for c in contributions %}
                    <tr>
-                        <td onclick="window.location.href = '{{ url_for(user_type + '.contribution', id=c.id) }}';">{{ c.title }}</td>
+                        <td onclick="window.location.href='{{ url_for(user_type + '.contribution', id=c.id) }}';">{{ c.title }}</td>
                         <td class="document document_status">{{ c.document_status }}</td>
                         <td>
                           <div class="ui buttons">
@@ -98,11 +98,11 @@
     <script>
       $(document).ready(function () {
         $('.delete-suggestion').on('click', function(e) {
-            id = e.target.id; // gets the id and shows the appropriate modal
+            id=e.target.id; // gets the id and shows the appropriate modal
             $('#modal-' + id).modal('show');
         });
         $('#search-suggestions').keyup(function () {
-                var searchText = $(this).val();
+                var searchText=$(this).val();
                 if (searchText.length > 0) {
                     $('tbody td:icontains(' + searchText + ')').addClass('positive');
                     $('td.positive').not(':icontains(' + searchText + ')').removeClass('positive');
@@ -123,8 +123,8 @@
       function linkMe(link) {
         console.log(link)
           if (isValidDomain(link)) {
-              var re  = "^(https?://)"
-              var regexHTTP = new RegExp(re,"i");
+              var re ="^(https?://)"
+              var regexHTTP=new RegExp(re,"i");
               if (regexHTTP.test(link)) {
                 window.open(link)
               }
@@ -138,8 +138,8 @@
       }
       function isValidDomain(v) {
         if (!v) return false;
-        var re  = "^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
-        var regexUrl = new RegExp(re,"i");
+        var re ="^(https?://)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(/[-\\w@\\+\\.~#\\?&/=%]*)?$"
+        var regexUrl=new RegExp(re,"i");
         return regexUrl.test(v);
       }
       function startDraft(id) {

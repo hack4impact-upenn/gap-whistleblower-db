@@ -28,9 +28,9 @@ then you'll want to include a decorator on your route `@csrf.exempt`
 
 
 ```python
-login_manager = LoginManager()
-login_manager.session_protection = 'strong'
-login_manager.login_view = 'account.login'
+login_manager=LoginManager()
+login_manager.session_protection='strong'
+login_manager.login_view='account.login'
 ```
 
 Flask-login provides us with a bunch of easy ways to do secure and

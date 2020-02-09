@@ -45,7 +45,7 @@
     </div>
     <script>
       function delTag(id, url, tag, num_docs) {
-        $( "#modal-text" ).text( "Are you should sure you want to delete " + tag + "? This tag is associated with " + num_docs + " documents." );
+        $( "#modal-text" ).text( "Are you sure you want to delete \"" + tag + "?\" This tag is associated with " + num_docs + " documents." );
         $('#modal-yes').attr('href',url);
         $('.ui.mini.modal.tag').attr('id', 'tag-modal-' + id);
         $('#tag-modal-' + id).modal('show');

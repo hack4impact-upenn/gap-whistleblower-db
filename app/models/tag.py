@@ -1,7 +1,6 @@
 from .. import db
 from app.models import Document
 from sqlalchemy import Table, Integer, ForeignKey
-from  sqlalchemy.sql.expression import func
 
 
 class Tag(db.Model):

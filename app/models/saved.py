@@ -39,7 +39,7 @@ class Saved(db.Model):
                         db.session.rollback()
         return saved_resources
 
-
     def __repr__(self):
-        return '<Saved Resource: User ID = {}, Resource ID = {}, Date = {}'.format(
-            self.user_id, self.doc_id, self.saved_date)
+        return '<Saved Resource: User ID={}, Resource ID={}, Date={}'.format(
+            self.user_id, self.doc_id, self.saved_date
+        )

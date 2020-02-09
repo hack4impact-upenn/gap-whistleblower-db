@@ -1,7 +1,7 @@
 // Semantic UI breakpoints
-var mobileBreakpoint = '768px';
-var tabletBreakpoint = '992px';
-var smallMonitorBreakpoint = '1200px';
+var mobileBreakpoint='768px';
+var tabletBreakpoint='992px';
+var smallMonitorBreakpoint='1200px';
 
 $(document).ready(function () {
   // Enable dismissable flash messages
@@ -25,7 +25,7 @@ $(document).ready(function () {
       .toLowerCase().indexOf((text || "").toLowerCase()) > -1;
   }
 
-  $.expr[':'].icontains = $.expr.createPseudo ?
+  $.expr[':'].icontains=$.expr.createPseudo ?
     $.expr.createPseudo(function (text) {
       return function (elem) {
         return icontains(elem, text);
@@ -54,10 +54,10 @@ $(document).ready(function () {
 // If the back button is clicked, we get the parent menu of the submenu by popping
 // the currentState variable.
 
-var currentState = [];
+var currentState=[];
 
 function changeMenu(e) {
-  var children = $($(e).children()[1]).html();
+  var children=$($(e).children()[1]).html();
   children += '<a class="item" onClick="back()">Back</a><i class="back icon"></i>';
   currentState.push($('.mobile.only .vertical.menu').html());
   $('.mobile.only .vertical.menu').html(children);
