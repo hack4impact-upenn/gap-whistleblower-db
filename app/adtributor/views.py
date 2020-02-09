@@ -2146,8 +2146,8 @@ def upload_and_download():
 
     if request.method == 'POST':
         if "Download" in request.form.values():
-
-            file_path = os.environ["HOME"] + "/Downloads/"
+            home_folder = os.path.expanduser('~')
+            file_path = home_folder + "/Downloads/"
             documents = Document.query.order_by(Document.id.desc()).all()
 
             if download_form.book.data:
