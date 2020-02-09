@@ -135,16 +135,17 @@
             </div>
         </div>
         {% endfor %}
-    {% elif field.type == 'MultipleFileUploadField' %}
-        <strong>Upload File</strong>
+    {% elif field.type == 'FileUploadField' %}
+        <label>Upload File</label>
         <input type="file" id="file-{{ field.name }}" style=""><br/>
-        <div style="display:none">{{ field }}</div>
-        <div id="{{ field.id }}_list">
+        <div style="display: none;">{{ field }}</div>
+        <div id="{{ field.id }}_meta">
           {% if field.data %}
-            {% set data=field.data.split(',') %}
-            {% for d in data %}
-            <span class="badge badge-light"><a href="{{ d }}">{{ d }}</a> <span class="delete badge badge-danger" data-url="{{ d }}">Delete Document</span></span><br/>
-            {% endfor %}
+          {% set url=field.data.split('/')[-1] %}
+            <div class="ui label">
+              <i class="icon close" id="{{ field.name }}-delete" data-url="{{ field.data }}"></i>
+              <a class="detail" href="{{ field.data }}">{{ url }}</a>
+            </div>
           {% endif %}
         </div>
     {% elif field.type == 'SubmitField' %}

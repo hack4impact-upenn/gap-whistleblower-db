@@ -1,72 +1,95 @@
 
 {% macro file_upload(fieldname) %}
-<script>
-  $('body').on('change', '#file-{{ fieldname }}', function() {
-  var file=$(this)[0].files[0];
-  {{fieldname}}_getSignedRequest(file)
-})
+  <script>
+    var current_{{filename}} = null;
 
-function {{fieldname}}_getSignedRequest(file){
-  var xhr=new XMLHttpRequest();
-  if (file.name && file.name.length > 0) {
-    xhr.open('GET', `/sign-s3?file-name=${file.name}&file-type=${file.type}`);
-    xhr.onreadystatechange=function() {
-    if (xhr.readyState === 4) {
-      console.log(xhr.responseText);
-      if (xhr.status === 200){
-        var response=JSON.parse(xhr.responseText);
-        {{fieldname}}_uploadFile(file, response.data, response.url, response.url_upload)
-      } else {
-        alert('Could not get presigned URL.'); //INTERNAL SERVER ERROR HERE
+    function {{fieldname}}_getSignedRequest(file) {
+      var xhr = new XMLHttpRequest();
+      if (file && file.name && file.name.length > 0) {
+        xhr.open('GET', `/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              var response = JSON.parse(xhr.responseText);
+              {{fieldname}}_uploadFile(file, response.data, response.url, response.url_upload);
+            } else {
+              enableInputs();
+              console.error('Could not get presigned URL.');
+            }
+          }
+        }
       }
+      xhr.send();
     }
-  }
-};
-  xhr.send();
-}
 
-function {{fieldname}}_uploadFile(file, s3Data, url, urlUpload, fieldName) {
-  // basic validation
-  var fileType=url.substring(url.lastIndexOf('.') + 1);
-  var xhr=new XMLHttpRequest();
-  xhr.open('POST', urlUpload);
-  xhr.setRequestHeader('x-amz-acl', 'public-read');
-  var postData=new FormData();
-  postData.append('key', s3Data.fields.key);
-  postData.append('file', file);
-  xhr.onreadystatechange=function()  {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200 || xhr.status === 204) {
-        {{fieldname}}_handleFunc(url, file);
-      } else {
-        alert('Could not upload file.');
-      }
+    function {{filename}}_deleteFile(file) {
+      console.log(file);
     }
-  };
-  xhr.send(postData);
-}
 
-function {{fieldname}}_handleFunc(url, file) {
-  console.log(url);
-  var curr=$("#{{ fieldname }}").val()
-  $("div > input#{{ fieldname }}").val(curr + ( curr ? ',': '' ) + url);
-  $("#{{ fieldname }}_list").append(
-    '<div class="badge badge-light"><i class="file icon"></i><a href="' + url + '">' + url + '</a><span id="{{fieldname}}-delete"class="delete badge badge-danger" data-url="' + url + '"><br/>Delete Document</span></span>')
-};
+    function {{fieldname}}_handleFunc(url, file) {
+      // Set hidden input.
+      $("input#{{ fieldname }}").val(url);
 
-$('body').on('click', '#{{fieldname}}-delete', function() {
-  var url=$(this).data('url');
+      // Get last part of the file.
+      var displayURL = url.split('/').slice(-1)[0];
 
-  var arr=$("div > input#{{ fieldname }}").val().split(',');
-  var idx=arr.indexOf(url);
-  if (idx > -1) {
-    arr.splice(idx, 1)
-  }
-  $("div > input#{{ fieldname }}").val(arr.join(','))
-  $(this).parent().remove();
-  $(this).remove();
-})
-</script>
+      $("#{{ fieldname }}_meta").html(
+        '<div class="ui label">' +
+        '<i class="icon close" id="{{fieldname}}-delete" data-url="' + url + '"></i>' +
+        '<a class="detail" href="' + url + '">' + displayURL + '</a>' +
+        '</div>'
+      );
+    }
 
+    function {{fieldname}}_uploadFile(file, s3Data, url, urlUpload, fieldName) {
+      // basic validation
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', urlUpload);
+      xhr.setRequestHeader('x-amz-acl', 'public-read');
+      var postData = new FormData();
+      postData.append('key', s3Data.fields.key);
+      postData.append('file', file);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200 || xhr.status === 204) {
+            {{fieldname}}_handleFunc(url, file);
+          } else {
+            console.error('Could not upload file.');
+          }
+          enableInputs();
+        }
+      };
+      xhr.send(postData);
+    }
 
+    function disableInputs() {
+      $('input[name^="save"]').prop('disabled', true);
+      $('input[name^="submit"]').prop('disabled', true);
+      $('#file-{{ fieldname }}').prop('disabled', true);
+    }
+
+    function enableInputs() {
+      $('input[name^="save"]').prop('disabled', false);
+      $('input[name^="submit"]').prop('disabled', false);
+      $('#file-{{ fieldname }}').prop('disabled', false);
+    }
+
+    $(document).ready(function () {
+      $('body').on('change', '#file-{{ fieldname }}', function () {
+        var file = $(this)[0].files[0];
+
+        if (file) {
+          disableInputs();
+          {{fieldname}}_getSignedRequest(file);
+        }
+      });
+
+      $('body').on('click', '#{{fieldname}}-delete', function () {
+        $('#file-{{ fieldname }}').val('');
+        $("input#{{ fieldname }}").val('');
+        $(this).parent().remove();
+        $(this).remove();
+      });
+    });
+  </script>
 {% endmacro %}

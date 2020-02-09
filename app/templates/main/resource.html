@@ -4,15 +4,30 @@
 {% block content %}
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
-            {% if from_saved %}
+            {% if loc=="saved" %}
             <a class="ui basic compact button" href="{{ url_for('main.review_saved') }}">
                 <i class="caret left icon"></i>
                 Back to saved resources
             </a>
+            {% elif loc=="draft" and user_type=="admin" %}
+            <a class="ui basic compact button" href="{{ url_for('admin.view_all_drafts') }}">
+                <i class="caret left icon"></i>
+                Back to drafts
+            </a>
+            {% elif loc=="draft" and user_type=="contributor" %}
+            <a class="ui basic compact button" href="{{ url_for('contributor.view_all_drafts') }}">
+                <i class="caret left icon"></i>
+                Back to drafts
+            </a>
+            {% elif loc=="contribution" %}
+            <a class="ui basic compact button" href="{{ url_for('admin.review_contributions') }}">
+                <i class="caret left icon"></i>
+                Back to contributions
+            </a>
             {% else %}
             <a class="ui basic compact button" href="{{ url_for('main.index') }}">
                 <i class="caret left icon"></i>
-                Back to database
+                Back to library
             </a>
             {% endif %}
               <div style="height:15px;"></div>

@@ -60,8 +60,6 @@
                </div>
                <div class="sixteen wide field">
                {{ f.render_form_input(report_form.report_file_urls) }}
-               </div>
-               <div class="sixteen wide field">
                {{ upload.file_upload('report_file_urls') }}
                </div>
                <div class="fields">
@@ -118,9 +116,14 @@
       </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
   }
   function delAuthor(author_id) {
+<<<<<<< HEAD
     let id="#author-" + author_id
     console.log(author_id)
       $(id).remove();
+=======
+    let id="#author-" + author_id;
+    $(id).remove();
+>>>>>>> 9a0219b0f3b80e801af5ea08e9def4fc57c7eea0
   }
 </script>
 

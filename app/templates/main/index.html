@@ -159,7 +159,9 @@
                             </td>
                             <td>
                               {% if c.description %}
-                              {{ c.description.split(' ')[:25]|join(' ') + '...'}}
+                              {% set description_words = c.description.split(' ') %}
+                              {{ description_words[:25]|join(' ') +
+                                      ('...' if description_words|length > 25 else '')}}
                               {% endif %}
                             </td>
                             <td>

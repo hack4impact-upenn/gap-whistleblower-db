@@ -95,7 +95,7 @@ class DraftEntryForm(Form):
     draft_new_book_entry = SubmitField()
 
 
-class MultipleFileUploadField(StringField):
+class FileUploadField(StringField):
     pass
 
 
@@ -129,7 +129,7 @@ class BookForm(Form):
     book_description = TextAreaField(validators=[InputRequired()])  # description
     book_tags = SelectMultipleField(choices=[('', '')])
     book_link = StringField()  # link
-    book_file_urls = MultipleFileUploadField()
+    book_file_urls = FileUploadField()
     save_book = SubmitField()
     submit_book = SubmitField()
 
@@ -160,7 +160,7 @@ class ArticleForm(Form):
     article_description = TextAreaField(validators=[InputRequired()])
     article_tags = SelectMultipleField(choices=[('', '')])
     article_link = StringField()
-    article_file_urls = MultipleFileUploadField()
+    article_file_urls = FileUploadField()
     save_article = SubmitField()
     submit_article = SubmitField()
 
@@ -197,7 +197,7 @@ class JournalArticleForm(Form):
     journal_description = TextAreaField(validators=[InputRequired()])
     journal_tags = SelectMultipleField(choices=[('', '')])
     journal_link = StringField()
-    journal_file_urls = MultipleFileUploadField()
+    journal_file_urls = FileUploadField()
     save_journal = SubmitField()
     submit_journal = SubmitField()
 
@@ -228,7 +228,7 @@ class LawForm(Form):
     law_description = TextAreaField(validators=[InputRequired()])
     law_tags = SelectMultipleField(choices=[('', '')])
     law_link = StringField()
-    law_file_urls = MultipleFileUploadField()
+    law_file_urls = FileUploadField()
     save_law = SubmitField()
     submit_law = SubmitField()
 
@@ -263,7 +263,7 @@ class VideoForm(Form):
     video_description = TextAreaField(validators=[InputRequired()])
     video_tags = SelectMultipleField(choices=[('', '')])
     video_link = StringField()
-    video_file_urls = MultipleFileUploadField()
+    video_file_urls = FileUploadField()
     save_video = SubmitField()
     submit_video = SubmitField()
 
@@ -294,7 +294,7 @@ class ReportForm(Form):
     report_description = TextAreaField(validators=[InputRequired()])
     report_tags = SelectMultipleField(choices=[('', '')])
     report_link = StringField()
-    report_file_urls = MultipleFileUploadField()
+    report_file_urls = FileUploadField()
     save_report = SubmitField()
     submit_report = SubmitField()
 
@@ -328,7 +328,7 @@ class OtherForm(Form):
     other_description = TextAreaField(validators=[InputRequired()])
     other_tags = SelectMultipleField(choices=[('', '')])
     other_link = StringField()
-    other_file_urls = MultipleFileUploadField()
+    other_file_urls = FileUploadField()
     save_other = SubmitField()
     submit_other = SubmitField()
 
