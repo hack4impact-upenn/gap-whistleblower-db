@@ -450,7 +450,7 @@ def other_contribution(id):
         resource=contribution,
         user_id=user_id,
         saved=saved,
-        from_saved=False,
+        loc="contribution",
         user_type=role()
     )
 
@@ -463,8 +463,9 @@ def other_contribution(id):
 def contribution(id):
     contribution = Document.query.get(id)
     return render_template(
-        'adtributor/contribution.html',
+        'main/resource.html',
         resource=contribution,
+        loc="draft",
         user_type=role()
     )
 
@@ -486,7 +487,7 @@ def view_book_draft(id):
         book_series=book_entry.series,
         book_author_first_name=book_entry.author_first_name.split(','),
         book_author_last_name=book_entry.author_last_name.split(','),
-        book_publisher_name=book_entry.publisher,
+        book_publisher=book_entry.publisher,
         book_publication_month=book_entry.month,
         book_publication_year=book_entry.year,
         book_description=book_entry.description,
@@ -689,6 +690,7 @@ def view_video_draft(id):
         video_source=video_entry.source,
         video_publisher=video_entry.publisher,
         video_country=video_entry.country,
+        video_studio=video_entry.studio,
         video_publication_day=video_entry.day,
         video_publication_month=video_entry.month,
         video_publication_year=video_entry.year,
@@ -1042,7 +1044,7 @@ def contribution_book(id):
         book_series=book_entry.series,
         book_author_first_name=book_entry.author_first_name.split(','),
         book_author_last_name=book_entry.author_last_name.split(','),
-        book_publisher_name=book_entry.publisher,
+        book_publisher=book_entry.publisher,
         book_publication_month=book_entry.month,
         book_publication_year=book_entry.year,
         book_description=book_entry.description,
@@ -1127,7 +1129,7 @@ def contribution_journal_article(id):
         journal_volume=journal_entry.volume,
         journal_start_page=journal_entry.page_start,
         journal_end_page=journal_entry.page_end,
-        journal_publisher=journal_entry.publisher,
+        journal_publication=journal_entry.publisher,
         journal_publication_day=journal_entry.day,
         journal_publication_month=journal_entry.month,
         journal_publication_year=journal_entry.year,
@@ -1212,6 +1214,9 @@ def contribution_video(id):
         director_last_name=video_entry.author_last_name.split(','),
         video_source=video_entry.source,
         video_publisher=video_entry.publisher,
+        video_studio=video_entry.studio,
+        video_country=video_entry.series,
+        video_series=video_entry.series,
         video_publication_day=video_entry.day,
         video_publication_month=video_entry.month,
         video_publication_year=video_entry.year,
@@ -1694,7 +1699,7 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
             'editor_last_name':
                 ','.join(book_form.book_editor_last_name.data),
             'last_edited_by': current_user.id,
-            'publisher': book_form.book_publisher_name.data,
+            'publisher': book_form.book_publisher.data,
             'month': book_form.book_publication_month.data,
             'year': book_form.book_publication_year.data,
             'description': book_form.book_description.data,
@@ -1745,6 +1750,7 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
         flash(
             'Book \"{}\" successfully saved'.format(
                 book_form.book_title.data), 'form-success')
+
     elif doc_type == 'journal_article':
         journal_form = form
         new = False
@@ -1884,9 +1890,12 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
             'title': video_form.video_title.data,
             'author_first_name': ','.join(video_form.director_first_name.data),
             'author_last_name': ','.join(video_form.director_last_name.data),
-            'source': video_form.video_source.data,
             'last_edited_by': current_user.id,
+            'series': video_form.video_series.data,
+            'source': video_form.video_source.data,
             'publisher': video_form.video_publisher.data,
+            'studio': video_form.video_studio.data,
+            'country': video_form.video_country.data,
             'day': video_form.video_publication_day.data,
             'month': video_form.video_publication_month.data,
             'year': video_form.video_publication_year.data,
@@ -1904,6 +1913,7 @@ def save_or_submit_doc(form, doc_type, submit, entry=None):
             update_sql_object(entry, kwargs)
         else:
             new = True
+            kwargs['posted_by'] = current_user.id
             article = Document(**kwargs)
             kwargs['posted_by'] = current_user.id
             db.session.add(article)
@@ -2250,7 +2260,7 @@ def upload_and_download():
                         'Id',
                         'Title',
                         'Citation',
-                        'Government Body',
+                        'Government Body*',
                         'Section',
                         'Region',
                         'Country',
@@ -2473,7 +2483,7 @@ def upload_and_download():
                             volume=row[6],
                             edition=row[7],
                             series=row[8],
-                            name=row[9],
+                            publisher=row[9],
                             month=row[10],
                             year=row[11],
                             description=row[12],
@@ -2504,7 +2514,7 @@ def upload_and_download():
                             title=row[1],
                             author_first_name=row[2],
                             author_last_name=row[3],
-                            name=row[4],
+                            publisher=row[4],
                             day=row[5],
                             month=row[6],
                             year=row[7],
@@ -2524,7 +2534,7 @@ def upload_and_download():
                         if ds == '':
                             ds = "published"
 
-                        int_fields = [6, 7, 8, 9, 11]
+                        int_fields = [9, 11]
                         for i in int_fields:
                             if row[i] == '':
                                 row[i] = None
@@ -2537,7 +2547,7 @@ def upload_and_download():
                             title=row[1],
                             author_first_name=row[2],
                             author_last_name=row[3],
-                            name=row[4],
+                            publisher=row[4],
                             volume=row[5],
                             issue=row[6],
                             page_start=row[7],
@@ -2644,7 +2654,7 @@ def upload_and_download():
                             title=row[1],
                             author_first_name=row[2],
                             author_last_name=row[3],
-                            name=row[4],
+                            publisher=row[4],
                             day=row[5],
                             month=row[6],
                             year=row[7],

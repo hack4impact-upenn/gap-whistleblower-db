@@ -232,12 +232,15 @@ def resource(id, from_saved=False):
     user_id = getattr(current_user, 'id', None)
     saved_objs = Saved.query.filter_by(user_id=user_id, doc_id=id)
     saved = bool(user_id) and bool(saved_objs.all())
+    loc = 'library'
+    if from_saved:
+        loc = 'saved'
     return render_template(
         'main/resource.html',
         resource=resource,
         user_id=user_id,
         saved=saved,
-        from_saved=from_saved,
+        loc=loc,
         user_type=role()
     )
 

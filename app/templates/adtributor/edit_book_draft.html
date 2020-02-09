@@ -63,7 +63,7 @@
                       </div>
                   </div>
                   <div class="sixteen wide field">
-                  {{ f.render_form_field(book_form.book_publisher_name, name="Publisher*") }}
+                  {{ f.render_form_field(book_form.book_publisher, name="Publisher*") }}
                   </div>
                   <div class="two fields">
       	            <div class="eight wide field">
@@ -177,10 +177,9 @@
       </div>`.replace(/0/g, index).replace(/value="*"/g, 'value=""')); //bit hacky but ok
   }
   function delEditor(editor_id) {
-    let id="#editor-" + editor_id;
-    $(id).remove();
+    let id="#editor-" + editor_id
+      $(id).remove();
   }
-
 </script>
 
 {% endblock %}

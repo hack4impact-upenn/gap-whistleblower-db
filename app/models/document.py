@@ -53,9 +53,9 @@ class Document(db.Model):
     author_last_name = db.Column(db.String(1000))
 
     # Specific to Journal Article
-    page_start = db.Column(db.Integer())
-    page_end = db.Column(db.Integer())
-    issue = db.Column(db.Integer())
+    page_start = db.Column(db.String(20))
+    page_end = db.Column(db.String(20))
+    issue = db.Column(db.String(100))
 
     # Specific to Law
     govt_body = db.Column(db.String(1000))
@@ -406,7 +406,7 @@ class Document(db.Model):
             'Author Last Name: {self.author_last_name}\n>'
             'Name: {self.name}\n>'
             'Country: {self.country}\n>'
-            'Affiliated Government Body: {self.govt_body}\n>'
+            'Affiliated Government Body*: {self.govt_body}\n>'
             'Section: {self.section}\n>'
             'Type (if other): {self.other_type}\n>'
             'Document Status: {self.document_status}\n>'

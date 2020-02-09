@@ -134,10 +134,24 @@
                                       {{ first_names[x] + ' ' + last_names[x] + ','}}
                                       {% endif %}
                                     {% endfor %}
-                                {% elif c.name %}
-                                  {{ c.name }}
+                                {% elif c.editor_last_name and c.editor_first_name %}
+                                  {% set first_names=c.editor_first_name.split(',') %}
+                                  {% set last_names= c.editor_last_name.split(',') %}
+                                    {% for x in range(first_names | length) %}
+                                      {% if (x == first_names | length - 1) %}
+                                      {{first_names[x] + ' ' + last_names[x] }}
+                                      {% else %}
+                                      {{ first_names[x] + ' ' + last_names[x] + ','}}
+                                      {% endif %}
+                                    {% endfor %}
+                                {% elif c.publisher %}
+                                  {{ c.publisher }}
+                                {% elif c.studio %}
+                                  {{ c.studio }}
                                 {% elif c.govt_body %}
                                   {{ c.govt_body }}
+                                {% else %}
+                                  No Attribution
                                 {% endif %}
                             </td>
                             <td>

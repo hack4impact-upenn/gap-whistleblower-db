@@ -117,7 +117,7 @@ class BookForm(Form):
     book_volume = StringField()
     book_edition = StringField()
     book_series = StringField()
-    book_publisher_name = StringField(validators=[InputRequired()])
+    book_publisher = StringField(validators=[InputRequired()])
     book_publication_month = SelectField(choices=[
         ('', ''), ('January', 'January'), ('February', 'February'),
         ('March', 'March'), ('April', 'April'), ('May', 'May'),
@@ -182,9 +182,9 @@ class JournalArticleForm(Form):
     )
     journal_publication = StringField(validators=[InputRequired()])
     journal_volume = StringField()
-    journal_issue = IntegerField(validators=[validators.optional()])
-    journal_start_page = IntegerField(validators=[validators.optional()])
-    journal_end_page = IntegerField(validators=[validators.optional()])
+    journal_issue = StringField()
+    journal_start_page = StringField()
+    journal_end_page = StringField()
     journal_publication_day = IntegerField(validators=[validators.optional()])
     journal_publication_month = SelectField(choices=[
         ('', ''), ('January', 'January'), ('February', 'February'),
@@ -212,7 +212,7 @@ class JournalArticleForm(Form):
 class LawForm(Form):
     law_title = StringField(validators=[InputRequired()])
     law_citation = StringField(validators=[InputRequired()])
-    law_government_body = StringField()
+    law_government_body = StringField(validators=[InputRequired()])
     law_section = StringField()
     law_region = StringField()
     law_enactment_day = IntegerField(validators=[validators.optional()])

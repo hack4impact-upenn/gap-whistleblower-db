@@ -4,15 +4,30 @@
 {% block content %}
     <div class="ui stackable centered grid container">
         <div class="twelve wide column">
-            {% if from_saved %}
+            {% if loc=="saved" %}
             <a class="ui basic compact button" href="{{ url_for('main.review_saved') }}">
                 <i class="caret left icon"></i>
                 Back to saved resources
             </a>
+            {% elif loc=="draft" and user_type=="admin" %}
+            <a class="ui basic compact button" href="{{ url_for('admin.view_all_drafts') }}">
+                <i class="caret left icon"></i>
+                Back to drafts
+            </a>
+            {% elif loc=="draft" and user_type=="contributor" %}
+            <a class="ui basic compact button" href="{{ url_for('contributor.view_all_drafts') }}">
+                <i class="caret left icon"></i>
+                Back to drafts
+            </a>
+            {% elif loc=="contribution" %}
+            <a class="ui basic compact button" href="{{ url_for('admin.review_contributions') }}">
+                <i class="caret left icon"></i>
+                Back to contributions
+            </a>
             {% else %}
             <a class="ui basic compact button" href="{{ url_for('main.index') }}">
                 <i class="caret left icon"></i>
-                Back to database
+                Back to library
             </a>
             {% endif %}
               <div style="height:15px;"></div>
@@ -62,7 +77,7 @@
                       {% endif %}
                     </div>
                     <div class="ui basic label" style="margin:2px;">
-                     {% if resource.type == 'other' %}
+                     {% if resource.doc_type == 'other' and resource.other_type %}
                        {{ resource.other_type }}
                      {% else %}
                        {{ resource.doc_type.split('_')|join(' ') }}
@@ -70,28 +85,39 @@
                     </div>
               </h2>
             </div>
-            <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
-              <thead>
-                  <tr>
-                      <th class="three wide" style="padding:0; border-bottom:0;"></th>
-                      <th class="nine wide" style="padding:0; border-bottom:0;"></th>
-                  </tr>
-              </thead>
+            <table class="ui searchable sortable unstackable selectable celled definition table" style="overflow-x: scroll; table-layout: fixed;">
                <tbody>
-                   {% if resource.tags | length > 0 %}
-                   <tr>
-                     <td>Tags</td>
-                     <td>
-                      {% for tag in resource.tags %}
-                       <div class="ui basic label" style="margin: 2px">
-                         {{ tag.tag.tag }}
-                       </div>
-                       {% endfor %}
-                     </td>
-                   </tr>
-                  {% endif %}
+                 {% if resource.tags | length > 0 %}
+                 <tr>
+                   <td>Tags</td>
+                   <td>
+                    {% for tag in resource.tags %}
+                     <div class="ui basic label" style="margin: 2px;">
+                       {{ tag.tag.tag }}
+                     </div>
+                     {% endfor %}
+                   </td>
+                 </tr>
+                {% endif %}
+                 {% if resource.day and resource.month and resource.year %}
+                 <tr>
+                    <td>Date</td>
+                    <td>{{ resource.month ~ ' ' ~ resource.day ~ ', ' ~ resource.year }}</td>
+                  </tr>
+                 {% elif resource.month and resource.year %}
+                 <tr>
+                    <td>Date</td>
+                    <td>{{ resource.month ~ ' ' ~ resource.year }}</td>
+                 </tr>
+                 {% elif resource.year %}
+                 <tr>
+                    <td>Year</td>
+                    <td>{{ resource.year }}</td>
+                 </tr>
+                 {% endif %}
                     {% if resource.editor_last_name and resource.editor_first_name %}
-                        <td>Editor</td>
+                    <tr>
+                        <td>Editor(s)</td>
                         {% set first_names=resource.editor_first_name.split(',') %}
                         {% set last_names=resource.editor_last_name.split(',') %}
                         <td>
@@ -103,63 +129,46 @@
                             {% endif %}
                           {% endfor %}
                         </td>
+                      </tr>
                     {% endif %}
-                  {% if resource.day and resource.month and resource.year %}
-                     <td>Date</td>
-                     <td>{{ resource.month ~ ' ' ~ resource.day ~ ', ' ~ resource.year }}</td>
-                  {% elif resource.month and resource.year %}
-                     <td>Date</td>
-                     <td>{{ resource.month ~ ' ' ~ resource.year }}</td>
-                  {% elif resource.year %}
-                     <td>Year</td>
-                     <td>{{ resource.year }}</td>
+                    {% if resource.publisher %}
+                    <tr>
+                      {% if resource.doc_type == 'news_article' %}
+                      <td>Publication</td>
+                      {% else %}
+                      <td>Publisher</td>
+                      {% endif %}
+                      <td>{{ resource.publisher }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if resource.source %}
+                    <tr>
+                      <td>Source</td>
+                      <td>{{ resource.source }}</td>
+                    </tr>
+                    {% endif %}
+                  {% if resource.volume %}
+                  <tr>
+                    <td>Volume</td>
+                    <td>{{ resource.volume }}</td>
+                  </tr>
                   {% endif %}
-                  {% if resource.other_type %}
-                   <tr>
-                     <td>Type (if other)</td>
-                     <td>{{ resource.other_type }}</td>
-                   </tr>
-                   <tr>
-                   {% endif %}
+                  {% if resource.edition %}
+                  <tr>
+                    <td>Edition</td>
+                    <td>{{ resource.edition }}</td>
+                  </tr>
+                  {% endif %}
+                  {% if resource.series %}
+                  <tr>
+                    <td>Series</td>
+                    <td>{{ resource.series }}</td>
+                  </tr>
+                  {% endif %}
                    {% if resource.citation %}
                    <tr>
                      <td>Citation</td>
                      <td>{{ resource.citation }}</td>
-                   </tr>
-                   {% endif %}
-                   {% if resource.volume %}
-                   <tr>
-                     <td>Volume</td>
-                     <td>{{ resource.volume }}</td>
-                   </tr>
-                   {% endif %}
-                   {% if resource.edition %}
-                   <tr>
-                     <td>Edition</td>
-                     <td>{{ resource.edition }}</td>
-                   </tr>
-                   {% endif %}
-                   {% if resource.series %}
-                   <tr>
-                     <td>Series</td>
-                     <td>{{ resource.series }}</td>
-                   </tr>
-                   {% endif %}
-                   {% if resource.name %}
-                   <tr>
-                     <td>Name</td>
-                     <td>{{ resource.name }}</td>
-                   </tr>
-                   {% endif %}
-                   {% if resource.region and resource.country %}
-                   <tr>
-                     <td>Location</td>
-                     <td>{{ resource.region  ~ ', ' ~ resource.country }}</td>
-                   </tr>
-                   {% elif resource.region %}
-                   <tr>
-                     <td>Region</td>
-                     <td>{{ resource.region }}</td>
                    </tr>
                    {% endif %}
                    {% if resource.section %}
@@ -168,11 +177,35 @@
                      <td>{{ resource.section }}</td>
                    </tr>
                    {% endif %}
+                   {% if resource.govt_body %}
+                   <tr>
+                     <td>Government Body</td>
+                     <td>{{ resource.govt_body }}</td>
+                   </tr>
+                   {% endif %}
+                   {% if resource.country %}
+                   <tr>
+                     <td>Country</td>
+                     <td>{{ resource.country }}</td>
+                   </tr>
+                   {% endif %}
+                   {% if resource.region %}
+                   <tr>
+                     <td>Region</td>
+                     <td>{{ resource.region }}</td>
+                   </tr>
+                   {% endif %}
+                   {% if resource.page_start and resource.page_end %}
+                   <tr>
+                     <td>Page Range</td>
+                     <td>{{ resource.page_start }} - {{ resource.page_end }}</td>
+                   </tr>
+                   {% endif %}
                    {% if resource.description %}
-                    <tr>
-                      <td>Description</td>
-                      <td>{{ resource.description }}</td>
-                    </tr>
+                   <tr>
+                     <td>Description</td>
+                     <td>{{ resource.description }}</td>
+                   </tr>
                    {% endif %}
                </tbody>
            </table>
