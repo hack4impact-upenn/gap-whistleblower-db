@@ -8,9 +8,9 @@ from wtforms.fields import (
     TextAreaField,
     SelectField,
     IntegerField,
-    BooleanField,
     SelectMultipleField,
     FieldList,
+    RadioField
 )
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import (
@@ -339,11 +339,13 @@ class OtherForm(Form):
 
 
 class DownloadForm(Form):
-    book = BooleanField()
-    news_article = BooleanField()
-    journal_article = BooleanField()
-    law = BooleanField()
-    video = BooleanField()
-    report = BooleanField()
-    other = BooleanField()
+    resource_type = RadioField(choices=[
+        ('book', 'Book'),
+        ('news_article', 'News Article'),
+        ('journal_article', 'Journal Article'),
+        ('law', 'Law'),
+        ('video', 'Video'),
+        ('report', 'Report'),
+        ('other', 'Other')
+    ], default='book')
     download = SubmitField()

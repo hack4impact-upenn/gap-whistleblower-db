@@ -59,9 +59,9 @@
           <h4>Instructions</h4>
           <h4 class="ui dividing header" style="font-weight:normal;margin-top:0px;">
             <div class="ui relaxed bulleted list">
-              <div class="item">Select the types of resources you want to download.</div>
-              <div class="item">Click "Download" to download the resources.</div>
-              <div class="item">Find the resources in your "Downloads" folder.</div>
+              <div class="item">Select the type of resource you want to download.</div>
+              <div class="item">Click "Download" to download the resource.</div>
+              <div class="item">Find the resource in your "Downloads" folder.</div>
           <br/>
           </h4>
           {% set flashes={
@@ -70,25 +70,7 @@
             {{ f.form_message(flashes['success'], header='Success!', class='success') }}
             {{ f.begin_form(form, flashes) }}
             <div class="field">
-            {{ f.render_form_field(form.book) }}
-            </div>
-            <div class="field">
-            {{ f.render_form_field(form.news_article) }}
-            </div>
-            <div class="field">
-            {{ f.render_form_field(form.journal_article) }}
-            </div>
-            <div class="field">
-            {{ f.render_form_field(form.law) }}
-            </div>
-            <div class="field">
-            {{ f.render_form_field(form.video) }}
-            </div>
-            <div class="field">
-            {{ f.render_form_field(form.report) }}
-            </div>
-            <div class="field">
-            {{ f.render_form_field(form.other) }}
+            {{ f.render_form_field(form.resource_type) }}
             </div>
             <div class="field">
             {{ f.render_form_field(form.download) }}
