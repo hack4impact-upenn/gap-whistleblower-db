@@ -2151,13 +2151,14 @@ def upload_and_download():
             csv_file = io.StringIO()
             csv_writer = csv.writer(csv_file)
 
-            # The file's donwload name.
-            filename = None
+            # The file's download name.
+            filename = 'empty'
+            types = []
 
             documents = Document.query.order_by(Document.id.desc()).all()
 
             if download_form.book.data:
-                filename = 'book.csv'
+                types.append('book')
 
                 csv_writer.writerow([
                     'Id', 'Title', 'Author First Name', 'Author Last Name',
@@ -2189,7 +2190,7 @@ def upload_and_download():
                             ", ".join(t.tag_name for t in d.tags)])
 
             if download_form.news_article.data is True:
-                filename = 'news_article.csv'
+                types.append('news_article')
 
                 csv_writer.writerow([
                     'Id', 'Title', 'Author First Name', 'Author Last Name',
@@ -2216,7 +2217,7 @@ def upload_and_download():
                             ", ".join(t.tag_name for t in d.tags)])
 
             if download_form.journal_article.data is True:
-                filename = 'journal_article.csv'
+                types.append('journal_article')
 
                 csv_writer.writerow([
                     'Id', 'Title', 'Author First Name', 'Author Last Name',
@@ -2247,7 +2248,7 @@ def upload_and_download():
                             ", ".join(t.tag_name for t in d.tags)])
 
             if download_form.law.data is True:
-                filename = 'law.csv'
+                types.append('law')
 
                 csv_writer.writerow([
                     'Id',
@@ -2287,7 +2288,7 @@ def upload_and_download():
                             ", ".join(t.tag_name for t in d.tags)])
 
             if download_form.video.data is True:
-                filename = 'video.csv'
+                types.append('video')
 
                 csv_writer.writerow([
                     'Id',
@@ -2331,7 +2332,7 @@ def upload_and_download():
                             ", ".join(t.tag_name for t in d.tags)])
 
             if download_form.report.data is True:
-                filename = 'report.csv'
+                types.append('report')
 
                 csv_writer.writerow([
                     'Id',
@@ -2367,7 +2368,7 @@ def upload_and_download():
                             ", ".join(t.tag_name for t in d.tags)])
 
             if download_form.other.data is True:
-                filename = 'other.csv'
+                types.append('other')
 
                 csv_writer.writerow([
                     'Id',
@@ -2406,6 +2407,10 @@ def upload_and_download():
             csv_bytes = io.BytesIO()
             csv_bytes.write(csv_file.getvalue().encode('utf-8'))
             csv_bytes.seek(0)
+
+            # Get the file name.
+            if types:
+                filename = '+'.join(types) + '.csv'
 
             # Send file for download.
             return send_file(csv_bytes,
