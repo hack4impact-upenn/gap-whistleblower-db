@@ -6,7 +6,8 @@ from flask import (
     render_template,
     request,
     jsonify,
-    url_for
+    url_for,
+    send_file
 )
 
 from nltk.corpus import stopwords
@@ -58,7 +59,6 @@ import os
 import nltk
 import threading
 import logging
-import tempfile
 
 logger = logging.getLogger('werkzeug')
 
@@ -2147,279 +2147,271 @@ def upload_and_download():
 
     if request.method == 'POST':
         if "Download" in request.form.values():
-            file_path = tempfile.mkdtemp()
+            # Create an in memory file.
+            csv_file = io.StringIO()
+            csv_writer = csv.writer(csv_file)
+
+            # The file's donwload name.
+            filename = None
+
             documents = Document.query.order_by(Document.id.desc()).all()
 
             if download_form.book.data:
-                with io.open(
-                    file_path + 'book.csv', 'w', newline=''
-                ) as csvfile:
+                filename = 'book.csv'
 
-                    csv_writer = csv.writer(csvfile)
+                csv_writer.writerow([
+                    'Id', 'Title', 'Author First Name', 'Author Last Name',
+                    'Editor First Name', 'Editor Last Name', 'Volume',
+                    'Edition', 'Series', 'Publisher Name',
+                    'Publication Month', 'Publication Year', 'Description',
+                    'Link', 'File', 'Document Status', 'Tags'
+                ])
 
-                    csv_writer.writerow([
-                        'Id', 'Title', 'Author First Name', 'Author Last Name',
-                        'Editor First Name', 'Editor Last Name', 'Volume',
-                        'Edition', 'Series', 'Publisher Name',
-                        'Publication Month', 'Publication Year', 'Description',
-                        'Link', 'File', 'Document Status', 'Tags'
-                    ])
-
-                    for d in documents:
-                        if d.doc_type == "book":
-                            csv_writer.writerow([
-                                d.id,
-                                d.title,
-                                d.author_first_name,
-                                d.author_last_name,
-                                d.editor_first_name,
-                                d.editor_last_name,
-                                d.volume,
-                                d.edition,
-                                d.series,
-                                d.publisher,
-                                d.month,
-                                d.year,
-                                d.description,
-                                d.link,
-                                d.file,
-                                d.document_status,
-                                ", ".join(t.tag_name for t in d.tags)])
+                for d in documents:
+                    if d.doc_type == "book":
+                        csv_writer.writerow([
+                            d.id,
+                            d.title,
+                            d.author_first_name,
+                            d.author_last_name,
+                            d.editor_first_name,
+                            d.editor_last_name,
+                            d.volume,
+                            d.edition,
+                            d.series,
+                            d.publisher,
+                            d.month,
+                            d.year,
+                            d.description,
+                            d.link,
+                            d.file,
+                            d.document_status,
+                            ", ".join(t.tag_name for t in d.tags)])
 
             if download_form.news_article.data is True:
-                with io.open(
-                    file_path + 'news_article.csv', 'w', newline=''
-                ) as csvfile:
-                    csv_writer = csv.writer(csvfile)
+                filename = 'news_article.csv'
 
-                    csv_writer.writerow([
-                        'Id', 'Title', 'Author First Name', 'Author Last Name',
-                        'Publication', 'Publication Day', 'Publication Month',
-                        'Publication Year', 'Description', 'Link', 'File',
-                        'Document Status', 'Tags'
-                    ])
+                csv_writer.writerow([
+                    'Id', 'Title', 'Author First Name', 'Author Last Name',
+                    'Publication', 'Publication Day', 'Publication Month',
+                    'Publication Year', 'Description', 'Link', 'File',
+                    'Document Status', 'Tags'
+                ])
 
-                    for d in documents:
-                        if d.doc_type == "news_article":
-                            csv_writer.writerow([
-                                d.id,
-                                d.title,
-                                d.author_first_name,
-                                d.author_last_name,
-                                d.publisher,
-                                d.day,
-                                d.month,
-                                d.year,
-                                d.description,
-                                d.link,
-                                d.file,
-                                d.document_status,
-                                ", ".join(t.tag_name for t in d.tags)])
+                for d in documents:
+                    if d.doc_type == "news_article":
+                        csv_writer.writerow([
+                            d.id,
+                            d.title,
+                            d.author_first_name,
+                            d.author_last_name,
+                            d.publisher,
+                            d.day,
+                            d.month,
+                            d.year,
+                            d.description,
+                            d.link,
+                            d.file,
+                            d.document_status,
+                            ", ".join(t.tag_name for t in d.tags)])
 
             if download_form.journal_article.data is True:
-                with io.open(
-                    file_path + 'journal_article.csv', 'w', newline=''
-                ) as csvfile:
-                    csv_writer = csv.writer(csvfile)
+                filename = 'journal_article.csv'
 
-                    csv_writer.writerow([
-                        'Id', 'Title', 'Author First Name', 'Author Last Name',
-                        'Publication', 'Volume', 'Start Page', 'End Page',
-                        'Publication Day', 'Publication Month',
-                        'Publication Year', 'Description', 'Link', 'File',
-                        'Document Status', 'Tags'
-                    ])
+                csv_writer.writerow([
+                    'Id', 'Title', 'Author First Name', 'Author Last Name',
+                    'Publication', 'Volume', 'Start Page', 'End Page',
+                    'Publication Day', 'Publication Month',
+                    'Publication Year', 'Description', 'Link', 'File',
+                    'Document Status', 'Tags'
+                ])
 
-                    for d in documents:
-                        if d.doc_type == "journal_article":
-                            csv_writer.writerow([
-                                d.id,
-                                d.title,
-                                d.author_first_name,
-                                d.author_last_name,
-                                d.publisher,
-                                d.volume,
-                                d.page_start,
-                                d.page_end,
-                                d.day,
-                                d.month,
-                                d.year,
-                                d.description,
-                                d.link,
-                                d.file,
-                                d.document_status,
-                                ", ".join(t.tag_name for t in d.tags)])
+                for d in documents:
+                    if d.doc_type == "journal_article":
+                        csv_writer.writerow([
+                            d.id,
+                            d.title,
+                            d.author_first_name,
+                            d.author_last_name,
+                            d.publisher,
+                            d.volume,
+                            d.page_start,
+                            d.page_end,
+                            d.day,
+                            d.month,
+                            d.year,
+                            d.description,
+                            d.link,
+                            d.file,
+                            d.document_status,
+                            ", ".join(t.tag_name for t in d.tags)])
 
             if download_form.law.data is True:
-                with io.open(
-                    file_path + 'law.csv', 'w', newline=''
-                ) as csvfile:
-                    csv_writer = csv.writer(csvfile)
+                filename = 'law.csv'
 
-                    csv_writer.writerow([
-                        'Id',
-                        'Title',
-                        'Citation',
-                        'Government Body*',
-                        'Section',
-                        'Region',
-                        'Country',
-                        'Enactment Day',
-                        'Enactment Month',
-                        'Enactment Year',
-                        'Description',
-                        'Link',
-                        'File',
-                        'Document Status',
-                        'Tags'
-                    ])
+                csv_writer.writerow([
+                    'Id',
+                    'Title',
+                    'Citation',
+                    'Government Body*',
+                    'Section',
+                    'Region',
+                    'Country',
+                    'Enactment Day',
+                    'Enactment Month',
+                    'Enactment Year',
+                    'Description',
+                    'Link',
+                    'File',
+                    'Document Status',
+                    'Tags'
+                ])
 
-                    for d in documents:
-                        if d.doc_type == "law":
-                            csv_writer.writerow([
-                                d.id,
-                                d.title,
-                                d.citation,
-                                d.govt_body,
-                                d.section,
-                                d.region,
-                                d.country,
-                                d.day,
-                                d.month,
-                                d.year,
-                                d.description,
-                                d.link,
-                                d.file,
-                                d.document_status,
-                                ", ".join(t.tag_name for t in d.tags)])
+                for d in documents:
+                    if d.doc_type == "law":
+                        csv_writer.writerow([
+                            d.id,
+                            d.title,
+                            d.citation,
+                            d.govt_body,
+                            d.section,
+                            d.region,
+                            d.country,
+                            d.day,
+                            d.month,
+                            d.year,
+                            d.description,
+                            d.link,
+                            d.file,
+                            d.document_status,
+                            ", ".join(t.tag_name for t in d.tags)])
 
             if download_form.video.data is True:
-                with io.open(
-                    file_path + 'video.csv', 'w', newline=''
-                ) as csvfile:
-                    csv_writer = csv.writer(csvfile)
+                filename = 'video.csv'
 
-                    csv_writer.writerow([
-                        'Id',
-                        'Title',
-                        'Series',
-                        'First Name',
-                        'Last Name',
-                        'Release Day',
-                        'Release Month',
-                        'Release Year',
-                        'Network/Studio',
-                        'Published/Uploaded By',
-                        'Source',
-                        'Country',
-                        'Description',
-                        'Link',
-                        'File',
-                        'Document Status',
-                        'Tags'
-                    ])
+                csv_writer.writerow([
+                    'Id',
+                    'Title',
+                    'Series',
+                    'First Name',
+                    'Last Name',
+                    'Release Day',
+                    'Release Month',
+                    'Release Year',
+                    'Network/Studio',
+                    'Published/Uploaded By',
+                    'Source',
+                    'Country',
+                    'Description',
+                    'Link',
+                    'File',
+                    'Document Status',
+                    'Tags'
+                ])
 
-                    for d in documents:
-                        if d.doc_type == "video":
-                            csv_writer.writerow([
-                                d.id,
-                                d.title,
-                                d.series,
-                                d.author_first_name,
-                                d.author_last_name,
-                                d.day,
-                                d.month,
-                                d.year,
-                                d.studio,
-                                d.publisher,
-                                d.source,
-                                d.country,
-                                d.description,
-                                d.link,
-                                d.file,
-                                d.document_status,
-                                ", ".join(t.tag_name for t in d.tags)])
+                for d in documents:
+                    if d.doc_type == "video":
+                        csv_writer.writerow([
+                            d.id,
+                            d.title,
+                            d.series,
+                            d.author_first_name,
+                            d.author_last_name,
+                            d.day,
+                            d.month,
+                            d.year,
+                            d.studio,
+                            d.publisher,
+                            d.source,
+                            d.country,
+                            d.description,
+                            d.link,
+                            d.file,
+                            d.document_status,
+                            ", ".join(t.tag_name for t in d.tags)])
 
             if download_form.report.data is True:
-                with io.open(
-                    file_path + 'report.csv', 'w', newline=''
-                ) as csvfile:
-                    csv_writer = csv.writer(csvfile)
+                filename = 'report.csv'
 
-                    csv_writer.writerow([
-                        'Id',
-                        'Title',
-                        'First Name',
-                        'Last Name',
-                        'Publisher',
-                        'Day',
-                        'Month',
-                        'Year',
-                        'Description',
-                        'Link',
-                        'File',
-                        'Document Status',
-                        'Tags'
-                    ])
+                csv_writer.writerow([
+                    'Id',
+                    'Title',
+                    'First Name',
+                    'Last Name',
+                    'Publisher',
+                    'Day',
+                    'Month',
+                    'Year',
+                    'Description',
+                    'Link',
+                    'File',
+                    'Document Status',
+                    'Tags'
+                ])
 
-                    for d in documents:
-                        if d.doc_type == "report":
-                            csv_writer.writerow([
-                                d.id,
-                                d.title,
-                                d.author_first_name,
-                                d.author_last_name,
-                                d.publisher,
-                                d.day,
-                                d.month,
-                                d.year,
-                                d.description,
-                                d.link,
-                                d.file,
-                                d.document_status,
-                                ", ".join(t.tag_name for t in d.tags)])
+                for d in documents:
+                    if d.doc_type == "report":
+                        csv_writer.writerow([
+                            d.id,
+                            d.title,
+                            d.author_first_name,
+                            d.author_last_name,
+                            d.publisher,
+                            d.day,
+                            d.month,
+                            d.year,
+                            d.description,
+                            d.link,
+                            d.file,
+                            d.document_status,
+                            ", ".join(t.tag_name for t in d.tags)])
 
             if download_form.other.data is True:
-                with io.open(
-                    file_path + 'other.csv', 'w', newline=''
-                ) as csvfile:
-                    csv_writer = csv.writer(csvfile)
+                filename = 'other.csv'
 
-                    csv_writer.writerow([
-                        'Id',
-                        'Title',
-                        'Author First Name',
-                        'Author Last Name',
-                        'Other Document Type',
-                        'Publication Day',
-                        'Publication Month',
-                        'Publication Year',
-                        'Description',
-                        'Link',
-                        'File',
-                        'Document Status',
-                        'Tags'
-                    ])
+                csv_writer.writerow([
+                    'Id',
+                    'Title',
+                    'Author First Name',
+                    'Author Last Name',
+                    'Other Document Type',
+                    'Publication Day',
+                    'Publication Month',
+                    'Publication Year',
+                    'Description',
+                    'Link',
+                    'File',
+                    'Document Status',
+                    'Tags'
+                ])
 
-                    for d in documents:
-                        if d.doc_type == "other":
-                            csv_writer.writerow([
-                                d.id,
-                                d.title,
-                                d.author_first_name,
-                                d.author_last_name,
-                                d.other_type,
-                                d.day,
-                                d.month,
-                                d.year,
-                                d.description,
-                                d.link,
-                                d.file,
-                                d.document_status,
-                                ", ".join(t.tag_name for t in d.tags)])
+                for d in documents:
+                    if d.doc_type == "other":
+                        csv_writer.writerow([
+                            d.id,
+                            d.title,
+                            d.author_first_name,
+                            d.author_last_name,
+                            d.other_type,
+                            d.day,
+                            d.month,
+                            d.year,
+                            d.description,
+                            d.link,
+                            d.file,
+                            d.document_status,
+                            ", ".join(t.tag_name for t in d.tags)])
 
-            flash('Download Successful', 'form-success')
-            return render_template('admin/upload.html', form=download_form)
+            # Convert to byte buffer.
+            csv_bytes = io.BytesIO()
+            csv_bytes.write(csv_file.getvalue().encode('utf-8'))
+            csv_bytes.seek(0)
+
+            # Send file for download.
+            return send_file(csv_bytes,
+                             as_attachment=True,
+                             attachment_filename=filename,
+                             mimetype='text/csv')
 
         else:
             stemmer = SnowballStemmer("english", ignore_stopwords=True)

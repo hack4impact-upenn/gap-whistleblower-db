@@ -111,6 +111,9 @@ $(document).ready(function() {
          $label.html();
       }
    });
+
+   // Download should open a new tab.
+    $('form:eq(1)').prop('target', '_blank');
 });
 $('.menu .item')
   .tab()
