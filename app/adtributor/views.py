@@ -59,6 +59,7 @@ import os
 import nltk
 import threading
 import logging
+import tempfile
 
 logger = logging.getLogger('werkzeug')
 

@@ -61,9 +61,10 @@
                       {% if resource.author_last_name and resource.author_first_name %}
                           {% set first_names=resource.author_first_name.split(',') %}
                           {% set last_names=resource.author_last_name.split(',') %}
+                          {% set names_length = [(first_names | length), (last_names | length)] | min %}
                           By
-                            {% for x in range(first_names | length) %}
-                              {% if (x == first_names | length - 1) %}
+                            {% for x in range(names_length) %}
+                              {% if (x == names_length - 1) %}
                               {{ first_names[x] + ' ' + last_names[x] }}
                               {% else %}
                               {{ first_names[x] + ' ' + last_names[x] + ','}}
@@ -118,14 +119,15 @@
                     {% if resource.editor_last_name and resource.editor_first_name %}
                     <tr>
                         <td>Editor(s)</td>
-                        {% set first_names=resource.editor_first_name.split(',') %}
-                        {% set last_names=resource.editor_last_name.split(',') %}
+                        {% set editor_first_names=resource.editor_first_name.split(',') %}
+                        {% set editor_last_names=resource.editor_last_name.split(',') %}
+                        {% set editor_names_length = [(editor_first_names | length), (editor_last_names | length)] | min %}
                         <td>
-                          {% for x in range(first_names | length) %}
-                            {% if (x == first_names | length - 1) %}
-                            {{ first_names[x] + ' ' + last_names[x] }}
+                          {% for x in range(editor_names_length) %}
+                            {% if (x == editor_names_length - 1) %}
+                            {{ editor_first_names[x] + ' ' + editor_last_names[x] }}
                             {% else %}
-                            {{ first_names[x] + ' ' + last_names[x] + ','}}
+                            {{ editor_first_names[x] + ' ' + editor_last_names[x] + ','}}
                             {% endif %}
                           {% endfor %}
                         </td>
