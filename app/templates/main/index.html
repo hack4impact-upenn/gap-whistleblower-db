@@ -125,10 +125,11 @@
                         <tr onclick="window.location.href='{{ url_for('main.resource', id=c.id) }}';">
                             <td>{{ c.title }}</td>
                             <td>{% if c.author_last_name and c.author_first_name %}
-                                  {% set first_names=c.author_first_name.split(',') %}
-                                  {% set last_names= c.author_last_name.split(',') %}
-                                    {% for x in range(first_names | length) %}
-                                      {% if (x == first_names | length - 1) %}
+                                  {% set first_names = c.author_first_name.split(',') %}
+                                  {% set last_names = c.author_last_name.split(',') %}
+                                  {% set names_length = [(first_names | length), (last_names | length)] | min %}
+                                    {% for x in range(names_length) %}
+                                      {% if (x == names_length - 1) %}
                                       {{first_names[x] + ' ' + last_names[x] }}
                                       {% else %}
                                       {{ first_names[x] + ' ' + last_names[x] + ','}}
@@ -137,8 +138,9 @@
                                 {% elif c.editor_last_name and c.editor_first_name %}
                                   {% set first_names=c.editor_first_name.split(',') %}
                                   {% set last_names= c.editor_last_name.split(',') %}
-                                    {% for x in range(first_names | length) %}
-                                      {% if (x == first_names | length - 1) %}
+                                  {% set names_length = [(first_names | length), (last_names | length)] | min %}
+                                    {% for x in range(names_length) %}
+                                      {% if (x == names_length - 1) %}
                                       {{first_names[x] + ' ' + last_names[x] }}
                                       {% else %}
                                       {{ first_names[x] + ' ' + last_names[x] + ','}}
