@@ -10,8 +10,6 @@ class Tagged(db.Model):
         db.Integer, ForeignKey('document.id'), primary_key=True
     )
     tag_name = db.Column(db.String(1000))
-    tag = db.relationship("Tag", backref="documents")
-    document = db.relationship("Document", backref="tags")
 
     @staticmethod
     def generate_fake(**kwargs):

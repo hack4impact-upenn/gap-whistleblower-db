@@ -5,6 +5,7 @@ from faker import Faker
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+from sqlalchemy.orm import relationship
 from nltk.stem.snowball import SnowballStemmer
 from sqlalchemy import PickleType
 import datetime
@@ -73,6 +74,9 @@ class Document(db.Model):
     tf = db.Column(MutableDict.as_mutable(PickleType))
 
     broken_link = db.Column(db.Integer())
+
+    # Many to many association
+    tags = relationship("Tag", secondary="tagged", backref="documents", lazy="joined")
 
     @hybrid_property
     def corpus(self):
