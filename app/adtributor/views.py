@@ -493,7 +493,7 @@ def view_book_draft(id):
         book_publication_month=book_entry.month,
         book_publication_year=book_entry.year,
         book_description=book_entry.description,
-        book_tags=[str(t.tag_id) for t in book_entry.tags],
+        book_tags=[str(t.id) for t in book_entry.tags],
         book_link=book_entry.link,
         book_file_urls=book_entry.file,
     )
@@ -540,7 +540,7 @@ def view_news_article_draft(id):
         article_publication_month=article_entry.month,
         article_publication_year=article_entry.year,
         article_description=article_entry.description,
-        article_tags=[str(t.tag_id) for t in article_entry.tags],
+        article_tags=[str(t.id) for t in article_entry.tags],
         article_link=article_entry.link,
         article_file_urls=article_entry.file,
     )
@@ -593,7 +593,7 @@ def view_journal_article_draft(id):
         journal_publication_month=journal_entry.month,
         journal_publication_year=journal_entry.year,
         journal_description=journal_entry.description,
-        journal_tags=[str(t.tag_id) for t in journal_entry.tags],
+        journal_tags=[str(t.id) for t in journal_entry.tags],
         journal_link=journal_entry.link,
         journal_file_urls=journal_entry.file,
         document_status="draft"
@@ -645,7 +645,7 @@ def view_law_draft(id):
         law_enactment_year=law_entry.year,
         law_country=law_entry.country,
         law_description=law_entry.description,
-        law_tags=[str(t.tag_id) for t in law_entry.tags],
+        law_tags=[str(t.id) for t in law_entry.tags],
         law_link=law_entry.link,
         law_file_urls=law_entry.file,
     )
@@ -697,7 +697,7 @@ def view_video_draft(id):
         video_publication_month=video_entry.month,
         video_publication_year=video_entry.year,
         video_description=video_entry.description,
-        video_tags=[str(t.tag_id) for t in video_entry.tags],
+        video_tags=[str(t.id) for t in video_entry.tags],
         video_link=video_entry.link,
         video_file_urls=video_entry.file,
     )
@@ -746,7 +746,7 @@ def view_report_draft(id):
         report_publication_month=report_entry.month,
         report_publication_year=report_entry.year,
         report_description=report_entry.description,
-        report_tags=[str(t.tag_id) for t in report_entry.tags],
+        report_tags=[str(t.id) for t in report_entry.tags],
         report_link=report_entry.link,
         report_file_urls=report_entry.file,
     )
@@ -796,7 +796,7 @@ def view_other_draft(id):
         other_publication_year=other_entry.year,
         other_source=other_entry.source,
         other_description=other_entry.description,
-        other_tags=[str(t.tag_id) for t in other_entry.tags],
+        other_tags=[str(t.id) for t in other_entry.tags],
         other_link=other_entry.link,
         other_file_urls=other_entry.file,
         document_status="draft"
@@ -1050,7 +1050,7 @@ def contribution_book(id):
         book_publication_month=book_entry.month,
         book_publication_year=book_entry.year,
         book_description=book_entry.description,
-        book_tags=[str(t.tag_id) for t in book_entry.tags],
+        book_tags=[str(t.id) for t in book_entry.tags],
         book_link=book_entry.link,
         book_file_urls=book_entry.file,
     )
@@ -1091,7 +1091,7 @@ def contribution_news_article(id):
         article_publication_month=article_entry.month,
         article_publication_year=article_entry.year,
         article_description=article_entry.description,
-        article_tags=[str(t.tag_id) for t in article_entry.tags],
+        article_tags=[str(t.id) for t in article_entry.tags],
         article_link=article_entry.link,
         article_file_urls=article_entry.file,
         document_status="draft"
@@ -1136,7 +1136,7 @@ def contribution_journal_article(id):
         journal_publication_month=journal_entry.month,
         journal_publication_year=journal_entry.year,
         journal_description=journal_entry.description,
-        journal_tags=[str(t.tag_id) for t in journal_entry.tags],
+        journal_tags=[str(t.id) for t in journal_entry.tags],
         journal_link=journal_entry.link,
         journal_file_urls=journal_entry.file,
     )
@@ -1179,7 +1179,7 @@ def contribution_law(id):
         law_enactment_year=law_entry.year,
         law_country=law_entry.country,
         law_description=law_entry.description,
-        law_tags=[str(t.tag_id) for t in law_entry.tags],
+        law_tags=[str(t.id) for t in law_entry.tags],
         law_link=law_entry.link,
         law_file_urls=law_entry.file,
     )
@@ -1223,7 +1223,7 @@ def contribution_video(id):
         video_publication_month=video_entry.month,
         video_publication_year=video_entry.year,
         video_description=video_entry.description,
-        video_tags=[str(t.tag_id) for t in video_entry.tags],
+        video_tags=[str(t.id) for t in video_entry.tags],
         video_link=video_entry.link,
         video_file_urls=video_entry.file,
     )
@@ -1265,7 +1265,7 @@ def contribution_report(id):
         report_publication_month=report_entry.month,
         report_publication_year=report_entry.year,
         report_description=report_entry.description,
-        report_tags=[str(t.tag_id) for t in report_entry.tags],
+        report_tags=[str(t.id) for t in report_entry.tags],
         report_link=report_entry.link,
         report_file_urls=report_entry.file,
         document_status='draft'
@@ -1310,7 +1310,7 @@ def contribution_other(id):
         other_publication_year=other_entry.year,
         other_source=other_entry.source,
         other_description=other_entry.description,
-        other_tags=[str(t.tag_id) for t in other_entry.tags],
+        other_tags=[str(t.id) for t in other_entry.tags],
         other_link=other_entry.link,
         other_file_urls=other_entry.file,
         document_status="draft"
