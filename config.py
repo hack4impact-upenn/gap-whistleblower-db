@@ -58,7 +58,7 @@ class Config:
     EMAIL_SUBJECT_PREFIX = '[{}]'.format(APP_NAME)
 
     EMAIL_SENDER = '{app_name} Admin <{email}>'.format(
-        app_name=APP_NAME, email=MAIL_USERNAME)
+        app_name=APP_NAME, email=MAIL_DEFAULT_SENDER)
 
     REDIS_URL = os.getenv('REDISTOGO_URL') or 'http://localhost:6379'
 
