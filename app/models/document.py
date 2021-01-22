@@ -12,6 +12,7 @@ import datetime
 from collections import Counter
 import os
 import nltk
+import datetime
 nltk.data.path.append(os.environ.get('NLTK_DATA'))
 
 
@@ -123,6 +124,19 @@ class Document(db.Model):
                 return self.month + " " + str(self.year)
             return str(self.year)
         return ""
+    
+    @hybrid_property
+    def raw_date(self):
+        month_dict = {
+            'January': 1, 'February': 2, 'March': 3, 'April': 4,
+            'May': 5, 'June': 6, 'July': 7, 'August': 8, 'September': 9,
+            'October': 10, 'November': 11, 'December': 12
+        }
+        year = self.year if self.year else 1970
+        month = month_dict.get(self.month) if month_dict.get(self.month) else 1
+        day = self.day if self.day else 1
+        return year, month, day
+    
 
     @hybrid_method
     def is_after(self, start_date):

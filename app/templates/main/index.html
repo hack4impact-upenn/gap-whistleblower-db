@@ -51,7 +51,7 @@
                 <br>
                 <div class="ui action input fluid large">
                   {{ form.query(class='ui input large fluid') }}
-                  <button class="ui button large" type="submit">Search</button>
+                  <button id="search-button" class="ui button large" type="submit">Search</button>
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
                 <div class="ui header small">Date Published</div>
                   <div class="ui center aligned calendar fluid">
                     {{ form.start_date.label }}
-                    <div class="ui input left icon fluid" id="start_date" style="margin-right:0px">
+                    <div class="ui input left icon fluid" id="start" style="margin-right:0px">
                       <i class="calendar icon"></i>
                       {{ form.start_date(class="ui calendar")}}
                     </div>
@@ -91,7 +91,7 @@
                   <br>
                   <div class="ui center aligned calendar fluid">
                     {{ form.end_date.label }}
-                    <div class="ui input left icon fluid" id="end_date">
+                    <div class="ui input left icon fluid" id="end">
                       <i class="calendar icon"></i>
                       {{ form.end_date(class="ui calendar")}}
                     </div>
@@ -104,13 +104,22 @@
               <span>Tags</span>
               <div style="min-width:14em!important; padding-left:20px;">{{ f.render_form_field(form.tags) }}</div>
             </div>
+            <div class="item" style="margin-top:auto; margin-bottom:auto; flex: initial!important">
+              <span>Sort by</span>
+              <div style="min-width:12em!important; padding-left:20px;">{{ f.render_form_field(form.sort_by) }}</div>
+            </div>
+            <div class="item" style="margin-top:auto; margin-bottom:auto; flex: initial!important">
+              <button id="refresh-button" class="ui primary button">
+                Refresh search
+              </button>
+            </div>
           </div>
           <div class="ui grid">
            <div class="row">
             <div class="sixteen wide column">
                 <!-- it started out with a div... how did it end up like this? -->
                 {% for i in range(((search_results | length) / 25)|round(0, 'ceil')|int) %}
-                <table class="ui searchable sortable unstackable selectable celled table
+                <table class="ui searchable unstackable selectable celled table
                     data-results data-results-{{ i }}" style="overflow-x: scroll;">
                     <thead>
                         <tr>
@@ -204,21 +213,27 @@
       </form>
         <script>
           $( document ).ready(function() {
-              $( '#state' ).attr( "disabled", "disabled")
-              $('#start_date').calendar({
-              type: 'date',
-              endCalendar: $('#end_date')
+              $('#refresh-button').attr("disabled",true);
+              $('#start').calendar({
+                type: 'date',
+                endCalendar: $('#end'),
+                onChange: function (){
+                  $('#refresh-button').attr("disabled", false);
+                }
               });
-              $('#end_date').calendar({
-              type: 'date',
-              startCalendar: $('#start_date')
+              $('#end').calendar({
+                type: 'date',
+                startCalendar: $('#start'),
+                onChange: function (){
+                  $('#refresh-button').attr("disabled", false);
+                }
               });
-              $('#country').change(function (){
-                if ($('#country').val() == 'US') {
+              $('input').not('#query').change(function (){
+                $('#refresh-button').attr("disabled", false);
+              });
 
-                }
-                else {
-                }
+              $('#refresh-button').click(function (){
+                $('#search-button').click()
               });
 
               $('#data-range').html('1 &ndash; ' + Math.min(25, {{ search_results | length }}));

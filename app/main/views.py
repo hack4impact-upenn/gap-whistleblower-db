@@ -70,6 +70,7 @@ def index():
     ).order_by(Document.last_edited_date.desc()).all()
 
     if form.validate_on_submit():
+        sort_by = form.sort_by.data
         conditions = []
         conditions.append(Document.document_status == 'published')
         types = [
@@ -140,9 +141,18 @@ def index():
 
         results = Document.query.filter(
                 and_(*conditions)
-            ).order_by(
-                Document.last_edited_date.desc()
-            ).all()
+            )
+        
+        if sort_by == "title":
+            results = results.order_by(Document.title).all()
+        elif sort_by == "newest":
+            results = results.all()
+            results.sort(key=lambda x: x.raw_date, reverse=True)
+        elif sort_by == "oldest":
+            results = results.all()
+            results.sort(key=lambda x: x.raw_date)
+        else:
+            results = results.order_by(Document.last_edited_date.desc()).all()
 
         if len(query) > 0:
             idf = {}
@@ -158,9 +168,11 @@ def index():
                     tf = r.tf.get(w)
                     if tf:
                         r.score += tf * idf.get(w)
-
-            results.sort(key=lambda x: x.score, reverse=True)
-
+                        
+            
+            if sort_by == "most_relevant":
+                results.sort(key=lambda x: x.score, reverse=True)
+        
         return render_template(
             'main/index.html',
             search_results=results,

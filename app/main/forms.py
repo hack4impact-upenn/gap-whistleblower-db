@@ -46,5 +46,13 @@ class SearchForm(Form):
         multiple=True,
         allow_custom=False
     )
+    sort_by = CustomSelectField(
+        default='Most Relevant',
+        choices=[
+            ('most_relevant', 'Most Relevant'),
+            ('title', 'Title'),
+            ('newest', 'Newest'),
+            ('oldest', 'Oldest'),
+        ], validators=[InputRequired()])
     start_date = StringField()
     end_date = StringField()
