@@ -35,6 +35,7 @@ from app.adtributor.forms import (
     VideoForm,
     DownloadForm,
     UpdateLinkForm,
+    BulkTagForm
 )
 from app.decorators import contributor_required, admin_required
 from app.models import (
@@ -54,6 +55,7 @@ from app.email import send_email
 import csv
 import io
 import datetime
+from sqlalchemy import or_
 
 import os
 import nltk
@@ -271,7 +273,13 @@ def manage_tags():
     form = TagForm()
     tags = Tag.query.all()
 
-    if form.validate_on_submit():
+    bulk_form = BulkTagForm()
+    results = Document.query.filter(or_(
+        Document.document_status=="published",
+        Document.posted_by==str(current_user.id)
+    )).order_by(Document.last_edited_date.desc()).all()
+
+    if form.add_tag.data and form.validate_on_submit():
         tag = Tag.query.filter(
             func.lower(Tag.tag) == func.lower(form.tag.data)
         ).first()
@@ -290,9 +298,44 @@ def manage_tags():
             )
         tags = Tag.query.all()
         return render_template(
-            'admin/manage_tags.html', form=form, tags=tags)
+            'admin/manage_tags.html', form=form, tags=tags, contributions=results, bulk_form=BulkTagForm())
+    
+    if bulk_form.submit.data and bulk_form.validate_on_submit():
+        for t in bulk_form.tags.data:
+            tag = Tag.query.get(t)
+            tag_name = tag.tag
+            tag_documents = set([td.id for td in tag.documents])
+            for d in bulk_form.choices.data:
+                if d not in tag_documents:
+                    tagged = Tagged(
+                        tag_id=t,
+                        document_id=d,
+                        tag_name=tag_name
+                    )
+                    db.session.add(tagged)
+        try:
+            db.session.commit()
+            db.session.flush()
+            flash(
+                'Tags successfully created', 'form-success'
+            )
+        except Exception:
+            db.session.rollback()
+            db.session.flush() # for reseting non-committed .add()
+            flash(
+                'Tags failed to create', 'form-error'
+            )
+        
+        results = Document.query.filter(or_(
+            Document.document_status=="published",
+            Document.posted_by==str(current_user.id)
+        )).order_by(Document.last_edited_date.desc()).all() 
 
-    return render_template('admin/manage_tags.html', form=form, tags=tags)
+        logger.error(bulk_form.choices.data)
+        return render_template(
+            'admin/manage_tags.html', form=form, tags=tags, contributions=results, bulk_form=BulkTagForm())
+
+    return render_template('admin/manage_tags.html', form=form, tags=tags, contributions=results, bulk_form=BulkTagForm())
 
 
 @admin.route('/tag/delete/<int:id>', methods=['GET', 'POST'])

@@ -12,6 +12,17 @@
                 Manage Tags
                 <div class="sub header">Review and manage tags that can be applied to resources.</div>
             </h2>
+            {% set flashes={
+              'success': get_flashed_messages(category_filter=['form-success']),
+              'error': get_flashed_messages(category_filter=['form-error'])
+            } %}
+            {{ f.form_message(flashes['success'], header='Success', class='success') }}
+            {{ f.form_message(flashes['error'], header='Error', class='error') }}
+            <h3 class="ui dividing header">Create a New Tag</h3>
+              {{ f.begin_form(form, flashes) }}
+              {{ f.render_form_field(form.tag) }}
+              {{ f.render_form_field(form.add_tag) }}
+              {{ f.end_form(form)}}
             <h3 class="ui dividing header">Existing Tags</h3>
             {% for t in tags %}
             <div class="ui label" style="margin-bottom:3px">
@@ -39,8 +50,50 @@
               </div>
             </div>
             {% endfor %}
-            <h3 class="ui dividing header">Add a New Tag</h3>
-            {{ f.render_form(form) }}
+            <h3 class="ui dividing header">Add Tags to Resources</h3>
+            {{ f.begin_form(bulk_form, flashes, extra_classes="bulk") }}
+            <div class="ui menu">
+              <div class="ui item" style="flex: 0 1 auto;">
+                {{ f.render_form_field(bulk_form.tags, name="") }}
+              </div>
+              <div class="ui right search item">
+                  <div class="ui transparent icon input">
+                      <input id="search-suggestions" type="text" placeholder="Search resources...">
+                      <i class="search icon"></i>
+                  </div>
+              </div>
+            </div>
+            {{ f.render_form_field(bulk_form.submit) }}
+            <table class="ui searchable sortable unstackable selectable celled table" style="overflow-x: scroll;">
+              <thead>
+                  <tr>
+                      <th></th>
+                      <th>Title</th>
+                      <th>Tags</th>
+                  </tr>
+              </thead>
+              <tbody>
+              {% for c in bulk_form.choices %}
+                  <tr>
+                    <td>
+                      <div class="form-check">
+                        {{ c(class="form-check-input") }}
+                    </div>
+                    </td>
+                    <td onclick="window.location.href='{{ url_for('main.resource', id=c.data) }}';">{{ c.label.text[0] }}</td>
+                    <td>
+                      {% for tag in c.label.text[1] %}
+                      <div class="ui basic label" style="margin: 2px">
+                        {{ tag.tag }}
+                      </div>
+                      {% endfor %}
+                    </td>
+                  </tr>
+              {% endfor %}
+              </tbody>
+          </table>
+          {{ f.end_form(bulk_form) }}
+
         </div>
     </div>
     <script>
@@ -50,5 +103,20 @@
         $('.ui.mini.modal.tag').attr('id', 'tag-modal-' + id);
         $('#tag-modal-' + id).modal('show');
       }
+      $(document).ready(function () {
+        $( 'input[type="checkbox"]' ).prop('checked', false);
+        $('#search-suggestions').keyup(function () {
+                var searchText=$(this).val();
+                if (searchText.length > 0) {
+                    $('tbody td:icontains(' + searchText + ')').addClass('positive');
+                    $('td.positive').not(':icontains(' + searchText + ')').removeClass('positive');
+                    $('tbody td').not(':icontains(' + searchText + ')').closest('tr').addClass('hidden').hide();
+                    $('tr.hidden:icontains(' + searchText + ')').removeClass('hidden').show();
+                } else {
+                    $('td.positive').removeClass('positive');
+                    $('tr.hidden').removeClass('hidden').show();
+                }
+        });
+      });
     </script>
 {% endblock %}

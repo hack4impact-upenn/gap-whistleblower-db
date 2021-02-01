@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import ValidationError, validators
+from wtforms import ValidationError, validators, widgets
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms.fields import (
     PasswordField,
@@ -10,7 +10,8 @@ from wtforms.fields import (
     IntegerField,
     SelectMultipleField,
     FieldList,
-    RadioField
+    RadioField,
+    HiddenField
 )
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import (
@@ -20,7 +21,12 @@ from wtforms.validators import (
     Length,
 )
 from app import db
-from app.models import Role, User, Tag
+from app.models import Role, User, Tag, Document
+
+
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
 
 
 class ChangeUserEmailForm(Form):
@@ -81,7 +87,20 @@ class NewUserForm(InviteUserForm):
 
 class TagForm(Form):
     tag = StringField(validators=[InputRequired()])
+    add_tag = SubmitField()
+
+
+class BulkTagForm(Form):
+    tags = SelectMultipleField(choices=[], coerce=int)
+    choices = MultiCheckboxField('Select', choices=[], coerce=int)
     submit = SubmitField()
+    
+    def __init__(self, **kwargs):
+        super(BulkTagForm, self).__init__(**kwargs)
+        self.tags.choices = [(t.id, t.tag) for t in Tag.query.all()]
+        self.choices.choices = [(d.id, (d.title, d.tags)) for d in Document.query.all()]
+        self.choices.default = []
+        self.tags.default = kwargs.get('tags')
 
 
 class UpdateLinkForm(Form):
