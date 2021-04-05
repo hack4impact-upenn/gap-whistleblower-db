@@ -59,7 +59,7 @@ def role():
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    idf = Idf.query.all()
+    # idf = Idf.query.all()
 
     form = SearchForm()
 
@@ -156,7 +156,7 @@ def index():
 
         if len(query) > 0:
             idf = {}
-            num_docs = len(Document.query.all())
+            num_docs = Document.query.count()
             for w in filtered_query:
                 idf_score = Idf.query.get(w)
                 if idf_score:
@@ -177,14 +177,12 @@ def index():
             'main/index.html',
             search_results=results,
             form=form,
-            idf=idf
         )
 
     return render_template(
         'main/index.html',
         search_results=results,
         form=form,
-        idf=idf
     )
 
 

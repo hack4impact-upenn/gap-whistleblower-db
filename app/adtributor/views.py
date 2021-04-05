@@ -2131,21 +2131,37 @@ def update_idf(doc_id, pre_tf, post_tf):
     post_set = set(post_tf.keys())
     remove_set = pre_set.difference(post_set)
     add_set = post_set.difference(pre_set)
-    for i in remove_set:
-        term = Idf.query.get(i)
-        if term is not None:
-            if doc_id in term.docs:
-                term.docs.remove(doc_id)
-    for i in add_set:
-        term = Idf.query.get(i)
-        if term is not None:
+
+    terms = Idf.query.filter(Idf.term.in_(list(remove_set))).all()
+    for term in terms:
+        if doc_id in term.docs:
+            term.docs.remove(doc_id)
+
+    # for i in remove_set:
+    #     term = Idf.query.get(i)
+    #     if term is not None:
+    #         if doc_id in term.docs:
+    #             term.docs.remove(doc_id)
+    
+    terms = Idf.query.filter(Idf.id.in_(list(add_set))).all()
+    for term in terms:
+        if doc_id not in term.docs:
             term.docs.append(doc_id)
-        else:
-            term = Idf(
-                term=i,
-                docs=[doc_id]
-            )
-            db.session.add(term)
+
+    for i in add_set - {term.term for term in terms}:
+        db.session.add(Idf(term=i, docs=[doc_id]))
+
+    # for i in add_set:
+    #     term = Idf.query.get(i)
+    #     if term is not None:
+    #         term.docs.append(doc_id)
+    #     else:
+    #         term = Idf(
+    #             term=i,
+    #             docs=[doc_id]
+    #         )
+    #         db.session.add(term)
+
     db.session.commit()
 
 
