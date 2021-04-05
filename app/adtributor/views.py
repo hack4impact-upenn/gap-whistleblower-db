@@ -2230,7 +2230,7 @@ def upload_and_download():
                             d.link,
                             d.file,
                             d.document_status,
-                            ", ".join(t.tag_name for t in d.tags)])
+                            ", ".join(t.tag for t in d.tags)])
 
             if download_form.resource_type.data == 'news_article':
                 filename = 'news_article.csv'
@@ -2257,7 +2257,7 @@ def upload_and_download():
                             d.link,
                             d.file,
                             d.document_status,
-                            ", ".join(t.tag_name for t in d.tags)])
+                            ", ".join(t.tag for t in d.tags)])
 
             if download_form.resource_type.data == 'journal_article':
                 filename = 'journal_article.csv'
@@ -2288,7 +2288,7 @@ def upload_and_download():
                             d.link,
                             d.file,
                             d.document_status,
-                            ", ".join(t.tag_name for t in d.tags)])
+                            ", ".join(t.tag for t in d.tags)])
 
             if download_form.resource_type.data == 'law':
                 filename = 'law.csv'
@@ -2328,7 +2328,7 @@ def upload_and_download():
                             d.link,
                             d.file,
                             d.document_status,
-                            ", ".join(t.tag_name for t in d.tags)])
+                            ", ".join(t.tag for t in d.tags)])
 
             if download_form.resource_type.data == 'video':
                 filename = 'video.csv'
@@ -2372,7 +2372,7 @@ def upload_and_download():
                             d.link,
                             d.file,
                             d.document_status,
-                            ", ".join(t.tag_name for t in d.tags)])
+                            ", ".join(t.tag for t in d.tags)])
 
             if download_form.resource_type.data == 'report':
                 filename = 'report.csv'
@@ -2408,7 +2408,7 @@ def upload_and_download():
                             d.link,
                             d.file,
                             d.document_status,
-                            ", ".join(t.tag_name for t in d.tags)])
+                            ", ".join(t.tag for t in d.tags)])
 
             if download_form.resource_type.data == 'other':
                 filename = 'other.csv'
@@ -2444,7 +2444,7 @@ def upload_and_download():
                             d.link,
                             d.file,
                             d.document_status,
-                            ", ".join(t.tag_name for t in d.tags)])
+                            ", ".join(t.tag for t in d.tags)])
 
             # Convert to byte buffer.
             csv_bytes = io.BytesIO()
