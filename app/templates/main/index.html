@@ -128,6 +128,7 @@
                             <th class="two wide">Resource Type</th>
                             <th>Description</th>
                             <th class="three wide">Tags</th>
+                            <th class="two wide">Publication Date</th>
                         </tr>
                     </thead>
                     {% for c in search_results[25*i:25*(i + 1)] %}
@@ -182,6 +183,15 @@
                               </div>
                               {% endfor %}
                             </td>
+                            {% if c.day and c.month and c.year %}
+                            <td>{{ c.month ~ ' ' ~ c.day ~ ', ' ~ c.year }}</td>
+                            {% elif c.month and c.year %}
+                            <td>{{ c.month ~ ' ' ~ c.year }}</td>
+                            {% elif c.year %}
+                            <td>{{ c.year }}</td>
+                            {% else %}
+                            <td>N/A</td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </table>
